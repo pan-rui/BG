@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TComment" table="t_comment">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TUser" class="com.qpp.model.TUser" fetch="select">
+            <column name="userId" length="20" not-null="true" />
+        </many-to-one>
+        <property name="message" type="string">
+            <column name="message" length="1024" not-null="true" />
+        </property>
+        <property name="image" type="string">
+            <column name="image" length="500" not-null="true" />
+        </property>
+        <property name="super_" type="string">
+            <column name="super" length="20" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

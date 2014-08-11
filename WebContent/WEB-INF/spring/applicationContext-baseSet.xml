@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="emboriderySet" class="com.qpp.emboridery.base.EmboriderySet">
+    	<property name="domain" value="http://trial3.stitchport.com/stitchportwebapi"/>
+    	<property name="imagePath" value="/emboridery/image/"/>
+    	<property name="productPath" value="/emboridery/product/"/>
+     </bean>
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="mail.qpp.com" />
+        <property name="port" value="25" />
+        <property name="username" value="qphk\webinfo2" />
+        <property name="password" value="winfo33" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="CS@China.com" />
+    </bean>
+    <bean id="Mail" class="com.qpp.util.Email">
+        <property name="javaMailSender" ref="javaMailSender" />
+        <property name="simpleMailMessage" ref="simpleMailMessage" />
+    </bean>
+
+    <bean id="memcachedPool" class="com.danga.MemCached.SockIOPool" factory-method="getInstance"
+          init-method="initialize" destroy-method="shutDown">
+        <constructor-arg><value>neeaMemcachedPool</value></constructor-arg>
+        <property name="servers">
+            <list>
+                <value>192.168.26.15:11211</value>
+            </list>
+        </property>
+        <property name="initConn"><value>5</value></property>
+        <property name="minConn"><value>5</value></property>
+        <property name="maxConn"><value>50</value></property>
+        <property name="maintSleep"><value>30</value></property>
+        <property name="nagle"><value>false</value></property>
+        <property name="socketTO"><value>3000</value></property>
+    </bean>
+
+    <bean id="memcachedClient" class="com.danga.MemCached.MemCachedClient">
+        <constructor-arg><value>neeaMemcachedPool</value></constructor-arg>
+    </bean>
+    <bean id="FacebookSet" class="com.qpp.model.FacebookConfig">
+		<property name="client_id" value="438164816195299"/>
+		<property name="secret" value="3875ccff8a5853accba1926891b24273"/>
+		<property name="localUri" value="http://www.makeplayingcards.com/login.hyml"/>
+    	<property name="loginUrl" value="https://www.facebook.com/dialog/oauth"/>
+    	<property name="authUrl" value="https://graph.facebook.com/oauth/access_token"/>
+    	<property name="userUrl" value="https://graph.facebook.com/me"/>
+    	<property name="sharedialog" value="https://www.facebook.com/dialog/share"/>
+    	<property name="shareUrl" value="https://graph.facebook.com/{0}/feed"/>
+    	<property name="permission" value="email,user_likes,user_location,user_about_me"/>
+ </bean>    
+<bean id="InstagramSet" class="com.qpp.model.InstagramConfig">
+		<property name="client_id" value="9228e1ef35d44b099c1246a5b1e8fdce"/>
+		<property name="secret" value="a849156ade71400f97966fafaf08bb33"/>
+		<property name="localUri" value="http://www.makeplayingcards.com/login.hyml"/>
+    	<property name="loginUrl" value="https://api.instagram.com/oauth/authorize"/>
+    	<property name="authUrl" value="https://api.instagram.com/oauth/access_token"/>
+ </bean>
+</beans>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.qpp.model.TCountry" table="qb_country_info">
+        <id name="countryCode" column="countryCode">
+            <generator class="native"/>
+        </id>
+        <property name="countryDesc" column="countryDesc"/>
+        <property name="cnCountryDesc" column="countryremark"/>
+        <property name="areaCode" column="areaCode"/>
+        <property name="areaDesc" column="areaDesc"/>
+        <property name="timeDiff" column="timeDiff"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TStore" table="t_store">
+        <id name="userId" type="string">
+            <column name="userId" length="20" />
+            <generator class="foreign">
+                <param name="property">TUser</param>
+            </generator>
+        </id>
+        <one-to-one name="TUser" class="com.qpp.model.TUser" constrained="true"></one-to-one>
+        <property name="name" type="string">
+            <column name="name" length="20" not-null="true" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="50" not-null="true" />
+        </property>
+        <property name="seo" type="string">
+            <column name="seo" length="1024" not-null="true" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="3" not-null="true" />
+        </property>
+        <property name="contacts" type="string">
+            <column name="contacts" length="20" not-null="true" />
+        </property>
+        <property name="phone" type="int">
+            <column name="phone" not-null="true" />
+        </property>
+        <property name="template" type="string">
+            <column name="template" length="1024" not-null="true" />
+        </property>
+        <property name="popularize" type="string">
+            <column name="popularize" length="2048" not-null="true" />
+        </property>
+        <property name="share" type="string">
+            <column name="share" length="2048" not-null="true" />
+        </property>
+        <property name="gameType" type="string">
+            <column name="gameType" length="1024" not-null="true" />
+        </property>
+        <set name="TStoreOrders" table="t_store_order" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="storeId" length="20" />
+            </key>
+            <one-to-many class="com.qpp.model.TStoreOrder" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TOrder" table="t_order">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TUser" class="com.qpp.model.TUser" fetch="select">
+            <column name="buyer" length="20" />
+        </many-to-one>
+        <property name="amt" type="java.lang.Double">
+            <column name="amt" precision="22" scale="0" />
+        </property>
+        <property name="currencyCode" type="string">
+            <column name="currencyCode" length="5" />
+        </property>
+        <property name="maxAmt" type="java.lang.Double">
+            <column name="maxAMT" precision="22" scale="0" />
+        </property>
+        <property name="payMentAction" type="string">
+            <column name="payMentAction" length="20" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="30" />
+        </property>
+        <property name="address" type="string">
+            <column name="address" length="80" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="15" />
+        </property>
+        <property name="zipCode" type="string">
+            <column name="zipCode" length="15" />
+        </property>
+        <property name="desc" type="string">
+            <column name="desc_" length="50" />
+        </property>
+        <property name="invnum" type="string">
+            <column name="invnum" length="20" />
+        </property>
+        <property name="transactionId" type="string">
+            <column name="transactionId" length="20" />
+        </property>
+        <property name="localCode" type="string">
+            <column name="localCode" length="8" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" />
+        </property>
+        <property name="utime" type="timestamp">
+            <column name="utime" length="19" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="10" />
+        </property>
+        <property name="itemAmt" type="java.lang.Double">
+            <column name="itemAMT" precision="22" scale="0" />
+        </property>
+        <property name="taxAmt" type="java.lang.Double">
+            <column name="taxAmt" precision="22" scale="0" />
+        </property>
+        <property name="shippingAmt" type="java.lang.Double">
+            <column name="shippingAmt" precision="22" scale="0" />
+        </property>
+        <property name="insuranceAmt" type="java.lang.Double">
+            <column name="insuranceAmt" precision="22" scale="0" />
+        </property>
+        <property name="shippingType" type="string">
+            <column name="ShippingType" length="20" />
+        </property>
+        <property name="shippingNum" type="java.lang.Double">
+            <column name="ShippingNum" precision="22" scale="0" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="20" not-null="true" />
+        </property>
+        <set name="TOrderItems" table="t_orderItem" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="orderId" length="20" />
+            </key>
+            <one-to-many class="com.qpp.model.TOrderItem" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TConvert" table="t_convert">
+        <id name="id" type="string">
+            <column name="id" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="type" type="string">
+            <column name="type" length="10" not-null="true" />
+        </property>
+        <property name="amount" type="int">
+            <column name="amount" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <property name="userId" type="string">
+            <column name="userId" length="20" not-null="true" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="50" not-null="true" />
+        </property>
+        <property name="target" type="string">
+            <column name="target" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

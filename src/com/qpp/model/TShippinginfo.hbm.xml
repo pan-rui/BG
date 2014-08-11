@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.qpp.model.TShippinginfo" table="qb_shipping_info">
+        <id name="shippingCode" column="shippingmode">
+            <generator class="native"/>
+         </id>
+        <property name="shippingDesc" column="shippingDesc"/>
+        <property name="priority" column="priority"/>
+        <property name="valid" column="status"/>
+    </class>
+</hibernate-mapping>

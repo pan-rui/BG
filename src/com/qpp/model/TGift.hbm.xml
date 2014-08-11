@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TGift" table="t_gift">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="30" not-null="true" unique="true" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="10" not-null="true" />
+        </property>
+        <property name="price" type="int">
+            <column name="price" not-null="true" />
+        </property>
+        <property name="priceTwo" type="int">
+            <column name="priceTwo" not-null="true" />
+        </property>
+        <property name="count" type="int">
+            <column name="count" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <set name="TScores" table="t_score" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="type" length="20" />
+            </key>
+            <one-to-many class="com.qpp.model.TScore" />
+        </set>
+    </class>
+</hibernate-mapping>

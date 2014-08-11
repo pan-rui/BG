@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+repositories {
+	mavenCentral()
+}
+task copyOne(type: Copy) {
+	 from 'src/resources'
+	 into 'build/classes/main/resources'
+ }
+task publish(overwrite: true,dependsOn:[jar]) {
+    println "Build all files"
+    copy{
+        from 'src/resources'
+        into 'build/classes/main/resources'
+    }
+    copy{
+        from 'src/resources'
+        into 'build/classes/main'
+    }
+/*
+    copy{
+        from('src/com/qpp/model'){
+            include('*.xml')
+        }
+        into 'build/classes/main/com/qpp/model'
+    }
+*/
+}
+dependencies {
+	//compile('org.springframework:spring-web:3.2.9.RELEASE')	//下载目录：C:\Users\admin\.gradle\caches
+	//compile('org.springframework:spring-webmvc:3.2.9.RELEASE')
+    compile fileTree(dir: System.getenv("JAVA_HOME")+'/lib', include: '*.jar')
+    //compile fileTree(dir: 'd:/work/java/loc', include: '*.jar')
+    compile fileTree(dir: System.getenv("CATALINA_HOME")+'/lib', include: '*.jar')
+    compile fileTree(dir: 'WebContent/WEB-INF/lib', include: '*.jar')
+}
+sourceSets { 
+	 main { 
+		 java.srcDir "$projectDir/src"
+		 //resources.srcDir "$projectDir/src/resources"
+         //resources.srcDir "$projectDir/src/com/qpp/model"
+		 //output.resourcesDir "${buildDir}/classes/main/resources"
+	 } 
+}
+tasks.withType(Compile) {
+    options.encoding = "UTF-8"
+} 

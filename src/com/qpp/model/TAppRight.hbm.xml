@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.qpp.model.TAppRight" table="t_app_right">
+        <composite-id mapped="true" class="com.qpp.model.TAppRightPK">
+            <key-property name="role" column="role"/>
+            <key-property name="url" column="url"/>
+        </composite-id>
+    </class>
+</hibernate-mapping>

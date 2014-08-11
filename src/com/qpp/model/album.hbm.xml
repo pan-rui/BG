@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+<hibernate-mapping>
+	<class name="com.qpp.model.Album" table="qb_photo_album_info_new">
+		<id name="id" column="albumId">
+			<generator class="native"/>
+		</id>
+		<property name="name" column="albumName" type="string"/>
+		<property name="userId" column="userId" type="java.lang.Long"/>
+		<property name="albumRemark" column="albumRemark" type="string"/>
+		<property name="createDate" column="createDate" type="java.util.Date"/>
+		<property name="modifyDate" column="modifyDate" type="java.util.Date"/>
+		<property name="type" column="type" type="string"/>
+		<property name="status" column="status" type="string"/>
+		<set name="folders">
+			<key column="albumId"/>
+			<one-to-many class="com.qpp.model.AlbumFolder"/>
+		</set>
+	</class>
+</hibernate-mapping> 

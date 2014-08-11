@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TStoreOrder" table="t_store_order">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TUser" class="com.qpp.model.TUser" fetch="select">
+            <column name="byuserId" length="20" not-null="true" />
+        </many-to-one>
+        <many-to-one name="TStore" class="com.qpp.model.TStore" fetch="select">
+            <column name="storeId" length="20" />
+        </many-to-one>
+        <property name="comment" type="string">
+            <column name="comment" length="50" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <property name="amount" type="int">
+            <column name="amount" not-null="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

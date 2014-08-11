@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="baseDao" class="com.qpp.dao.BaseDao">
+         <property name="sessionFactory">
+             <ref bean="sessionFactory" />
+         </property>
+     </bean>
+    <bean id="EasySQL" class="com.qpp.dao.EasySQL" parent="baseDao"/>
+    <bean id="CountryDao" class="com.qpp.dao.CountryDao" parent="baseDao"/>
+    <bean id="StateDao" class="com.qpp.dao.StateDao" parent="baseDao"/>
+    <bean id="AppInfoDao" class="com.qpp.dao.AppInfoDao" parent="baseDao"/>
+    <bean id="ShippingInfoDao" class="com.qpp.dao.ShippingInfoDao" parent="baseDao"/>
+    <bean id="LocInfoDao" class="com.qpp.dao.LocInfoDao" parent="baseDao"/>
+    <bean id="AppRightDao" class="com.qpp.dao.AppRightDao" parent="baseDao"/>
+</beans>
