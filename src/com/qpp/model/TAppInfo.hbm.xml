@@ -5,14 +5,14 @@
 <hibernate-mapping>
 
     <class name="com.qpp.model.TAppInfo" table="t_app_info">
-        <id name="appid" column="appid">
-            <generator class="native"/>
-        </id>
+        <id name="appid" column="appid"/>
         <property name="appkey" column="appkey"/>
         <property name="role" column="role"/>
         <property name="startTime" column="start_time"/>
     </class>
+<!--
     <sql-query name="p_newApp" callable="true">
         {call p_newApp(?)}
     </sql-query>
+-->
 </hibernate-mapping>

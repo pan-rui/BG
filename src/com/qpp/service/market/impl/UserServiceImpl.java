@@ -1,9 +1,6 @@
 package com.qpp.service.market.impl;
 
-import com.qpp.dao.BaseDao;
-import com.qpp.dao.ConfigDao;
-import com.qpp.dao.ScoreDao;
-import com.qpp.dao.UserDao;
+import com.qpp.dao.*;
 import com.qpp.model.*;
 import com.qpp.service.market.UserService;
 import com.qpp.util.Email;
@@ -31,7 +28,10 @@ public class UserServiceImpl implements UserService {
     private ConfigDao configDao;
     private Pattern patten = Pattern.compile("^([\\w|-]+)@(\\w+)\\.(\\w+)$");
     private MD5 md5 = new MD5();
+    @Resource
     private ScoreDao scoreDao;
+    @Resource
+    private ConvertDao convertDao;
 //    @Resource
 //    private Email Mail;
 //    @Resource
@@ -223,17 +223,17 @@ public class UserServiceImpl implements UserService {
         dataMap.put("score",user.getScore()-needScore);
         userDao.update("t_user",dataMap,user.getId());
         //新增积分记录
-        TScore score = new TScore();
+        TConvert convert = new TConvert();
         Date date = new Date();
-        score.setId(RandomSymbol.getAllSymbol(16));
-        score.setCtime(date);
-        score.setTGift(gift);
-        score.setTUser(user);
-        score.setCount(Integer.parseInt(count));
-        score.setSize(needScore);
-        score.setStatus("1");
-        scoreDao.insert(score);
-        result.setResult(0);
+        convert.setId(RandomSymbol.getAllSymbol(16));
+        convert.setCtime(date);
+        convert.setTGift(gift);
+        convert.setTUser(user);
+        convert.setCount(Integer.parseInt(count));
+        convert.setType("fromScore");
+        convert.setAmount(needScore);
+        convertDao.insert(convert);
+        result.setResult(1);
         result.setData(user);
         return result;
     }

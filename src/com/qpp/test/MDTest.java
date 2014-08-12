@@ -1,8 +1,10 @@
 package com.qpp.test;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.StringTokenizer;
 
 /**
  * Created by qpp on 8/11/2014.
@@ -23,7 +25,13 @@ public class MDTest {
             sb.append(Integer.toString(b16, 16));  //等同于上面....
         }
         System.out.println(sb.toString());
+        System.out.println("encode\t" + URLEncoder.encode("a=aaa&b=bbb", "UTF-8"));
 
-
+        StringTokenizer st = new StringTokenizer("a=aaa&b=bbb", "&");int i=0;
+        while(st.hasMoreTokens()){
+            System.out.println(++i);
+            System.out.println(st.nextToken());
+        }
+        System.out.println("88888\t"+st.countTokens());
     }
 }

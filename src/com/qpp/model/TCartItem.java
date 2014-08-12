@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 public class TCartItem implements java.io.Serializable {
 
 	private String id;
-	private String userId;
+	private TUser TUser;
 	private String productId;
 	private String productSpec;
 	private int productCount;
@@ -23,11 +23,11 @@ public class TCartItem implements java.io.Serializable {
 	public TCartItem() {
 	}
 
-	public TCartItem(String id, String userId, String productId,
+	public TCartItem(String id, TUser TUser, String productId,
 			String productSpec, int productCount, Date ctime, String comment,
 			double price, String imgUrl, String url) {
 		this.id = id;
-		this.userId = userId;
+		this.TUser = TUser;
 		this.productId = productId;
 		this.productSpec = productSpec;
 		this.productCount = productCount;
@@ -46,12 +46,12 @@ public class TCartItem implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public TUser getTUser() {
+		return this.TUser;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setTUser(TUser TUser) {
+		this.TUser = TUser;
 	}
 
 	public String getProductId() {

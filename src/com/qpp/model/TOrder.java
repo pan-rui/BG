@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;

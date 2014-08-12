@@ -295,7 +295,7 @@ public class UserAction extends BaseAction {
         }else
             result=userServiceImpl.rePass(user,oldPass,newPass);
         if(result.getResult()==1)
-            loger.info(MessageFormat.format("EventType: ModifyPassWord .UserId: {} . DateTime: {}.Result:Error",user.getId(),formatDateTime(new Date())));
+            loger.info(MessageFormat.format("EventType: ModifyPassWord .UserId: {} . DateTime: {}.Result:Success",user.getId(),formatDateTime(new Date())));
         else
             loger.info(MessageFormat.format("EventType: ModifyPassWord .UserId: {} . DateTime: {}.Result:Error",user.getId(), formatDateTime(new Date())));
 //        map.addAttribute(result);
@@ -320,7 +320,7 @@ public class UserAction extends BaseAction {
         cartItem.setId(RandomSymbol.getAllSymbol(16));
         cartItem.setCtime(new Date());
         if (userId != null && !"".equals(userId.trim()))
-            cartItem.setUserId(userId);
+            cartItem.setTUser((TUser) memcachedClient.get(userId));
         cartList.add(cartItem);
         request.getSession().setAttribute("cartList", cartList);
         result.setResult(1);

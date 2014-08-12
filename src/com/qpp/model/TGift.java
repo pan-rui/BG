@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,6 +19,8 @@ public class TGift implements java.io.Serializable {
 	private int count;
 	private Date ctime;
 	private Set<TScore> TScores = new HashSet<TScore>(0);
+	private Set<TUser> TUsers = new HashSet<TUser>(0);
+	private Set<TConvert> TConverts = new HashSet<TConvert>(0);
 
 	public TGift() {
 	}
@@ -35,7 +37,8 @@ public class TGift implements java.io.Serializable {
 	}
 
 	public TGift(String id, String name, String type, int price, int priceTwo,
-			int count, Date ctime, Set<TScore> TScores) {
+			int count, Date ctime, Set<TScore> TScores, Set<TUser> TUsers,
+			Set<TConvert> TConverts) {
 		this.id = id;
 		this.name = name;
 		this.type = type;
@@ -44,6 +47,8 @@ public class TGift implements java.io.Serializable {
 		this.count = count;
 		this.ctime = ctime;
 		this.TScores = TScores;
+		this.TUsers = TUsers;
+		this.TConverts = TConverts;
 	}
 
 	public String getId() {
@@ -108,6 +113,22 @@ public class TGift implements java.io.Serializable {
 
 	public void setTScores(Set<TScore> TScores) {
 		this.TScores = TScores;
+	}
+
+	public Set<TUser> getTUsers() {
+		return this.TUsers;
+	}
+
+	public void setTUsers(Set<TUser> TUsers) {
+		this.TUsers = TUsers;
+	}
+
+	public Set<TConvert> getTConverts() {
+		return this.TConverts;
+	}
+
+	public void setTConverts(Set<TConvert> TConverts) {
+		this.TConverts = TConverts;
 	}
 
 }

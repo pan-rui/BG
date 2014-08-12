@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -10,25 +10,38 @@ import java.util.Date;
 public class TConvert implements java.io.Serializable {
 
 	private String id;
+	private TGift TGift;
+	private TUser TUser;
 	private String type;
 	private int amount;
 	private Date ctime;
-	private String userId;
 	private String comment;
-	private String target;
+	private int count;
 
 	public TConvert() {
 	}
 
-	public TConvert(String id, String type, int amount, Date ctime,
-			String userId, String comment, String target) {
+	public TConvert(String id, TUser TUser, String type, int amount,
+			Date ctime, String comment, int count) {
 		this.id = id;
+		this.TUser = TUser;
 		this.type = type;
 		this.amount = amount;
 		this.ctime = ctime;
-		this.userId = userId;
 		this.comment = comment;
-		this.target = target;
+		this.count = count;
+	}
+
+	public TConvert(String id, TGift TGift, TUser TUser, String type,
+			int amount, Date ctime, String comment, int count) {
+		this.id = id;
+		this.TGift = TGift;
+		this.TUser = TUser;
+		this.type = type;
+		this.amount = amount;
+		this.ctime = ctime;
+		this.comment = comment;
+		this.count = count;
 	}
 
 	public String getId() {
@@ -37,6 +50,22 @@ public class TConvert implements java.io.Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public TGift getTGift() {
+		return this.TGift;
+	}
+
+	public void setTGift(TGift TGift) {
+		this.TGift = TGift;
+	}
+
+	public TUser getTUser() {
+		return this.TUser;
+	}
+
+	public void setTUser(TUser TUser) {
+		this.TUser = TUser;
 	}
 
 	public String getType() {
@@ -63,14 +92,6 @@ public class TConvert implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
-	public String getUserId() {
-		return this.userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 	public String getComment() {
 		return this.comment;
 	}
@@ -79,12 +100,12 @@ public class TConvert implements java.io.Serializable {
 		this.comment = comment;
 	}
 
-	public String getTarget() {
-		return this.target;
+	public int getCount() {
+		return this.count;
 	}
 
-	public void setTarget(String target) {
-		this.target = target;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

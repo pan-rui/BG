@@ -139,7 +139,7 @@ public class PaypalUtil {
         newMesssgae.append(message);
         FileWriter fw;
         try {
-            fw = new FileWriter(PayPalConstant.Log_Path,true);
+            fw = new FileWriter(MessageInfo.getMessage("paypal.logPath"),true);
             fw.append("\r\n"+newMesssgae.toString()+className);
             fw.close();
         } catch (IOException e) {

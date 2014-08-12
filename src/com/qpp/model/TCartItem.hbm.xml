@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TCartItem" table="t_cartItem">
         <id name="id" type="string">
             <column name="id" length="20" />
             <generator class="assigned" />
         </id>
-        <property name="userId" type="string">
+        <many-to-one name="TUser" class="com.qpp.model.TUser" fetch="select">
             <column name="userId" length="20" not-null="true" />
-        </property>
+        </many-to-one>
         <property name="productId" type="string">
             <column name="productId" length="20" not-null="true" />
         </property>

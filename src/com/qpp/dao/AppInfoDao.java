@@ -16,13 +16,10 @@ public class AppInfoDao extends BaseDao<TAppInfo> {
     public AppInfoDao(){
         super(TAppInfo.class);
     }
-/*
     public String insertApp(String appId){
-        //return super.getObjectBySQL("select p_newApp('"+appId+"')").toString();
-        return super.getObjectBySQL("exec p_newApp '"+appId+"'").toString();
+        return super.getObjectBySQL("select p_newApp('"+appId+"')").toString();
     }
-*/
-    public String insertApp(final String appId) {
+ /*   public String insertApp(final String appId) {
         Object appKey = getHibernateTemplate().execute(
                 new HibernateCallback() {
                     public Object doInHibernate(Session session)
@@ -41,5 +38,5 @@ public class AppInfoDao extends BaseDao<TAppInfo> {
                     }
                 });
         return appKey.toString();
-    }
+    }*/
 }

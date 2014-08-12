@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TUser" table="t_user">
         <id name="id" type="string">
             <column name="id" length="20" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="TGift" class="com.qpp.model.TGift" fetch="select">
+            <column name="present" length="20" />
+        </many-to-one>
         <property name="name" type="string">
             <column name="name" length="20" not-null="true" />
         </property>
-        <property name="age" type="int">
-            <column name="age" not-null="true" />
+        <property name="birthDay" type="timestamp">
+            <column name="birthDay" length="19" />
         </property>
         <property name="phone" type="int">
             <column name="phone" not-null="true" />
@@ -59,15 +62,21 @@
         <property name="voucher" type="string">
             <column name="voucher" length="1024" not-null="true" />
         </property>
-        <property name="present" type="string">
-            <column name="present" length="2048" not-null="true" />
-        </property>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
         </property>
         <property name="utime" type="timestamp">
             <column name="utime" length="19" not-null="true" />
         </property>
+        <property name="countryCode" type="string">
+            <column name="countryCode" length="5" not-null="true" />
+        </property>
+        <set name="TConverts" table="t_convert" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="userId" length="20" not-null="true" />
+            </key>
+            <one-to-many class="com.qpp.model.TConvert" />
+        </set>
         <one-to-one name="TStore" class="com.qpp.model.TStore"></one-to-one>
         <set name="TStoreOrders" table="t_store_order" inverse="true" lazy="true" fetch="select">
             <key>
@@ -88,6 +97,12 @@
             <one-to-many class="com.qpp.model.TScore" />
         </set>
         <one-to-one name="TFavorite" class="com.qpp.model.TFavorite"></one-to-one>
+        <set name="TCartItems" table="t_cartItem" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="userId" length="20" not-null="true" />
+            </key>
+            <one-to-many class="com.qpp.model.TCartItem" />
+        </set>
         <set name="TOrders" table="t_order" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="buyer" length="20" />

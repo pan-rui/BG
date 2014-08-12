@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 6, 2014 1:48:13 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -15,18 +15,20 @@ public class TConfig implements java.io.Serializable {
 	private Date ctime;
 	private Date utime;
 	private String comment;
+	private String state;
 
 	public TConfig() {
 	}
 
 	public TConfig(String configName, String configValue, String module,
-			Date ctime, Date utime, String comment) {
+			Date ctime, Date utime, String comment, String state) {
 		this.configName = configName;
 		this.configValue = configValue;
 		this.module = module;
 		this.ctime = ctime;
 		this.utime = utime;
 		this.comment = comment;
+		this.state = state;
 	}
 
 	public String getConfigName() {
@@ -75,6 +77,14 @@ public class TConfig implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getState() {
+		return this.state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 }
