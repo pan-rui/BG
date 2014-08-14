@@ -20,11 +20,8 @@ public class OrderItemServiceImpl implements OrderItemService{
         try {
             orderItemDao.save(orderItem);
         }catch (Exception e){
-            return orderItemDao.insert(orderItem);
+            return false;
         }
         return true;
-    }
-    public boolean insert(TOrderItem orderItem){
-        return orderItemDao.insert(orderItem);
     }
 }

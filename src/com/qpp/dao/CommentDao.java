@@ -30,9 +30,6 @@ public class CommentDao extends BaseDao<TComment>{
             e.printStackTrace();
         }
     }
-    public boolean insert(TComment comment){
-        return super.insert(comment);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

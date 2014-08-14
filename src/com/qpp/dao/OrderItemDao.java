@@ -17,9 +17,6 @@ public class OrderItemDao extends BaseDao<TOrderItem> {
     public void save(TOrderItem orderItem){
         super.save(orderItem);
     }
-    public boolean  insert(TOrderItem orderItem){
-        return super.insert(orderItem);
-    }
     public TOrderItem getById(String id){
         return super.getById(id,TOrderItem.class);
     }
@@ -29,9 +26,9 @@ public class OrderItemDao extends BaseDao<TOrderItem> {
     public TOrderItem getBySql(String sql){
         return super.getBySQL(sql);
     }
-    public void update(String tableName, Map newData, String cond){
+    public void update(String tableName, Map newData, String id){
         try {
-            super.update(tableName,newData,cond);
+            super.update(tableName,newData,id);
         } catch (Exception e) {
             e.printStackTrace();
         }

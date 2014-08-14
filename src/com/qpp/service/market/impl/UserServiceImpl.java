@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
         convert.setCount(Integer.parseInt(count));
         convert.setType("fromScore");
         convert.setAmount(needScore);
-        convertDao.insert(convert);
+        convertDao.save(convert);
         result.setResult(1);
         result.setData(user);
         return result;
@@ -281,4 +281,13 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public boolean update(String tableName, Map data, String id) {
+        try {
+            userDao.update(tableName, data, id);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 }

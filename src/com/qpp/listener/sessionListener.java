@@ -24,7 +24,7 @@ public class sessionListener implements HttpSessionListener {
         List<TCartItem> cartList = (List<TCartItem>) session.getAttribute("cartList");
         if(user!=null&&cartList!=null&&!cartList.isEmpty()){
             for(TCartItem cartItem:cartList)
-                cartItemDao.insert(cartItem);  //持久化到数据库
+                cartItemDao.save(cartItem);  //持久化到数据库
         }
     }
 

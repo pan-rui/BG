@@ -1,9 +1,13 @@
 package com.qpp.test;
 
+import com.qpp.model.TOrder;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 /**
@@ -33,5 +37,11 @@ public class MDTest {
             System.out.println(st.nextToken());
         }
         System.out.println("88888\t"+st.countTokens());
+        System.out.println("Type \t"+new HashSet<TOrder>().getClass().getName());
+        System.out.println("clild Type \t"+new HashSet<TOrder>().getClass().getTypeParameters()[0].getName());
+        System.out.println(" TypeVar \t"+new HashSet<TOrder>().getClass().getTypeParameters()[0].getGenericDeclaration());
+
+        System.out.println(" ArgmType \t" + (new HashSet<TOrder>().getClass().getTypeParameters()[0].getBounds()[0]));
+        System.out.println("Date\t"+new Date());
     }
 }

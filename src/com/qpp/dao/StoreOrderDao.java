@@ -32,9 +32,6 @@ public class StoreOrderDao extends BaseDao<TStoreOrder> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TStoreOrder storeOrder){
-        return super.insert(storeOrder);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

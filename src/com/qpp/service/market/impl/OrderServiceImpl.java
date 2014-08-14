@@ -3,6 +3,7 @@ package com.qpp.service.market.impl;
 import com.qpp.dao.OrderDao;
 import com.qpp.model.TOrder;
 import com.qpp.service.market.OrderService;
+import com.qpp.service.market.Payment;
 import com.qpp.service.market.PaymentRequest;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,12 @@ public class OrderServiceImpl implements OrderService {
     }
     @Resource
     private OrderDao OrderDao;
+    @Resource
+    private Payment unionPayment;
+    @Resource
+    private Payment paypalPayment;
+    @Resource
+    private Payment awsPayment;
 
     public enum OrderStatus {
         no_Pay("no_Pay"),
@@ -44,13 +51,10 @@ public class OrderServiceImpl implements OrderService {
     public boolean save(TOrder TOrder) {
         try {
             OrderDao.save(TOrder);
-        }catch (Exception expection){
-            return OrderDao.insert(TOrder);
+        }catch (Exception e){
+            return false;
         }
         return true;
-    }
-    public boolean insert(TOrder TOrder){
-        return OrderDao.insert(TOrder);
     }
 
     @Override
@@ -70,12 +74,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, String> paypal(PaymentRequest paymentRequest,PayType type) {
+    public Map<String, String> paypal(PaymentRequest paymentRequest,PayType type,TOrder order) {
         return null;
     }
 
     @Override
-    public Map<String, String> findTransaction(PaymentRequest findRequest,PayType type) {
+    public Map<String, String> findTransaction(PaymentRequest findRequest,PayType type,TOrder order) {
         return null;
     }
 
@@ -85,7 +89,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, String> preAuth(PaymentRequest preAuthRequest,PayType type) {
+    public Map<String, String> preAuth(PaymentRequest preAuthRequest,PayType type,TOrder order) {
+        Map<String, String> resultMap =null;
+        switch (type) {
+            case Union:
+                resultMap=unionPayment.preAuth(preAuthRequest);
+        }
         return null;
     }
 
@@ -100,12 +109,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, String> refund(PaymentRequest refundRequest,PayType type) {
+    public Map<String, String> refund(PaymentRequest refundRequest,PayType type,TOrder order) {
         return null;
     }
 
-    public void update(String tableName, Map newData, String cond) {
-         OrderDao.update(tableName,newData,cond);
+    public boolean update(String tableName, Map newData, String cond) {
+        try {
+            OrderDao.update(tableName, newData, cond);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
 }

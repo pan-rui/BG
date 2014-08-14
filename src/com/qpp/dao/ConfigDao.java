@@ -32,9 +32,6 @@ public class ConfigDao extends BaseDao<TConfig> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TConfig config){
-        return super.insert(config);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

@@ -2,6 +2,8 @@ package com.qpp.service.market;
 
 import com.qpp.model.*;
 
+import java.util.Map;
+
 /**
  * Created by qpp on 7/31/2014.
  */
@@ -36,4 +38,5 @@ public interface UserService {
     //用户积分兑换
     public BaseReturn scoreProcess(TUser user,TGift gift,String count);
 
+    public boolean update(String tableName, Map data, String id);
 }

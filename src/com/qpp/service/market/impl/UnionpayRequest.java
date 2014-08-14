@@ -1,5 +1,6 @@
 package com.qpp.service.market.impl;
 
+import com.qpp.model.TOrder;
 import com.qpp.service.market.PaymentRequest;
 
 import java.lang.reflect.Field;
@@ -385,4 +386,10 @@ public class UnionpayRequest implements PaymentRequest {
     public Map<String, String> getResponse() {
         return null;
     }
+
+    @Override
+    public void setOrderParam(TOrder order) {
+
+    }
+
 }

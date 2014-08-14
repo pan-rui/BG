@@ -136,11 +136,11 @@ static{
         }while (retry);
             return decode(responseBody,config.getCharSet());
     }
-//执行请求....
-    public static final synchronized Map<String,String> decode(String Payload,String charCode) {
+
+    public static final synchronized Map<String,String> decode(String payload,String charCode) {
         Map<String, String> nvpMap = new HashMap<String, String>();
         try {
-            StringTokenizer stTok = new StringTokenizer(Payload, "&");
+            StringTokenizer stTok = new StringTokenizer(payload, "&");
             while (stTok.hasMoreTokens()) {
                 StringTokenizer stInternalTokenizer = new StringTokenizer(stTok.nextToken(), "=");
                 if (stInternalTokenizer.countTokens() == 2) {

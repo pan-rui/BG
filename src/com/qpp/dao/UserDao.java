@@ -25,16 +25,16 @@ public class UserDao extends BaseDao<TUser> {
     public TUser getBySql(String sql){
         return super.getBySQL(sql);
     }
-    public void update(String tableName, Map newData, String cond){
+    public void update(String tableName, Map newData, String id){
         try {
-            super.update(tableName,newData,cond);
+            super.update(tableName,newData,id);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public boolean insert(TUser user){
-        return super.insert(user);
-    }
+//    public boolean insert(TUser user){
+//        return super.insert(user);
+//    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

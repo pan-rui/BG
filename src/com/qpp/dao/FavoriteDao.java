@@ -32,9 +32,6 @@ public class FavoriteDao extends BaseDao<TFavorite> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TFavorite favorite){
-        return super.insert(favorite);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

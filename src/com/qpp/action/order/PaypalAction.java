@@ -82,7 +82,7 @@ public class PaypalAction extends BaseAction {
             TOrderItem.setTOrder(order);
             TOrderItem.setCtime(date);
             TOrderItem.setUtime(date);
-            OrderItemServiceImpl.insert(TOrderItem);
+            OrderItemServiceImpl.save(TOrderItem);
         }
         encoder.add("SHIPPINGAMT", String.valueOf(order.getShippingAmt()));
         encoder.add("L_SHIPPINGOPTIONISDEFAULT0", "true");
@@ -100,7 +100,7 @@ public class PaypalAction extends BaseAction {
         order.setInvnum(invnum);
         order.setMaxAmt(order.getAmt() + 50);
         order.setStatus(OrderServiceImpl.OrderStatus.no_Pay.getValue());
-        orderServiceImpl.insert(order);
+        orderServiceImpl.save(order);
         Map<String, Object> sMap = paypalUtil.setExpress(encoder, PaypalUtil.LogType.SET_EXPRESS_CHECKOUT.getValue());
         Map<String, Object> verifyy = new HashMap<String, Object>();
         verifyy.put("SHIPTOSTREET", order.getAddress());

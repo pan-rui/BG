@@ -1,7 +1,6 @@
 package com.qpp.dao;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.qpp.service.market.PaypalUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,7 +10,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
@@ -183,7 +181,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
 //        PreparedStatement pstmt = null;
 //        StringBuffer sql = new StringBuffer("update " + tableName + " set");
 //        try {
-//            conn = DriverManager.getConnection("jdbc:mysql://192.168.26.15:3306/test", "root", "!root@123456");
+//            conn=getConnetion();
 //            conn.setReadOnly(false);
 ////            stmt=conn.prepareStatement()
 //            Set<Map.Entry<String, Object>> entry = newData.entrySet();
@@ -218,67 +216,67 @@ public class BaseDao<T> extends HibernateDaoSupport {
 //        return false;
 //    }
 
-    public boolean insert(T t) {
-        StringBuffer sql = new StringBuffer("insert into t_" + getTableName(t.getClass().getName()));
-        boolean result=false;
-        StringBuffer fis = new StringBuffer(" (");
-        StringBuffer vus = new StringBuffer(" (");
-        Connection conn = getConnetion();
-        PreparedStatement pstmt=null;
-        Field[] fields = t.getClass().getDeclaredFields();
-        int i = 0;
-        try {
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Class type =field.getType();
-                Object value=field.get(t);
-                if (i != fields.length - 1) {
-                    if (value != null) {
-                        fis.append(field.getName() + ",");
-                        if (type.isInstance(""))
-                            vus.append("'" + value + "',");
-                        else if(type.isInstance(new java.util.Date()))
-                            vus.append("'"+PaypalUtil.dateFormat((java.util.Date)value) + "',");
-                        else
-                            vus.append(value + ",");
-                    }
-                } else {
-                    if (!fis.toString().contains(")")) {
-                        if(value!=null) {
-                            fis.append(field.getName() + ")");
-                            if (type.isInstance(""))
-                                vus.append("'" + value + "')");
-                            else if (type.isInstance(new java.util.Date()))
-                                vus.append("'" + PaypalUtil.dateFormat((java.util.Date) value) + "')");
-                            else
-                                vus.append(value + ")");
-                        }else{
-                            fis=new StringBuffer(fis.substring(0,fis.length()-1)).append(")");
-                            vus=new StringBuffer(vus.substring(0,vus.length()-1)).append(")");
-                        }
-                    }
-                }
-
-                i++;
-            }
-            sql.append(fis.toString()).append(" values").append(vus);
-            pstmt=conn.prepareStatement(sql.toString());
-            result=pstmt.execute();
-            conn.commit();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        }finally {
-            close(conn,pstmt,null);
-        }
-        return result;
-    }
+//    public boolean insert(T t) {
+//        StringBuffer sql = new StringBuffer("insert into t_" + getTableName(t.getClass().getName()));
+//        boolean result=false;
+//        StringBuffer fis = new StringBuffer(" (");
+//        StringBuffer vus = new StringBuffer(" (");
+//        Connection conn = getConnetion();
+//        PreparedStatement pstmt=null;
+//        Field[] fields = t.getClass().getDeclaredFields();
+//        int i = 0;
+//        try {
+//            for (Field field : fields) {
+//                field.setAccessible(true);
+//                Class type =field.getType();
+//                Object value=field.get(t);
+//                if (i != fields.length - 1) {
+//                    if (value != null) {
+//                        fis.append(field.getName() + ",");
+//                        if (type.isInstance(""))
+//                            vus.append("'" + value + "',");
+//                        else if(type.isInstance(new java.util.Date()))
+//                            vus.append("'"+PaypalUtil.dateFormat((java.util.Date)value) + "',");
+//                        else
+//                            vus.append(value + ",");
+//                    }
+//                } else {
+//                    if (!fis.toString().contains(")")) {
+//                        if(value!=null) {
+//                            fis.append(field.getName() + ")");
+//                            if (type.isInstance(""))
+//                                vus.append("'" + value + "')");
+//                            else if (type.isInstance(new java.util.Date()))
+//                                vus.append("'" + PaypalUtil.dateFormat((java.util.Date) value) + "')");
+//                            else
+//                                vus.append(value + ")");
+//                        }else{
+//                            fis=new StringBuffer(fis.substring(0,fis.length()-1)).append(")");
+//                            vus=new StringBuffer(vus.substring(0,vus.length()-1)).append(")");
+//                        }
+//                    }
+//                }
+//
+//                i++;
+//            }
+//            sql.append(fis.toString()).append(" values").append(vus);
+//            pstmt=conn.prepareStatement(sql.toString());
+//            result=pstmt.execute();
+//            conn.commit();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            try {
+//                conn.rollback();
+//            } catch (SQLException e1) {
+//                e1.printStackTrace();
+//            }
+//        }finally {
+//            close(conn,pstmt,null);
+//        }
+//        return result;
+//    }
 
 //    public List<T> query(){}
 

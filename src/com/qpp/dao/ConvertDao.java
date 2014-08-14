@@ -32,9 +32,6 @@ public class ConvertDao extends BaseDao<TConvert> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TConvert convert){
-        return super.insert(convert);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

@@ -32,9 +32,6 @@ public class CartItemDao extends BaseDao<TCartItem> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TCartItem cartItem){
-        return super.insert(cartItem);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

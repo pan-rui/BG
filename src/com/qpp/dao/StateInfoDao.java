@@ -32,9 +32,6 @@ public class StateInfoDao extends BaseDao<TStateInfo> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TStateInfo stateInfo){
-        return super.insert(stateInfo);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

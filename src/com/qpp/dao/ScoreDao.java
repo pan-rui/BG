@@ -32,9 +32,6 @@ public class ScoreDao extends BaseDao<TScore> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TScore score){
-        return super.insert(score);
-    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);

@@ -33,9 +33,9 @@ public class OrderDao extends BaseDao<TOrder> {
             e.printStackTrace();
         }
     }
-    public boolean insert(TOrder TOrder){
-        return super.insert(TOrder);
-    }
+//    public boolean insert(TOrder TOrder){
+//        return super.insert(TOrder);
+//    }
 
     public int delete(String property, Object value) {
         return super.delete(property, value);
