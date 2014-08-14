@@ -30,12 +30,12 @@ public class UnionpayRequest implements PaymentRequest {
     private String commodityUrl; //商品URL
     private String commodityUnitPrice; //商品价格
     private String commodityQuantity; //商品数量
-    private String transferFee;
+    private String transferFee;  //运输费用
     private String commodityDiscount; //优惠信息
     private String orderAmount;  //交易金额
     private String orderCurrency; // backup TstateInfo
     private String customerName; //持卡人姓名
-    private String defaultPayType; //默认支付方式
+    private String defaultPayType; //默认支付方式 	LitePay（认证支付）,ProPay（快捷支付）,CommonPay（小额支付）,ExpressPay（储值卡支付）,CSPay（网银支付）,DirectPay（后台支付），ICPay（IC卡支付）
     private String defaultBankNumber; //默认银行编码
     private String customerIp; //持卡人IP
     private String qid; //交易流水号
@@ -50,6 +50,15 @@ public class UnionpayRequest implements PaymentRequest {
     private String settleAmount; //清算金额
     private String settleCurrency; //清算币种
     private String exchangeRate; //清算汇率
+
+    public String getTransType() {
+        return transType;
+    }
+
+    public void setTransType(String transType) {
+        this.transType = transType;
+    }
+
     private String exchangeDate; //兑换日期
     private String settleDate; //清算日期
     private String queryResult; //查询结果

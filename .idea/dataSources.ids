@@ -452,6 +452,7 @@
       <column name="price" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
       <column name="img_url" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12"/>
       <column name="url" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12"/>
+      <column name="productName" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="t_cartItem_ibfk_1" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
@@ -483,8 +484,11 @@
       <column name="ctime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <column name="userId" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
       <column name="comment" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
-      <column name="target" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="target" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="count" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="t_convert_ibfk_2" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="t_convert_ibfk_1" columns="target" ref-table="t_gift" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="t_country" schema="" catalog="bgm" type="TABLE">
       <column name="countryCode" sqlType="CHAR" precision="2" scale="0" nullable="false" jdbcType="1"/>
@@ -514,7 +518,9 @@
       <column name="count" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
       <column name="ctime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="t_convert_ibfk_1" table="t_convert" schema="" catalog="bgm" columns="target"/>
       <exported-key name="t_score_ibfk_2" table="t_score" schema="" catalog="bgm" columns="type"/>
+      <exported-key name="t_user_ibfk_1" table="t_user" schema="" catalog="bgm" columns="present"/>
       <index name="unique_name" unique="true" columns="name"/>
     </table>
     <table name="t_locinfo" schema="" catalog="bgm" type="TABLE">
@@ -555,7 +561,7 @@
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
       <column name="orderId" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <column name="productId" sqlType="VARCHAR" precision="18" scale="0" nullable="false" jdbcType="12"/>
-      <column name="productName" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="productName" sqlType="VARCHAR" precision="1024" scale="0" nullable="true" jdbcType="12"/>
       <column name="productCount" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="productSpec" sqlType="VARCHAR" precision="2048" scale="0" nullable="true" jdbcType="12"/>
       <column name="comment" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
@@ -670,12 +676,15 @@
       <column name="comment" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
       <column name="status" sqlType="CHAR" precision="1" scale="0" nullable="false" jdbcType="1"/>
       <column name="voucher" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12"/>
-      <column name="present" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12"/>
+      <column name="present" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <column name="ctime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <column name="utime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="countryCode" sqlType="VARCHAR" precision="5" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="t_user_ibfk_1" columns="present" ref-table="t_gift" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <exported-key name="t_cartItem_ibfk_1" table="t_cartItem" schema="" catalog="bgm" columns="userId"/>
       <exported-key name="t_comment_ibfk_1" table="t_comment" schema="" catalog="bgm" columns="userId"/>
+      <exported-key name="t_convert_ibfk_2" table="t_convert" schema="" catalog="bgm" columns="userId"/>
       <exported-key name="t_favorite_ibfk_1" table="t_favorite" schema="" catalog="bgm" columns="userId"/>
       <exported-key name="t_order_ibfk_1" table="t_order" schema="" catalog="bgm" columns="buyer"/>
       <exported-key name="t_score_ibfk_1" table="t_score" schema="" catalog="bgm" columns="userId"/>

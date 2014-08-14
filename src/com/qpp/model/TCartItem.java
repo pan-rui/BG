@@ -19,8 +19,17 @@ public class TCartItem implements java.io.Serializable {
 	private double price;
 	private String imgUrl;
 	private String url;
+    private String productName;
 
-	public TCartItem() {
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public TCartItem() {
 	}
 
 	public TCartItem(String id, TUser TUser, String productId,
