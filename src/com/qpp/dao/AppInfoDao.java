@@ -6,12 +6,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.annotations.Cache;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
 /**
  * Created by admin on 2014/7/29.
  */
+@Repository
 public class AppInfoDao extends BaseDao<TAppInfo> {
     public AppInfoDao(){
         super(TAppInfo.class);

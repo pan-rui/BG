@@ -1,14 +1,20 @@
 package com.qpp.service.market.impl;
 
 import com.qpp.dao.OrderDao;
+import com.qpp.dao.UserDao;
 import com.qpp.model.TOrder;
+import com.qpp.model.TUser;
+import com.qpp.service.market.MessageInfo;
 import com.qpp.service.market.OrderService;
 import com.qpp.service.market.Payment;
 import com.qpp.service.market.PaymentRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,6 +22,10 @@ import java.util.Map;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
+    @Resource
+    private OrderDao orderDao;
+    @Resource
+    private UserDao userDao;
     public enum PayType{
         Union,
         Aws,
@@ -30,6 +40,8 @@ public class OrderServiceImpl implements OrderService {
     private Payment paypalPayment;
     @Resource
     private Payment awsPayment;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public enum OrderStatus {
         no_Pay("no_Pay"),
@@ -94,8 +106,20 @@ public class OrderServiceImpl implements OrderService {
         switch (type) {
             case Union:
                 resultMap=unionPayment.preAuth(preAuthRequest);
+                break;
+            case Paypal:
+                resultMap = paypalPayment.preAuth(preAuthRequest);
+//                String strAck=resultMap.get("ACK");
+//                if(strAck !=null && !(strAck.equals("Success") || strAck.equals("SuccessWithWarning"))){
+//
+//                }
+
+                break;
+            case Aws:
+                resultMap = awsPayment.preAuth(preAuthRequest);
+                break;
         }
-        return null;
+        return resultMap;
     }
 
     @Override
@@ -113,13 +137,24 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    public boolean update(String tableName, Map newData, String cond) {
-        try {
-            OrderDao.update(tableName, newData, cond);
-        }catch (Exception e){
-            return false;
-        }
-        return true;
+    @Override
+    public void updtaOrder(TOrder order,String qid) {
+        TUser user =order.getTUser();
+//            user.setScore(Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("交易金额兑换积分系数")));
+        Map<String, Object> orderData = new HashMap<String, Object>();
+        Map<String, Object> userData = new HashMap<String, Object>();
+        orderData.put("status", "订单已支付");
+        orderData.put("invnum", qid);
+        orderDao.update("t_order", orderData, order.getId());
+        userData.put("score", Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("key"))); //TODO:key为交易金额兑换积分系数
+        userDao.update("t_user", userData, user.getId());
+
     }
 
+
+
+//    public Map<String,String> getExpress(PaypalRequest request) {
+////        Map<String,String> reqMap=request.getNVPRequest();
+//        paypalPayment.preAuth(request);
+//    }
 }

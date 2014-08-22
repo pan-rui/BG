@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TOrderItem" table="t_orderItem">
         <id name="id" type="string">
@@ -15,7 +15,7 @@
             <column name="productId" length="18" not-null="true" />
         </property>
         <property name="productName" type="string">
-            <column name="productName" length="50" />
+            <column name="productName" length="1024" />
         </property>
         <property name="productCount" type="java.lang.Integer">
             <column name="productCount" />

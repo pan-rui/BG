@@ -3,21 +3,27 @@ package com.qpp.util;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.io.InputStream;
+import java.util.Arrays;
 
 public class Email {
     private JavaMailSender javaMailSender;
     private SimpleMailMessage simpleMailMessage;
     protected final org.slf4j.Logger loger = org.slf4j.LoggerFactory.getLogger(this.getClass().getName());
-    public void sendMail(String subject, String content, String to) {
+    public void sendMail(String subject, String content, String[] to) {
         this.sendMail(subject,content,to,null,null,null);
     }
-    public void sendMail(String subject, String content, String to,String cc,String bcc,String filePath) {
+    public void sendMail(String subject, String content, String[] to,String[] cc) {
+        this.sendMail(subject,content,to,cc,null,null);
+    }
+    public void sendMail(String subject, String content, String[] to,String[] cc,String bcc,Object attachment) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true);
@@ -29,15 +35,18 @@ public class Email {
                 messageHelper.setCc(cc);
             if (bcc!=null)
                 messageHelper.setBcc(cc);
-            if (filePath!=null){
-                FileSystemResource file = new FileSystemResource(new File(filePath));
+            if (attachment!=null&&attachment instanceof String&&!"".equals(attachment)) {
+                FileSystemResource file = new FileSystemResource(new File(String.valueOf(attachment)));
                 messageHelper.addAttachment(file.getFilename(), file); //添加附件
+            }else if(attachment instanceof InputStream){
+
+                messageHelper.addAttachment("附件",new InputStreamResource((InputStream)attachment));
             }
             javaMailSender.send(mimeMessage);    //发送附件邮件
-            loger.info("To:"+to+",subject='"+subject+"' is successful.");
+            loger.info("To:"+ Arrays.asList(to)+",subject='"+subject+"' is successful.");
         }catch (Exception e) {
             e.printStackTrace();
-            loger.error("To:"+to+",subject='"+subject+"' is failed , Message is "+e.getMessage());
+            loger.error("To:"+Arrays.asList(to)+",subject='"+subject+"' is failed , Message is "+e.getMessage());
         }
     }
     public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
@@ -48,9 +57,9 @@ public class Email {
     }
     public static void main(String[] args) {
         String path=System.getProperty("user.dir");
-        ApplicationContext ctx = new FileSystemXmlApplicationContext(path+"\\WebContent\\WEB-INF\\spring\\mail-config.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext(path+"\\WebContent\\WEB-INF\\spring\\applicationContext-baseSet.xml");
         Email mail=(Email)ctx.getBean("Mail");
-        mail.sendMail("tt","haha","gxu@cn.henyep.com");
+        mail.sendMail("tt","haha",new String[]{"79277490@qq.com"});
     }
 
 }

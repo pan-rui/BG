@@ -10,6 +10,8 @@ public interface AlbumFolderService {
 	
 	public Long addAlbumFolder (AlbumFolder albumFolder);
 	
+	public AlbumFolder getAlbumFolderById (long albumId);
+	
 	public boolean updateAlbumFolder (AlbumFolder albumFolder);
 	
 	public boolean deleteAlbumFolder (AlbumFolder albumFolder);

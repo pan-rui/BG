@@ -18,8 +18,8 @@ public class AwsPayment implements Payment {
     private Logger logger = Logger.getLogger(this.getClass());
     static {
         awsConfig.setEndPoint(MessageInfo.getMessage("Union.endPoint"));
-        awsConfig.setSignature(MessageInfo.getMessage("Union.Signature"));
-        awsConfig.setSignMethod(MessageInfo.getMessage("Union.SignMethod"));
+        awsConfig.setSignature(MessageInfo.getMessage("Union.signature"));
+        awsConfig.setSignMethod(MessageInfo.getMessage("Union.signMethod"));
         awsConfig.setVersion(MessageInfo.getMessage("Union.version"));
         awsConfig.setCharset(MessageInfo.getMessage("Union.charset"));
     }

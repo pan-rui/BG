@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by admin on 2014/7/29.
  */
+@Repository
 public class AppRightDao extends BaseDao<TAppRight> {
     public AppRightDao(){
         super(TAppRight.class);

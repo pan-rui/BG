@@ -14,7 +14,7 @@ public interface OrderService {
     TOrder getById(String id);
     boolean update(TOrder TOrder);
 
-    boolean update(String tableName, Map data, String id);
+//    boolean update(String tableName, Map data, String id);
     TOrder getBySql(String sql);
 //    boolean updateOnMap(String tableName,Map<String,Object> newData,String cond);
 //消费
@@ -37,4 +37,8 @@ public Map<String,String> paypal(PaymentRequest paymentRequest,OrderServiceImpl.
 
     //退款
     public Map<String,String> refund(PaymentRequest refundRequest,OrderServiceImpl.PayType type,TOrder order);
+
+    //订单更新
+    public void updtaOrder(TOrder order,String qid);
+
 }

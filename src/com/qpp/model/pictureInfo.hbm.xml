@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
 <hibernate-mapping>
-	<class name="com.qpp.model.PictureInfo" table="qb_photo_album_detail_new">
+	<class name="com.qpp.model.PictureInfo" table="t_picture">
 		<id name="photoId" column="photoId" type="string"/>
 		<property name="name" column="photoName" type="string"/>
 		<property name="photoExp" column="photoExp" type="string"/>
@@ -13,7 +13,7 @@
 		<property name="photoRemark" column="photoRemark" type="string"/>
 		<property name="createDate" column="createDate" type="java.util.Date"/>
 		<property name="modifyDate" column="modifyDate" type="java.util.Date"/>
-		<set name="tags" table="qb_photo_tag">
+		<set name="tags" table="t_picture_tag">
 			<key column="photoId"/>
 			<many-to-many class="com.qpp.model.Tag" column="tagId"/>
 		</set>

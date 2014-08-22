@@ -9,6 +9,7 @@ public class TState implements Serializable {
     private String countryCode;
     private String stateCode;
     private String stateDesc;
+    private String direction;
 
     public String getCountryCode() {
         return countryCode;
@@ -32,6 +33,14 @@ public class TState implements Serializable {
 
     public void setStateDesc(String stateDesc) {
         this.stateDesc = stateDesc;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     @Override

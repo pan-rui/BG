@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class TUser implements java.io.Serializable {
 	private String password;
 	private String nickname;
 	private double money;
-	private int score;
+	private Integer score;
 	private String sex;
 	private String comment;
 	private char status;
@@ -37,7 +37,7 @@ public class TUser implements java.io.Serializable {
 	private TStore TStore;
 	private Set<TStoreOrder> TStoreOrders = new HashSet<TStoreOrder>(0);
 	private Set<TUserOrder> TUserOrders = new HashSet<TUserOrder>(0);
-//	private Set<TScore> TScores = new HashSet<TScore>(0);
+	private Set<TUserEmail> TUserEmails = new HashSet<TUserEmail>(0);
 	private TFavorite TFavorite;
 	private Set<TCartItem> TCartItems = new HashSet<TCartItem>(0);
 	private Set<TOrder> TOrders = new HashSet<TOrder>(0);
@@ -46,15 +46,14 @@ public class TUser implements java.io.Serializable {
 	public TUser() {
 	}
 
-	public TUser(String id, String name, int phone, String address,
-			String province, String city, String area, String email,
-			String type, String nickname, double money, String sex,
-			String comment, char status, String voucher, Date ctime,
-			Date utime, String countryCode) {
+	public TUser(String id, String name, int phone, String province,
+			String city, String area, String email, String type,
+			String nickname, double money, String sex, String comment,
+			char status, String voucher, Date ctime, Date utime,
+			String countryCode) {
 		this.id = id;
 		this.name = name;
 		this.phone = phone;
-		this.address = address;
 		this.province = province;
 		this.city = city;
 		this.area = area;
@@ -74,11 +73,11 @@ public class TUser implements java.io.Serializable {
 	public TUser(String id, TGift TGift, String name, Date birthDay, int phone,
 			String address, String province, String city, String area,
 			String email, String type, String password, String nickname,
-			double money, int score, String sex, String comment,
+			double money, Integer score, String sex, String comment,
 			char status, String voucher, Date ctime, Date utime,
 			String countryCode, Set<TConvert> TConverts, TStore TStore,
 			Set<TStoreOrder> TStoreOrders, Set<TUserOrder> TUserOrders,
-			TFavorite TFavorite,
+			Set<TUserEmail> TUserEmails, TFavorite TFavorite,
 			Set<TCartItem> TCartItems, Set<TOrder> TOrders,
 			Set<TComment> TComments) {
 		this.id = id;
@@ -107,7 +106,7 @@ public class TUser implements java.io.Serializable {
 		this.TStore = TStore;
 		this.TStoreOrders = TStoreOrders;
 		this.TUserOrders = TUserOrders;
-//		this.TScores = TScores;
+		this.TUserEmails = TUserEmails;
 		this.TFavorite = TFavorite;
 		this.TCartItems = TCartItems;
 		this.TOrders = TOrders;
@@ -321,14 +320,14 @@ public class TUser implements java.io.Serializable {
 	public void setTUserOrders(Set<TUserOrder> TUserOrders) {
 		this.TUserOrders = TUserOrders;
 	}
-//
-//	public Set<TScore> getTScores() {
-//		return this.TScores;
-//	}
-//
-//	public void setTScores(Set<TScore> TScores) {
-//		this.TScores = TScores;
-//	}
+
+	public Set<TUserEmail> getTUserEmails() {
+		return this.TUserEmails;
+	}
+
+	public void setTUserEmails(Set<TUserEmail> TUserEmails) {
+		this.TUserEmails = TUserEmails;
+	}
 
 	public TFavorite getTFavorite() {
 		return this.TFavorite;

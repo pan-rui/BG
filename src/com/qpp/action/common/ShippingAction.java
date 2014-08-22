@@ -6,7 +6,6 @@ import com.qpp.dao.StateDao;
 import com.qpp.model.BaseReturn;
 import com.qpp.model.TShippinginfo;
 import com.qpp.model.TState;
-import com.qpp.model.TStatePK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

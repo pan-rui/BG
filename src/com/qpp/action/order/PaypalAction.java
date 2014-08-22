@@ -37,7 +37,7 @@ public class PaypalAction extends BaseAction {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort(); //+request.getContextPath();
         NVPEncoder encoder = new NVPEncoder();
         String invnum = PaypalUtil.getUuid(16);
-        String returnUrl = baseUrl + "/order/payReturn.hyml";
+        String returnUrl = baseUrl + "/order/payRetur.hyml";
         encoder.add("RETURNURL", returnUrl);
         encoder.add("CANCELURL", baseUrl + "/jsp/order.jsp");
         encoder.add("CURRENCYCODE", order.getCurrencyCode()); //货币类型
@@ -116,7 +116,7 @@ public class PaypalAction extends BaseAction {
             return "redirect:" + String.valueOf(sMap.get("url"));
     }
 
-    @RequestMapping(value="/order/payReturn.hyml")
+    @RequestMapping(value="/order/payRetur.hyml")
     public String doPaypal(ModelMap map, HttpServletRequest request) {
         NVPEncoder encoder=new NVPEncoder();
         Map<String, Object> verify = new HashMap<String, Object>();

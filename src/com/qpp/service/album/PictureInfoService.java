@@ -18,6 +18,6 @@ public interface PictureInfoService {
 	
 	public boolean deletePicture (PictureInfo pic);
 	
-	public List<PictureInfo> getPicturesByTagIds (List<Long> tagIds);
+	public List<PictureInfo> getPicturesByTagIds (long[] tagIds);
 	
 }

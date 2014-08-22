@@ -40,8 +40,8 @@ public class UnionPayment implements Payment {
         unionPayConfig.setMerAbbr(MessageInfo.getMessage("Union.merAbbr"));
         unionPayConfig.setMerId(MessageInfo.getMessage("Union.merId"));
         unionPayConfig.setMerCode(MessageInfo.getMessage("Union.merCode"));
-        unionPayConfig.setSignature(MessageInfo.getMessage("Union.Signature"));
-        unionPayConfig.setSignMethod(MessageInfo.getMessage("Union.SignMethod"));
+        unionPayConfig.setSignature(MessageInfo.getMessage("Union.signature"));
+        unionPayConfig.setSignMethod(MessageInfo.getMessage("Union.signMethod"));
         unionPayConfig.setVersion(MessageInfo.getMessage("Union.version"));
         unionPayConfig.setCharset(MessageInfo.getMessage("Union.charset"));
     }

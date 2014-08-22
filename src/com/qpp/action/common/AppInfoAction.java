@@ -68,7 +68,7 @@ public class AppInfoAction extends BaseAction {
         }else{
             String token=getToken(appInfo);
             baseReturn.setData(token);
-            memcachedClient.set(token, appInfo.getAppid(), new Date(2 * 60 * 60 * 1000));
+            memcachedClient.set(token, appInfo, new Date(2 * 60 * 60 * 1000));
         }
         return baseReturn;
     }

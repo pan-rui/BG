@@ -1,12 +1,18 @@
 package com.qpp.action.order;
 
+import com.paypal.sdk.core.nvp.NVPEncoder;
 import com.qpp.action.BaseAction;
-import com.qpp.model.*;
-import com.qpp.service.market.MessageInfo;
+import com.qpp.model.BaseReturn;
+import com.qpp.model.TCartItem;
+import com.qpp.model.TOrder;
+import com.qpp.model.TOrderItem;
 import com.qpp.service.market.OrderItemService;
 import com.qpp.service.market.OrderService;
-import com.qpp.service.market.UserService;
-import com.qpp.service.market.impl.*;
+import com.qpp.service.market.impl.AwsRequest;
+import com.qpp.service.market.impl.OrderServiceImpl;
+import com.qpp.service.market.impl.PaypalRequest;
+import com.qpp.service.market.impl.UnionpayRequest;
+import com.qpp.service.user.UserService;
 import com.qpp.util.RandomSymbol;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -85,8 +91,8 @@ private OrderService orderServiceImpl;
         order.setId(orderId);
         order.setStatus("下单待付款");
 //        order.setAmt();前台已计算
-//        String invnum = RandomSymbol.getAllSymbol(18);//流水号/跟踪号
-//        order.setInvnum(invnum);
+        String invnum = RandomSymbol.getAllSymbol(18);//流水号/跟踪号
+        order.setInvnum(invnum);
         String transId = RandomSymbol.getAllSymbol(16);
         order.setTransactionId(transId);
 //        order.setType();  支付方式
@@ -105,7 +111,9 @@ private OrderService orderServiceImpl;
             }
             order.setTOrderItems(orderItems);
             orderServiceImpl.save(order);
-            memcachedClient.set("order"+orderId,order,24*60*60*1000);
+            request.setAttribute("invnum", invnum);
+            memcachedClient.set("order" + invnum, order, 18 * 60 * 60 * 1000);
+            memcachedClient.set("order" + orderId, order, 18 * 60 * 60 * 1000);
             result.setResult(1);
             result.setData(order);
         }catch (Exception e){
@@ -122,8 +130,9 @@ private OrderService orderServiceImpl;
      */
     @RequestMapping("/order/type")
     @ResponseBody
-    public void typeToPay(String type,HttpServletRequest request) {
+    public void typeToPay(String type, HttpServletRequest request, HttpServletResponse response) {
         BaseReturn result = new BaseReturn();
+        Map<String, String> resultMap = new HashMap<String, String>();
             OrderServiceImpl.PayType payType=null;
         try {
             payType = OrderServiceImpl.PayType.valueOf(type);
@@ -131,34 +140,58 @@ private OrderService orderServiceImpl;
             result.setResult(0);
             result.setErrMessage("支付类型不正确....");
         }
-        TOrder order = (TOrder) memcachedClient.get("order");
+        TOrder order = (TOrder) memcachedClient.get("order" + request.getSession().getAttribute("invnum"));
         switch (payType){
             case Union:
-                UnionpayRequest req = new UnionpayRequest();
-                req.setBackEndUrl("返回URL");
-                req.setFrontEndUrl("http://localhost:8080/order/union_notify.hyml");
-                req.setOrderTime(UnionPayment.formatDate(order.getCtime()));
-                req.setOrderNumber(order.getId());
-                req.setOrderAmount(String.valueOf(order.getAmt()));
-                req.setOrderCurrency(order.getCurrencyCode());
-                req.putAll(order.getMap());
+                UnionpayRequest uReq = new UnionpayRequest();
+                uReq.setBackEndUrl("返回URL");
+                uReq.setFrontEndUrl("http://localhost:8080/order/union_notify.hyml");
+//                req.setOrderTime(UnionPayment.formatDate(order.getCtime()));
+//                req.setOrderNumber(order.getId());
+//                req.setOrderAmount(String.valueOf(order.getAmt()));
+//                req.setOrderCurrency(order.getCurrencyCode());
+                uReq.setOrderParam(order);
 //                req.setOrigQid(order.getInvnum());
-                req.setCustomerIp("持卡人IP");
+                uReq.setCustomerIp("持卡人IP");
 //                result.setResult(1);
 //                result.setData(UnionPayment.unionPayConfig.getEndPoint());
-                orderServiceImpl.preAuth(req, OrderServiceImpl.PayType.Union, order);
+                resultMap = orderServiceImpl.preAuth(uReq, OrderServiceImpl.PayType.Union, order); //保存返回的 跟踪号/流水号
+                //TODO: 可直接根据返回结果处理(修改订单状态...流水号........
+
                 break;
             case Paypal:
-                result.setResult(1);
-                result.setData(PaypalPayment.paypalConfig.getEndPoint());
+                PaypalRequest pReq = new PaypalRequest();
+                String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort(); //+request.getContextPath();
+                NVPEncoder encoder = new NVPEncoder();
+//                String invnum = RandomSymbol.getAllSymbol(18);
+
+                String returnUrl = baseUrl + "/order/payReturn.hyml";
+                pReq.setReturnUrl(returnUrl);
+                pReq.setCancelUrl(request.getHeader("REFERER"));
+
+                pReq.setOrderParam(order);
+
+                resultMap = orderServiceImpl.preAuth(pReq, OrderServiceImpl.PayType.Paypal, order);
+                String strAck = resultMap.get("ACK");
+                try {
+                    if (strAck != null && !(strAck.equals("Success") || strAck.equals("SuccessWithWarning"))) {
+                        request.getSession().setAttribute("errorMessage", "参数有误,支付失败");
+                        response.sendRedirect("APIError.jsp");
+                    } else
+                        response.sendRedirect("https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + resultMap.get("TOKEN"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case Aws:
-                result.setResult(1);
-                result.setData(AwsPayment.awsConfig.getEndPoint());
+                AwsRequest aReq = new AwsRequest();
+                aReq.setOrderParam(order);
+                resultMap = orderServiceImpl.preAuth(aReq, OrderServiceImpl.PayType.Aws, order);
                 break;
             default:
               //..........
         }
+
     }
 
     /**
@@ -170,27 +203,38 @@ private OrderService orderServiceImpl;
     @ResponseBody
     public void pay(String type,HttpServletRequest request) {
         Map<String, String[]> respMap = request.getParameterMap();
-        for(String param1:respMap.keySet())
+        for (String param1 : respMap.keySet())
             System.out.println(param1);
         //更改订单状态,赠送积分或优惠卷
-        String orderId = respMap.get("orderNumber")[0];
+        String qid = respMap.get("qid")[0];
         String respCode = respMap.get("respCode")[0];
-        if(respCode.equals("00")) {
-            //更新
-            TOrder order = (TOrder) memcachedClient.get("order" + orderId);
+        if (respCode.equals("00")) {
+            //TODO:更新
+            TOrder order = (TOrder) memcachedClient.get("order" + respMap.get("orderNumber")[0]);
 //            order.setStatus("订单已支付");
-            TUser user =order.getTUser();
-//            user.setScore(Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("交易金额兑换积分系数")));
-            Map<String, Object> orderData = new HashMap<String, Object>();
-            Map<String, Object> userData = new HashMap<String, Object>();
-            orderData.put("status", "订单已支付");
-            orderServiceImpl.update("t_order", orderData, order.getId());
-            userData.put("score", Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("交易金额兑换积分系数")));
-            userServiceImpl.update("t_user", userData, user.getId());
-            loger.info(MessageFormat.format("Event:Order is Payment,orderId:{},time:{},result:Success",orderId,formatDateTime(new Date())));
-        }else{
-            loger.info(MessageFormat.format("Event:Order is Payment,orderId:{},time:{},result:Success",orderId,formatDateTime(new Date())));
-        }
+            orderServiceImpl.updtaOrder(order, qid);
+            loger.info(MessageFormat.format("Event:Order is Payment,invnum:{0},time:{1},result:Success", qid, formatDateTime(new Date())));
+        }else
+            loger.info(MessageFormat.format("Event:Order is Payment,invnum:{0},time:{1},result:Error", qid, formatDateTime(new Date())));
     }
+    //Paypal 支付核实
+    @RequestMapping("/order/payReturn.hyml")
+    @ResponseBody
+    public BaseReturn payReturn(HttpServletRequest request) {
+        BaseReturn result = new BaseReturn();
+        PaypalRequest paypalRequest = new PaypalRequest();
+        paypalRequest.setToken(request.getParameter("token"));
+        TOrder order = (TOrder) memcachedClient.get("order" + request.getParameter("invnum"));
+        paypalRequest.setOrderParam(order);
+        Map<String, String> resultMap = orderServiceImpl.preAuth(paypalRequest, OrderServiceImpl.PayType.Paypal, order);
+        if (resultMap != null && ("Success".equals(resultMap.get("ACK")) || "SuccessWithWarning".equals(resultMap.get("ACK")))) {
+            //TODO: 支付成功,修改订单状态,赠送积分或其它促销方案......
 
+            result.setResult(1);
+            result.setData(resultMap);
+        }
+//    paypalRequest
+
+        return result;
+    }
 }

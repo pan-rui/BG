@@ -1,12 +1,10 @@
 package com.qpp.action.common;
 
 import com.qpp.action.BaseAction;
-import com.qpp.dao.CountryDao;
 import com.qpp.dao.StateDao;
 import com.qpp.model.BaseReturn;
-import com.qpp.model.TCountry;
 import com.qpp.model.TState;
-import com.qpp.model.TStatePK;
+import com.qpp.service.common.CommonDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +22,13 @@ import java.util.List;
 @RequestMapping(value = "/common")
 public class StateAction extends BaseAction {
     @Autowired
+    private CommonDataService commonDataService;
+    @Autowired
     private StateDao stateDao;
     @RequestMapping(value = "state",method = RequestMethod.GET)
     @ResponseBody
     private BaseReturn getStateList(){
-        List<TState> list=stateDao.getsByQuery("from TState");
+        List<TState> list=commonDataService.getAlState();
         BaseReturn baseReturn=new BaseReturn();
         baseReturn.setData(list);
         return baseReturn;
@@ -36,10 +36,11 @@ public class StateAction extends BaseAction {
     @RequestMapping(value = "state/{countryCode}/{statecode}",method = RequestMethod.GET)
     @ResponseBody
     private BaseReturn getStateById(@PathVariable final String countryCode,@PathVariable final String statecode,HttpServletRequest request){
-        TStatePK tStatePK=new TStatePK();
+        TState tStatePK=new TState();
         tStatePK.setCountryCode(countryCode);
         tStatePK.setStateCode(statecode);
-        TState tState=stateDao.getById(tStatePK);
+        TState tState=commonDataService.getState(tStatePK);
+        //TState tState=stateDao.getById(tStatePK);
         BaseReturn baseReturn=new BaseReturn();
         if (tState==null){
             baseReturn.setResult(1);

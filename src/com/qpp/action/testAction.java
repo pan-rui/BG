@@ -1,11 +1,23 @@
 package com.qpp.action;
 
+import com.qpp.dao.AppInfoDao;
+import com.qpp.dao.AppRightDao;
 import com.qpp.form.People;
 import com.qpp.form.SessionModel;
 
+import com.qpp.model.BaseReturn;
+import com.qpp.model.TAppInfo;
+import com.qpp.service.common.CommonDataService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +35,12 @@ import java.util.Map;
 @Controller
 public class testAction extends BaseAction{
     private People pp;
-
+    @Autowired
+    private AppInfoDao appInfoDao;
+    @Autowired
+    private CommonDataService commonDataService;
+    @Autowired
+    private AppRightDao appRightDao;
     public People getPp() {
         return pp;
     }
@@ -49,5 +66,19 @@ public class testAction extends BaseAction{
         Map map=new HashMap();
         map.put("rep","replicate");
         return new ModelAndView("/test/inputModel",map);
+    }
+    @RequestMapping(value = "apptest/{appCode}",method = RequestMethod.GET)
+    @ResponseBody
+    public BaseReturn newApp(@PathVariable final String appCode,HttpServletRequest request){
+        TAppInfo tAppInfo=new TAppInfo();
+        tAppInfo.setAppid(appCode);
+        tAppInfo.setAppkey("123");
+        appInfoDao.save(tAppInfo);
+        TAppInfo tAppInfo1=new TAppInfo();
+        tAppInfo1.setAppid(appCode);
+        tAppInfo1.setAppkey("456");
+        appInfoDao.save(tAppInfo1);
+        //commonDataService.testAc(appCode);
+        return new BaseReturn();
     }
 }

@@ -1,15 +1,21 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-
-    <class name="com.qpp.model.TShippinginfo" table="qb_shipping_info">
-        <id name="shippingCode" column="shippingmode">
-            <generator class="native"/>
-         </id>
-        <property name="shippingDesc" column="shippingDesc"/>
-        <property name="priority" column="priority"/>
-        <property name="valid" column="status"/>
+    <class name="com.qpp.model.TShippinginfo" table="t_shippinginfo">
+        <id name="shippingCode" type="string">
+            <column name="shippingCode" length="64" />
+            <generator class="assigned" />
+        </id>
+        <property name="shippingDesc" type="string">
+            <column name="shippingDesc" length="128" not-null="true" />
+        </property>
+        <property name="priority" type="short">
+            <column name="priority" not-null="true" />
+        </property>
+        <property name="valid" type="java.lang.Boolean">
+            <column name="valid" />
+        </property>
     </class>
 </hibernate-mapping>

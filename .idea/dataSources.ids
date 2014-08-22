@@ -12,6 +12,7 @@
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="performance_schema"/>
     <schema name="" catalog="test"/>
+    <schema name="" catalog="typesetting"/>
     <table name="ACT_GE_BYTEARRAY" schema="" catalog="bgm" type="TABLE">
       <column name="ID_" sqlType="VARCHAR" precision="64" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
       <column name="REV_" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
@@ -410,29 +411,69 @@
       <index name="ACT_FK_VAR_PROCINST" unique="false" columns="PROC_INST_ID_"/>
       <index name="ACT_IDX_VARIABLE_TASK_ID" unique="false" columns="TASK_ID_"/>
     </table>
+    <table name="qb_country_info" schema="" catalog="bgm" type="TABLE">
+      <column name="CountryCode" sqlType="VARCHAR" precision="2" scale="0" nullable="false" jdbcType="12"/>
+      <column name="CountryDesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="CountryRemark" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="AreaCode" sqlType="VARCHAR" precision="2" scale="0" nullable="true" jdbcType="12"/>
+      <column name="AreaDesc" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="AreaRemark" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="TimeDiff" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="SortNo" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="CountryCode"/>
+      <index name="IDX_qb_country_info_1" unique="false" columns="AreaCode"/>
+    </table>
+    <table name="qb_country_state_info" schema="" catalog="bgm" type="TABLE">
+      <column name="StateCode" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="StateDesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="CountryCode" sqlType="VARCHAR" precision="2" scale="0" nullable="false" jdbcType="12"/>
+      <column name="Direction" sqlType="VARCHAR" precision="32" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="StateCode,CountryCode"/>
+    </table>
+    <table name="qb_shipping_info" schema="" catalog="bgm" type="TABLE">
+      <column name="ShippingMode" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="ShippingDesc" sqlType="VARCHAR" precision="128" scale="0" nullable="false" jdbcType="12"/>
+      <column name="Priority" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="Tracking" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1"/>
+      <column name="Publish" sqlType="CHAR" precision="1" scale="0" nullable="false" jdbcType="1"/>
+      <column name="Grade" sqlType="CHAR" precision="1" scale="0" nullable="false" jdbcType="1"/>
+      <column name="SortNo" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="Remark" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="Status" sqlType="CHAR" precision="1" scale="0" nullable="false" jdbcType="1"/>
+      <primary-key name="PRIMARY" columns="ShippingMode"/>
+      <index name="IDX_qb_shipping_info_1" unique="false" columns="Priority"/>
+      <index name="IDX_qb_shipping_info_2" unique="false" columns="Tracking"/>
+      <index name="IDX_qb_shipping_info_3" unique="false" columns="Publish"/>
+      <index name="IDX_qb_shipping_info_4" unique="false" columns="Grade"/>
+      <index name="IDX_qb_shipping_info_5" unique="false" columns="SortNo"/>
+      <index name="IDX_qb_shipping_info_6" unique="false" columns="Status"/>
+    </table>
     <table name="serverset" schema="" catalog="bgm" type="TABLE">
       <column name="col" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
       <column name="value" sqlType="VARCHAR" precision="1000" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="col"/>
     </table>
     <table name="t_album" schema="" catalog="bgm" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="name" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
-      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
-      <column name="type" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" def="JzAn"/>
-      <primary-key name="PRIMARY" columns="id"/>
+      <column name="albumId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="55u45YaMSUQ=" autoIncrement="true"/>
+      <column name="albumName" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12" remarks="55u45YaM5ZCN56ew"/>
+      <column name="albumRemark" sqlType="VARCHAR" precision="500" scale="0" nullable="true" jdbcType="12" remarks="55u45YaM6K+E6K66"/>
+      <column name="userId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="55So5oi3SUQ="/>
+      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" remarks="55u45YaM5Yib5bu65pe26Ze0"/>
+      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="55u45YaM5pu05paw5pe26Ze0"/>
+      <column name="type" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" def="JzAn" remarks="55u45YaM57G75Z6L"/>
+      <column name="status" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12" remarks="55u45YaM54q25oCB"/>
+      <primary-key name="PRIMARY" columns="albumId"/>
     </table>
     <table name="t_album_folder" schema="" catalog="bgm" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
-      <column name="folder_Id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="album_Id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="user_Id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
-      <primary-key name="PRIMARY" columns="id"/>
+      <column name="folderId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="55u45YaM5LiL5paH5Lu25aS5SUQ=" autoIncrement="true"/>
+      <column name="folderName" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" remarks="5paH5Lu25aS55ZCN56ew"/>
+      <column name="folderRemark" sqlType="VARCHAR" precision="300" scale="0" nullable="true" jdbcType="12" remarks="5paH5Lu25aS56K+E6K66"/>
+      <column name="folderParentId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="54i25paH5Lu25aS5SUQ="/>
+      <column name="albumId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="55u45YaMSUQ="/>
+      <column name="userId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="55So5oi3SUQ="/>
+      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" remarks="55u45YaM5paH5Lu25aS55Yib5bu65pe26Ze0"/>
+      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="55u45YaM5paH5Lu25aS55pu05paw5pe26Ze0"/>
+      <primary-key name="PRIMARY" columns="folderId"/>
     </table>
     <table name="t_app_info" schema="" catalog="bgm" type="TABLE">
       <column name="appid" sqlType="VARCHAR" precision="64" scale="0" nullable="false" jdbcType="12"/>
@@ -440,6 +481,11 @@
       <column name="role" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="true" jdbcType="5" def="MA=="/>
       <column name="start_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
       <primary-key name="PRIMARY" columns="appid"/>
+    </table>
+    <table name="t_app_right" schema="" catalog="bgm" type="TABLE">
+      <column name="role" sqlType="SMALLINT" precision="5" scale="0" nullable="false" jdbcType="5"/>
+      <column name="url" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="role,url"/>
     </table>
     <table name="t_cartItem" schema="" catalog="bgm" type="TABLE">
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
@@ -487,17 +533,8 @@
       <column name="target" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <column name="count" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="t_convert_ibfk_2" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="t_convert_ibfk_1" columns="target" ref-table="t_gift" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
-    </table>
-    <table name="t_country" schema="" catalog="bgm" type="TABLE">
-      <column name="countryCode" sqlType="CHAR" precision="2" scale="0" nullable="false" jdbcType="1"/>
-      <column name="countryDesc" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="cnCountryDesc" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
-      <column name="areaCode" sqlType="CHAR" precision="2" scale="0" nullable="true" jdbcType="1"/>
-      <column name="areaDesc" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
-      <column name="timeDiff" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <primary-key name="PRIMARY" columns="countryCode"/>
+      <foreign-key name="t_convert_ibfk_2" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="t_favorite" schema="" catalog="bgm" type="TABLE">
       <column name="type" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
@@ -508,6 +545,21 @@
       <column name="userId" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="userId"/>
       <foreign-key name="t_favorite_ibfk_1" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="t_font" schema="" catalog="bgm" type="TABLE">
+      <column name="fontCode" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" remarks="5a2X5L2T5Luj5Y+3"/>
+      <column name="fontName" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" remarks="5a2X5L2T5ZCN56ew"/>
+      <column name="hasAlignCenter" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="5piv5ZCm5Y+v5Lul5bGF5Lit5a+56b2Q"/>
+      <column name="hasAlignRight" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="5piv5ZCm5Y+v5Lul6Z2g5Y+z5a+56b2Q"/>
+      <column name="hasNormal" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="5piv5ZCm5pyJ5q2j5bi45a2X5L2T"/>
+      <column name="hasBold" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="5piv5ZCm5pyJ57KX5L2T"/>
+      <column name="hasItalic" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="5piv5ZCm5pyJ5pac5L2T"/>
+      <column name="realItalic" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a6e6ZmF5a2X5L2T5piv5ZCm5YC+5pac"/>
+      <column name="italicRotate" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a2X5L2T5YC+5pac6KeS5bqm"/>
+      <column name="italicSpace" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="6KGl6b2Q5bem6L6556m65qC85pWw6YeP5L+h5oGv"/>
+      <column name="allowChar" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5YWB6K646L6T5YWl5a2X56ym"/>
+      <column name="status" sqlType="CHAR" precision="1" scale="0" nullable="true" jdbcType="1" remarks="54q25oCB"/>
+      <primary-key name="PRIMARY" columns="fontCode"/>
     </table>
     <table name="t_gift" schema="" catalog="bgm" type="TABLE">
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
@@ -526,6 +578,20 @@
       <column name="locCode" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
       <column name="locDesc" sqlType="VARCHAR" precision="128" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="locCode"/>
+    </table>
+    <table name="t_mailPublish" schema="" catalog="bgm" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="subject" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="fromm" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="attachment" sqlType="VARCHAR" precision="1024" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cc" sqlType="VARCHAR" precision="4096" scale="0" nullable="true" jdbcType="12"/>
+      <column name="content" sqlType="VARCHAR" precision="4096" scale="0" nullable="false" jdbcType="12"/>
+      <column name="sendDate" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="ctime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="comment" sqlType="VARCHAR" precision="1024" scale="0" nullable="true" jdbcType="12"/>
+      <column name="isPublish" sqlType="VARCHAR" precision="1" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="t_userEmail_ibfk_2" table="t_userEmail" schema="" catalog="bgm" columns="emailId"/>
     </table>
     <table name="t_order" schema="" catalog="bgm" type="TABLE">
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
@@ -572,22 +638,29 @@
       <foreign-key name="t_orderItem_ibfk_1" columns="orderId" ref-table="t_order" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="t_picture" schema="" catalog="bgm" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="name" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
-      <column name="folder_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="width" sqlType="FLOAT" precision="12" scale="0" nullable="true" jdbcType="7"/>
-      <column name="height" sqlType="FLOAT" precision="12" scale="0" nullable="true" jdbcType="7"/>
-      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
-      <column name="picUrl" sqlType="VARCHAR" precision="800" scale="0" nullable="false" jdbcType="12"/>
-      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <primary-key name="PRIMARY" columns="id"/>
+      <column name="photoId" sqlType="VARCHAR" precision="80" scale="0" nullable="false" jdbcType="12" remarks="5Zu+54mHSUQ="/>
+      <column name="photoName" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" remarks="5Zu+54mH5ZCN56ew"/>
+      <column name="photoExp" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12" remarks="5Zu+54mH5qC85byP"/>
+      <column name="folderId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5Zu+54mH5omA5Zyo5paH5Lu25aS5SUQ="/>
+      <column name="userId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="55So5oi3SUQ="/>
+      <column name="photoWidth" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5Zu+54mH5a695bqm"/>
+      <column name="photoHeight" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5Zu+54mH6auY5bqm"/>
+      <column name="photoRemark" sqlType="VARCHAR" precision="300" scale="0" nullable="true" jdbcType="12" remarks="5Zu+54mH6K+E6K66"/>
+      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" remarks="5Zu+54mH5Yib5bu65pe26Ze0"/>
+      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Zu+54mH5pu05paw5pe26Ze0"/>
+      <primary-key name="PRIMARY" columns="photoId"/>
     </table>
     <table name="t_picture_tag" schema="" catalog="bgm" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="picture_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="tag_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="SUQ=" autoIncrement="true"/>
+      <column name="tagId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="5qCH562+SUQ="/>
+      <column name="photoId" sqlType="VARCHAR" precision="80" scale="0" nullable="false" jdbcType="12" remarks="5Zu+54mHSUQ="/>
       <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="t_role_info" schema="" catalog="bgm" type="TABLE">
+      <column name="role" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="role_desc" sqlType="VARCHAR" precision="128" scale="0" nullable="true" jdbcType="12"/>
+      <column name="default_page" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="role"/>
     </table>
     <table name="t_score" schema="" catalog="bgm" type="TABLE">
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
@@ -606,12 +679,6 @@
       <column name="priority" sqlType="SMALLINT" precision="5" scale="0" nullable="false" jdbcType="5"/>
       <column name="valid" sqlType="BIT" precision="1" scale="0" nullable="true" jdbcType="-7"/>
       <primary-key name="PRIMARY" columns="shippingCode"/>
-    </table>
-    <table name="t_state" schema="" catalog="bgm" type="TABLE">
-      <column name="countryCode" sqlType="CHAR" precision="2" scale="0" nullable="false" jdbcType="1"/>
-      <column name="stateCode" sqlType="CHAR" precision="2" scale="0" nullable="false" jdbcType="1"/>
-      <column name="stateDesc" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <primary-key name="PRIMARY" columns="countryCode,stateCode"/>
     </table>
     <table name="t_stateInfo" schema="" catalog="bgm" type="TABLE">
       <column name="stateCode" sqlType="VARCHAR" precision="5" scale="0" nullable="false" jdbcType="12"/>
@@ -650,16 +717,20 @@
       <foreign-key name="t_store_order_ibfk_2" columns="byuserId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="t_tag" schema="" catalog="bgm" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <primary-key name="PRIMARY" columns="id"/>
+      <column name="tagId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="5qCH562+SUQ=" autoIncrement="true"/>
+      <column name="tagName" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="5qCH562+5ZCN56ew"/>
+      <column name="createDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5qCH562+5Yib5bu65pe26Ze0"/>
+      <column name="createPersion" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5qCH562+5Yib5bu65Lq6"/>
+      <column name="modifyDate" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5qCH562+5pu05paw5pe26Ze0"/>
+      <column name="modifyPersion" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5qCH562+5pu05paw5Lq6"/>
+      <primary-key name="PRIMARY" columns="tagId"/>
     </table>
     <table name="t_user" schema="" catalog="bgm" type="TABLE">
       <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
       <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
       <column name="birthDay" sqlType="TIMESTAMP" precision="19" scale="0" nullable="true" jdbcType="93"/>
       <column name="phone" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="address" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="address" sqlType="VARCHAR" precision="2048" scale="0" nullable="true" jdbcType="12"/>
       <column name="province" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
       <column name="city" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
       <column name="area" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
@@ -686,7 +757,16 @@
       <exported-key name="t_order_ibfk_1" table="t_order" schema="" catalog="bgm" columns="buyer"/>
       <exported-key name="t_store_ibfk_1" table="t_store" schema="" catalog="bgm" columns="userId"/>
       <exported-key name="t_store_order_ibfk_2" table="t_store_order" schema="" catalog="bgm" columns="byuserId"/>
+      <exported-key name="t_userEmail_ibfk_1" table="t_userEmail" schema="" catalog="bgm" columns="userId"/>
       <exported-key name="t_user_order_ibfk_1" table="t_user_order" schema="" catalog="bgm" columns="userId"/>
+    </table>
+    <table name="t_userEmail" schema="" catalog="bgm" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="userId" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="emailId" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="t_userEmail_ibfk_1" columns="userId" ref-table="t_user" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="t_userEmail_ibfk_2" columns="emailId" ref-table="t_mailPublish" ref-schema="" ref-catalog="bgm" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="t_user_order" schema="" catalog="bgm" type="TABLE">
       <column name="userId" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
@@ -2880,6 +2960,141 @@
     <table name="people" schema="" catalog="test" type="TABLE">
       <column name="idpeople" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="name" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="cgp_config" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="pid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="query" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="text" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="cgp_configration_group" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sortOrder" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="visiable" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="cgp_configuration" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="groupId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="config_key" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sortOrder" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="config_value" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="cgp_font" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="isInstall" sqlType="BIT" precision="1" scale="0" nullable="false" jdbcType="-7"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="cgp_layout" schema="" catalog="typesetting" type="TABLE">
+      <column name="configKey" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="configType" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="configValue" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="configKey"/>
+    </table>
+    <table name="cgp_navigator" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="pid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="text" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="cgp_printer" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="printer_desc" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="printer_name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="printer_type" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_ak106qf0cblrb07hlj0l8f35y" columns="printer_type" ref-table="cgp_printer_type" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_5gwntlmntfj8ensqeeba2y0pi" table="printer_paperSize" schema="" catalog="typesetting" columns="printer"/>
+      <exported-key name="FK_l3ienjwxkrpym3yyxt6rlmxo" table="product_printer" schema="" catalog="typesetting" columns="printer"/>
+      <index name="FK_ak106qf0cblrb07hlj0l8f35y" unique="false" columns="printer_type"/>
+    </table>
+    <table name="cgp_printer_paper_size" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="printer_paper_size_height" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="printer_paper_size_name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="printer_paper_size_thickness" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="printer_paper_size_width" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_imoxtwl6dgylmjvkrl5mj50li" table="printer_paperSize" schema="" catalog="typesetting" columns="printer_paper_size"/>
+      <exported-key name="FK_7sn5sidepjooebf52lrn6qsqd" table="product_papersize" schema="" catalog="typesetting" columns="paper_size"/>
+    </table>
+    <table name="cgp_printer_type" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="printer_type_name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_ak106qf0cblrb07hlj0l8f35y" table="cgp_printer" schema="" catalog="typesetting" columns="printer_type"/>
+    </table>
+    <table name="cgp_product" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="chart" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="format" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="product_code" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="product_desc" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="product_finalFileNameFormat" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="product_format" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="product_typesetting_mathod" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_mh2w2fgxwyeptuqgui6i0lk6f" columns="product_typesetting_mathod" ref-table="cgp_typesetting_method" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_mtxxjk6v462qq3hip57iikygy" table="cgp_productdiecut" schema="" catalog="typesetting" columns="productdiecut_product"/>
+      <exported-key name="FK_63ld9wxr1g80c7ok6jen05h8r" table="product_papersize" schema="" catalog="typesetting" columns="product"/>
+      <exported-key name="FK_t8laubqvo2uvnyu52l8pu68my" table="product_printer" schema="" catalog="typesetting" columns="product"/>
+      <index name="FK_mh2w2fgxwyeptuqgui6i0lk6f" unique="false" columns="product_typesetting_mathod"/>
+    </table>
+    <table name="cgp_productdiecut" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="productdiecut_url" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="productdiecut_product" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_mtxxjk6v462qq3hip57iikygy" columns="productdiecut_product" ref-table="cgp_product" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_mtxxjk6v462qq3hip57iikygy" unique="false" columns="productdiecut_product"/>
+    </table>
+    <table name="cgp_typesetting_method" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="cgp_typesetting_method_class_name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cgp_typesetting_method_name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_mh2w2fgxwyeptuqgui6i0lk6f" table="cgp_product" schema="" catalog="typesetting" columns="product_typesetting_mathod"/>
+    </table>
+    <table name="cgp_user" schema="" catalog="typesetting" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="contact_address" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="contact_phone" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="remark" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="userName" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="printer_paperSize" schema="" catalog="typesetting" type="TABLE">
+      <column name="printer" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="printer_paper_size" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="printer,printer_paper_size"/>
+      <foreign-key name="FK_5gwntlmntfj8ensqeeba2y0pi" columns="printer" ref-table="cgp_printer" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_imoxtwl6dgylmjvkrl5mj50li" columns="printer_paper_size" ref-table="cgp_printer_paper_size" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_imoxtwl6dgylmjvkrl5mj50li" unique="false" columns="printer_paper_size"/>
+    </table>
+    <table name="product_papersize" schema="" catalog="typesetting" type="TABLE">
+      <column name="product" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="paper_size" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="product,paper_size"/>
+      <foreign-key name="FK_63ld9wxr1g80c7ok6jen05h8r" columns="product" ref-table="cgp_product" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_7sn5sidepjooebf52lrn6qsqd" columns="paper_size" ref-table="cgp_printer_paper_size" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_7sn5sidepjooebf52lrn6qsqd" unique="false" columns="paper_size"/>
+    </table>
+    <table name="product_printer" schema="" catalog="typesetting" type="TABLE">
+      <column name="product" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="printer" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="product,printer"/>
+      <foreign-key name="FK_t8laubqvo2uvnyu52l8pu68my" columns="product" ref-table="cgp_product" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_l3ienjwxkrpym3yyxt6rlmxo" columns="printer" ref-table="cgp_printer" ref-schema="" ref-catalog="typesetting" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_l3ienjwxkrpym3yyxt6rlmxo" unique="false" columns="printer"/>
     </table>
   </data-source>
 </component>

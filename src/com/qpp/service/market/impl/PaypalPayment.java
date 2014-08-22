@@ -3,6 +3,7 @@ package com.qpp.service.market.impl;
 import com.qpp.service.market.MessageInfo;
 import com.qpp.service.market.Payment;
 import com.qpp.service.market.PaymentRequest;
+import com.qpp.service.market.PaymentSupport;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,11 @@ public class PaypalPayment implements Payment {
     public static PaypalConfig paypalConfig= new PaypalConfig();
     private Logger logger = Logger.getLogger(this.getClass());
     static {
-        paypalConfig.setEndPoint(MessageInfo.getMessage("Union.endPoint"));
-        paypalConfig.setSignature(MessageInfo.getMessage("Union.Signature"));
-        paypalConfig.setSignMethod(MessageInfo.getMessage("Union.SignMethod"));
-        paypalConfig.setVersion(MessageInfo.getMessage("Union.version"));
-        paypalConfig.setCharset(MessageInfo.getMessage("Union.charset"));
+        paypalConfig.setEndPoint(MessageInfo.getMessage("Paypal.endPoint"));
+        paypalConfig.setSignature(MessageInfo.getMessage("Paypal.Signature"));
+        paypalConfig.setSignMethod(MessageInfo.getMessage("Paypal.SignMethod"));
+        paypalConfig.setVersion(MessageInfo.getMessage("Paypal.version"));
+        paypalConfig.setCharset(MessageInfo.getMessage("Paypal.charset"));
     }
     @Override
     public Map<String, String> paypal(PaymentRequest paymentRequest) {
@@ -40,7 +41,31 @@ public class PaypalPayment implements Payment {
 
     @Override
     public Map<String, String> preAuth(PaymentRequest preAuthRequest) {
-        return null;
+        Map<String,String> reqMap=preAuthRequest.getNVPRequest();
+        Map<String, String> resultMap=null;
+        reqMap.putAll(paypalConfig.getConfigMap());
+        if(reqMap.get("TOKEN")==null) {
+
+            reqMap.put("METHOD", "SetExpressCheckout");
+            reqMap.put("PAYMENTACTION", "Authorization");
+             resultMap= PaymentSupport.execute(reqMap, paypalConfig);
+        }else {
+            reqMap.put("METHOD", "GetExpressCheckoutDetails");
+            resultMap=PaymentSupport.execute(reqMap, paypalConfig);
+            String strAck = resultMap.get("ACK");
+            if(strAck !=null && (strAck.equals("Success") || strAck.equals("SuccessWithWarning"))) {
+                reqMap.put("METHOD", "DoExpressCheckoutPayment");
+                reqMap.put("PAYERID", resultMap.get("PayerID"));
+                reqMap.put("PAYMENTACTION", "Authorization");
+//                reqMap.put("AMT", reqMap.get("AMT"));
+//                reqMap.put("CURRENCYCODE",reqMap.get("CURRENCYCODE"));
+                resultMap = PaymentSupport.execute(reqMap, paypalConfig);
+            }
+
+        }
+
+
+        return resultMap;
     }
 
     @Override
@@ -55,6 +80,10 @@ public class PaypalPayment implements Payment {
 
     @Override
     public Map<String, String> refund(PaymentRequest refundRequest) {
+        return null;
+    }
+
+    public Map<String,String> getExpress(PaymentRequest gRequest){
         return null;
     }
 }

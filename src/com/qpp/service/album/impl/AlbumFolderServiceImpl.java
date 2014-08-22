@@ -49,5 +49,10 @@ public class AlbumFolderServiceImpl implements AlbumFolderService {
 		return flag;
 	}
 
+	@Override
+	public AlbumFolder getAlbumFolderById(long albumId) {
+		return albumFolderDao.getAlbumFolderById(albumId);
+	}
+
 	
 }

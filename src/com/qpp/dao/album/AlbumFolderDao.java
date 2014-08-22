@@ -1,13 +1,13 @@
 package com.qpp.dao.album;
 
-import java.util.List;
+import com.qpp.dao.BaseDao;
+import com.qpp.model.AlbumFolder;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.qpp.dao.BaseDao;
-import com.qpp.model.AlbumFolder;
+import java.util.List;
 
 @Repository
 public class AlbumFolderDao extends BaseDao<AlbumFolder> {
@@ -20,5 +20,10 @@ public class AlbumFolderDao extends BaseDao<AlbumFolder> {
 		query.setLong("albumId", albumId);
 		List<AlbumFolder> list = query.list();
 		return list;
+	}
+	
+	public AlbumFolder getAlbumFolderById (long id) {
+		AlbumFolder albumFolder = getHibernateTemplate().get(AlbumFolder.class, id);
+		return albumFolder;
 	}
 }

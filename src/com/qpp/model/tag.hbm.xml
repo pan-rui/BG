@@ -2,16 +2,16 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
 <hibernate-mapping>
-	<class name="com.qpp.model.Tag" table="qb_tag_info">
+	<class name="com.qpp.model.Tag" table="t_tag">
 		<id name="id" column="tagId">
 			<generator class="native"/>
 		</id>
 		<property name="name" column="tagName" type="string"/>
-		<property name="createUserId" column="createUserId" type="java.lang.Long"/>
-		<property name="modifyUserId" column="modifyUserId" type="java.lang.Long"/>
+		<property name="createUserId" column="createPersion" type="java.lang.Long"/>
+		<property name="modifyUserId" column="modifyPersion" type="java.lang.Long"/>
 		<property name="createDate" column="createDate" type="java.util.Date"/>
 		<property name="modifyDate" column="modifyDate" type="java.util.Date"/>
-		<set name="pictures" table="qb_photo_tag">
+		<set name="pictures" table="t_picture_tag">
 			<key column="tagId"/>
 			<many-to-many class="com.qpp.model.PictureInfo" column="photoId"/>
 		</set>

@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 12, 2014 11:53:34 AM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -10,10 +10,10 @@ import java.util.Date;
 public class TScore implements java.io.Serializable {
 
 	private String id;
-	private TGift TGift;
-	private TUser TUser;
 	private Date ctime;
+	private String type;
 	private int size;
+	private String userId;
 	private Integer count;
 	private String status;
 	private String comment;
@@ -21,23 +21,21 @@ public class TScore implements java.io.Serializable {
 	public TScore() {
 	}
 
-	public TScore(String id, TUser TUser, Date ctime, int size, String status,
-			String comment) {
+	public TScore(String id, Date ctime, int size, String status, String comment) {
 		this.id = id;
-		this.TUser = TUser;
 		this.ctime = ctime;
 		this.size = size;
 		this.status = status;
 		this.comment = comment;
 	}
 
-	public TScore(String id, TGift TGift, TUser TUser, Date ctime, int size,
+	public TScore(String id, Date ctime, String type, int size, String userId,
 			Integer count, String status, String comment) {
 		this.id = id;
-		this.TGift = TGift;
-		this.TUser = TUser;
 		this.ctime = ctime;
+		this.type = type;
 		this.size = size;
+		this.userId = userId;
 		this.count = count;
 		this.status = status;
 		this.comment = comment;
@@ -51,22 +49,6 @@ public class TScore implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public TGift getTGift() {
-		return this.TGift;
-	}
-
-	public void setTGift(TGift TGift) {
-		this.TGift = TGift;
-	}
-
-	public TUser getTUser() {
-		return this.TUser;
-	}
-
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
-
 	public Date getCtime() {
 		return this.ctime;
 	}
@@ -75,12 +57,28 @@ public class TScore implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public int getSize() {
 		return this.size;
 	}
 
 	public void setSize(int size) {
 		this.size = size;
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public Integer getCount() {

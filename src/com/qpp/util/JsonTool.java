@@ -6,6 +6,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
+import net.sf.json.util.PropertyFilter;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,10 +65,19 @@ public class JsonTool {
 	
 	public static Object jsonByObjectDirecdt(Object obj, String[] filterNames) {
 		JsonConfig jsonConfig = new JsonConfig();
-	    jsonConfig.setIgnoreDefaultExcludes(true);   
+	    jsonConfig.setIgnoreDefaultExcludes(true); 
+	    jsonConfig.setJsonPropertyFilter(new PropertyFilter() {
+			@Override
+			public boolean apply(Object source, String name, Object value) {
+				if (value == null) {
+					return true;
+				}
+				return false;
+			}
+		});
 	    jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT); 
 	    jsonConfig.setExcludes(new String[]{"handler","hibernateLazyInitializer"});  
-	    jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+	    jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonProcessor());
 	    if (filterNames != null) {
 	    	jsonConfig.setExcludes(filterNames);
 	    }

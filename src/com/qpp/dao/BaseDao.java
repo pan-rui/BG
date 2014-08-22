@@ -4,7 +4,11 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -15,35 +19,48 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
-public class BaseDao<T> extends HibernateDaoSupport {
+public class BaseDao<T> extends HibernateDaoSupport{
     private Class priClass;
-
+    @Autowired
+    protected HibernateTemplate hibernateTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Resource
     private ComboPooledDataSource dataSource;
     public BaseDao() {
+
     }
+
     public BaseDao(Class poClass) {
         this.priClass = poClass;
     }
 
     public void save(T po) {
-        getHibernateTemplate().save(po);
+        hibernateTemplate.save(po);
     }
 
     public void delete(T po) {
-        getHibernateTemplate().delete(po);
+        hibernateTemplate.delete(po);
     }
 
     public void update(T po) {
-        getHibernateTemplate().update(po);
+        hibernateTemplate.update(po);
     }
 
-    
+    public List<T> getAll(){
+        return hibernateTemplate.loadAll(priClass);
+    }
+    public List<T> getsByCriteria(DetachedCriteria criteria){
+        return hibernateTemplate.findByCriteria(criteria);
+    }
+
+
+
     public T getById(final Serializable id) {
         return this.getById(id,priClass);
     }
     protected T getById(final Serializable id, final Class poClass) {
-        return (T) getHibernateTemplate().execute(new HibernateCallback() {
+        return (T) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session)
                     throws HibernateException, SQLException {
                 return session.get(poClass, id);
@@ -53,7 +70,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
 
     
     public T getByQuery(final String hqlString) {
-        return (T) getHibernateTemplate().execute(new HibernateCallback() {
+        return (T) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createQuery(hqlString);
                 return query.uniqueResult();
@@ -64,7 +81,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
 
     
     public List<T> getsByQuery(final String hqlString) {
-        return (List<T>) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createQuery(hqlString);
                 return query.list();
@@ -74,7 +91,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
     }
 
     public List<T> getsByQueryPage(final String sqlString, final int start,final int end) {
-        return (List<T>) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createQuery(sqlString).setFirstResult(start).setMaxResults(end);
                 return query.list();
@@ -84,12 +101,12 @@ public class BaseDao<T> extends HibernateDaoSupport {
     }
 
     public List<T> getsByExample(T obj) {
-        return (List<T>) getHibernateTemplate().findByExample(obj);
+        return (List<T>) hibernateTemplate.findByExample(obj);
     }
 
 
     public Object getObjectBySQL(final String sqlString) {
-        return (Object) getHibernateTemplate().execute(new HibernateCallback() {
+        return (Object) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createSQLQuery(sqlString);
                 return query.uniqueResult();
@@ -98,7 +115,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
         );
     }
     public Object getObjectByQuery(final String sqlString) {
-        return (Object) getHibernateTemplate().execute(new HibernateCallback() {
+        return (Object) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createQuery(sqlString);
                 return query.uniqueResult();
@@ -108,7 +125,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
     }
 
     public T execBySQL(final String sqlString) {
-        return (T) getHibernateTemplate().execute(new HibernateCallback() {
+        return (T) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 session.createSQLQuery(sqlString).executeUpdate();
                 return null;
@@ -121,7 +138,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
         return this.getBySQL(sqlString,priClass);
     }
     protected T getBySQL(final String sqlString, final Class poClass) {
-        return (T) getHibernateTemplate().execute(new HibernateCallback() {
+        return (T) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createSQLQuery(sqlString).addEntity(poClass);
                 return query.uniqueResult();
@@ -135,7 +152,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
         return this.getsBySQL(sqlString,priClass);
     }
     protected List<T> getsBySQL(final String sqlString, final Class poClass) {
-        return (List<T>) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createSQLQuery(sqlString).addEntity(poClass);
                 return query.list();
@@ -147,11 +164,11 @@ public class BaseDao<T> extends HibernateDaoSupport {
     public int getKeyBySQL(String sql) {
         final String  queryStr;
         queryStr=sql;
-        int userCount = (Integer) getHibernateTemplate().execute(
+        int userCount = (Integer) hibernateTemplate.execute(
                 new HibernateCallback() {
                     public Object doInHibernate(Session session)
                             throws HibernateException, SQLException {
-                        Connection conn = SessionFactoryUtils.getDataSource(getSessionFactory()).getConnection();
+                        Connection conn = SessionFactoryUtils.getDataSource(hibernateTemplate.getSessionFactory()).getConnection();
                         Statement statement =conn.createStatement();
                         int retval=0;
                         try {
@@ -311,7 +328,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
             e.printStackTrace();
         }
     }
-    public void update(String tableName, Map data, String id)throws Exception
+    public void update(String tableName, Map data, String id)
     {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -354,7 +371,7 @@ public class BaseDao<T> extends HibernateDaoSupport {
         }
         catch (Exception e)
         {
-            throw new Exception(e);
+           e.printStackTrace();
         }
         finally
         {
@@ -363,8 +380,8 @@ public class BaseDao<T> extends HibernateDaoSupport {
     }
 
     public int delete(String property, Object value) {
-        List<T> list=getHibernateTemplate().findByNamedQuery(property,value);
-        getHibernateTemplate().deleteAll(list);
+        List<T> list=hibernateTemplate.findByNamedQuery(property,value);
+        hibernateTemplate.deleteAll(list);
         return  list.size();
     }
 

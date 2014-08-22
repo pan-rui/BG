@@ -56,7 +56,7 @@ public class PictureInfoServiceImpl implements PictureInfoService {
 	}
 
 	@Override
-	public List<PictureInfo> getPicturesByTagIds(List<Long> tagIds) {
+	public List<PictureInfo> getPicturesByTagIds(long[] tagIds) {
 		return pictureInfoDao.getPicturesByTagIds(tagIds);
 	}
 

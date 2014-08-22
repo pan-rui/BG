@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
 <hibernate-mapping>
-	<class name="com.qpp.model.AlbumFolder" table="qb_photo_album_folder">
+	<class name="com.qpp.model.AlbumFolder" table="t_album_folder">
 		<id name="id" column="folderId">
 			<generator class="native"/>
 		</id>

@@ -1,15 +1,14 @@
 package com.qpp.dao.album;
 
-import java.util.List;
+import com.qpp.dao.BaseDao;
+import com.qpp.model.Album;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.qpp.dao.BaseDao;
-import com.qpp.model.Album;
+import java.util.List;
 
 @Repository
 public class AlbumDao extends BaseDao<Album>{
