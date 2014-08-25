@@ -3,28 +3,40 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="autoStartup" value="false"/>
         <property name="triggers">
             <list>
                 <!--<ref local="stestSchedule"/>-->
+                <ref bean="cartTrigger"/>
             </list>
         </property>
     </bean>
-    <bean id="stest" class="com.gary.testClass.MyTest"/>
-    <bean id="stestSchedule" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <!--<bean id="stest" class="com.gary.testClass.MyTest"/>-->
+    <bean id="stestSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
-            <ref bean="methodTest"/>
+            <ref bean="jobDetail"/>
         </property>
         <property name="cronExpression">
             <value>0 0/1 * ? * MON-SUN</value>
         </property>
+
     </bean>
-    <bean id="methodTest" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <bean id="cartTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail"/>
+        <!--延迟18个小时执行-->
+        <property name="startDelay" value="64800000"/>
+    </bean>
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="group" value="cartJob"/>
+        <property name="name" value="userCart"/>
+        <!--<property name="concurrent" value="false"/>-->
+
         <property name="targetObject">
-            <ref bean="stest" />
+            <ref bean="cartJob" />
         </property>
-        <property name="targetMethod">
-            <value>scheduleTest</value>
-        </property>
+        <property name="targetMethod" value="execute"/>
     </bean>
+
+    <bean id="cartJob" class="com.qpp.service.user.impl.CartJob" />
 
 </beans>

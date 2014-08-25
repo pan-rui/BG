@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.qpp.model.TRoleInfo" table="t_role_info">
+        <id name="role" column="role">
+            <generator class="native"/>
+        </id>
+        <property name="roleDesc" column="role_desc"/>
+        <property name="defaultPage" column="default_page"/>
+    </class>
+</hibernate-mapping>

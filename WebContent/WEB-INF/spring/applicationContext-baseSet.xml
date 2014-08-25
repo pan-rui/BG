@@ -19,6 +19,7 @@
                 <prop key="mail.smtp.timeout">25000</prop>
             </props>
         </property>
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
     <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
         <property name="from" value="CS@China.com" />
@@ -65,4 +66,5 @@
     	<property name="loginUrl" value="https://api.instagram.com/oauth/authorize"/>
     	<property name="authUrl" value="https://api.instagram.com/oauth/access_token"/>
  </bean>
+    <!--<import resource="Quartz.xml" />-->
 </beans>

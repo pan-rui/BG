@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TMailPublish" table="t_mailPublish">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="subject" type="string">
+            <column name="subject" length="100" not-null="true" />
+        </property>
+        <property name="fromm" type="string">
+            <column name="fromm" length="50" />
+        </property>
+        <property name="attachment" type="string">
+            <column name="attachment" length="1024" />
+        </property>
+        <property name="cc" type="string">
+            <column name="cc" length="4096" />
+        </property>
+        <property name="content" type="string">
+            <column name="content" length="4096" not-null="true" />
+        </property>
+        <property name="sendDate" type="timestamp">
+            <column name="sendDate" length="19" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="1024" />
+        </property>
+        <property name="isPublish" type="string">
+            <column name="isPublish" length="1" not-null="true" />
+        </property>
+        <set name="TUserEmails" table="t_userEmail" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="emailId" length="20" not-null="true" />
+            </key>
+            <one-to-many class="com.qpp.model.TUserEmail" />
+        </set>
+    </class>
+</hibernate-mapping>

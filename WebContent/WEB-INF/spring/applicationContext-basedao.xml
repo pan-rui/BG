@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd" default-autowire="byName">
+
+<!--
+    <context:component-scan base-package="com.qpp.dao" >
+        &lt;!&ndash;<context:exclude-filter type="annotation"  expression="org.springframework.stereotype.Service" />&ndash;&gt;
+    </context:component-scan>
+-->
+
     <bean id="baseDao" class="com.qpp.dao.BaseDao">
          <property name="sessionFactory">
              <ref bean="sessionFactory" />
          </property>
      </bean>
-    <bean id="EasySQL" class="com.qpp.dao.EasySQL" parent="baseDao"/>
-    <bean id="CountryDao" class="com.qpp.dao.CountryDao" parent="baseDao"/>
-    <bean id="StateDao" class="com.qpp.dao.StateDao" parent="baseDao"/>
-    <bean id="AppInfoDao" class="com.qpp.dao.AppInfoDao" parent="baseDao"/>
-    <bean id="ShippingInfoDao" class="com.qpp.dao.ShippingInfoDao" parent="baseDao"/>
-    <bean id="LocInfoDao" class="com.qpp.dao.LocInfoDao" parent="baseDao"/>
-    <bean id="AppRightDao" class="com.qpp.dao.AppRightDao" parent="baseDao"/>
 </beans>

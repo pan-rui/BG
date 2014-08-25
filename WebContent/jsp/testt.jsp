@@ -12,5 +12,10 @@
 </head>
 <body>
 <p>from httpClient...........</p>
+
+<form action="/order/unio.hyml" method="post">
+    <input type="text" name="tye" value="panrui">
+    <input type="submit" value="ttest">
+    </form>
 </body>
 </html>
