@@ -11,10 +11,8 @@ import java.util.List;
 @Repository
 public class PictureInfoDao extends BaseDao<PictureInfo> {
 	
-	public PictureInfo getPictureById (String id) {
-//		PictureInfo pic = getHibernateTemplate().get(PictureInfo.class, id);
-//		return pic;
-        return null;
+	public PictureInfoDao() {
+		super(PictureInfo.class);
 	}
 	
 	public List<PictureInfo> getPicturesByFolderId (long folderId) {

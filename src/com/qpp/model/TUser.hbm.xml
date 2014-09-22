@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
-<hibernate-mapping>
+<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping default-lazy="false">
     <class name="com.qpp.model.TUser" table="t_user">
-        <id name="id" type="string">
-            <column name="id" length="20" />
-            <generator class="assigned" />
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
         </id>
-        <many-to-one name="TGift" class="com.qpp.model.TGift" fetch="select">
-            <column name="present" length="20" />
+        <many-to-one name="present" class="com.qpp.model.TGift" fetch="select">
+            <column name="present" />
         </many-to-one>
         <property name="name" type="string">
             <column name="name" length="20" not-null="true" />
@@ -17,20 +17,20 @@
         <property name="birthDay" type="timestamp">
             <column name="birthDay" length="19" />
         </property>
-        <property name="phone" type="int">
-            <column name="phone" not-null="true" />
+        <property name="phone" type="string">
+            <column name="phone" length="15" />
         </property>
         <property name="address" type="string">
             <column name="address" length="2048" />
         </property>
         <property name="province" type="string">
-            <column name="province" length="10" not-null="true" />
+            <column name="province" length="10" />
         </property>
         <property name="city" type="string">
-            <column name="city" length="10" not-null="true" />
+            <column name="city" length="10" />
         </property>
         <property name="area" type="string">
-            <column name="area" length="10" not-null="true" />
+            <column name="area" length="10" />
         </property>
         <property name="email" type="string">
             <column name="email" length="30" not-null="true" />
@@ -39,28 +39,28 @@
             <column name="type" length="1" not-null="true" />
         </property>
         <property name="password" type="string">
-            <column name="password" length="32" />
+            <column name="password" length="32" not-null="true" />
         </property>
         <property name="nickname" type="string">
-            <column name="nickname" length="20" not-null="true" />
+            <column name="nickname" length="20" />
         </property>
-        <property name="money" type="double">
-            <column name="money" precision="22" scale="0" not-null="true" />
+        <property name="money" type="java.lang.Double">
+            <column name="money" precision="22" scale="0" />
         </property>
-        <property name="score" type="java.lang.Integer">
+        <property name="score" type="int">
             <column name="score" />
         </property>
         <property name="sex" type="string">
-            <column name="sex" length="1" not-null="true" />
+            <column name="sex" length="1" />
         </property>
         <property name="comment" type="string">
-            <column name="comment" length="50" not-null="true" />
+            <column name="comment" length="50" />
         </property>
-        <property name="status" type="char">
-            <column name="status" length="1" not-null="true" />
+        <property name="status" type="string">
+            <column name="status" length="1" />
         </property>
         <property name="voucher" type="string">
-            <column name="voucher" length="1024" not-null="true" />
+            <column name="voucher" length="1024" />
         </property>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
@@ -69,49 +69,46 @@
             <column name="utime" length="19" not-null="true" />
         </property>
         <property name="countryCode" type="string">
-            <column name="countryCode" length="5" not-null="true" />
+            <column name="countryCode" length="2" not-null="true" />
         </property>
-        <set name="TConverts" table="t_convert" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="userId" length="20" not-null="true" />
-            </key>
-            <one-to-many class="com.qpp.model.TConvert" />
-        </set>
+        <property name="roles" type="string">
+            <column name="roles" length="1024" />
+        </property>
         <one-to-one name="TStore" class="com.qpp.model.TStore"></one-to-one>
-        <set name="TStoreOrders" table="t_store_order" inverse="true" lazy="true" fetch="select">
+        <set name="TUserOrders" table="t_user_order" inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="byuserId" length="20" not-null="true" />
-            </key>
-            <one-to-many class="com.qpp.model.TStoreOrder" />
-        </set>
-        <set name="TUserOrders" table="t_user_order" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="userId" length="20" not-null="true" />
+                <column name="userId" />
             </key>
             <one-to-many class="com.qpp.model.TUserOrder" />
         </set>
-        <set name="TUserEmails" table="t_userEmail" inverse="true" lazy="true" fetch="select">
+        <set name="TUserEmails" table="t_userEmail" inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="userId" length="20" not-null="true" />
+                <column name="userId" />
             </key>
             <one-to-many class="com.qpp.model.TUserEmail" />
         </set>
-        <one-to-one name="TFavorite" class="com.qpp.model.TFavorite"></one-to-one>
-        <set name="TCartItems" table="t_cartItem" inverse="true" lazy="true" fetch="select">
+        <set name="TScores" table="t_score" inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="userId" length="20" not-null="true" />
+                <column name="userId" />
+            </key>
+            <one-to-many class="com.qpp.model.TScore" />
+        </set>
+        <one-to-one name="TFavorite" class="com.qpp.model.TFavorite"></one-to-one>
+        <set name="TCartItems" table="t_cartItem" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="userId" />
             </key>
             <one-to-many class="com.qpp.model.TCartItem" />
         </set>
-        <set name="TOrders" table="t_order" inverse="true" lazy="true" fetch="select">
+        <set name="TConverts" table="t_convert" inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="buyer" length="20" />
+                <column name="userId" />
             </key>
-            <one-to-many class="com.qpp.model.TOrder" />
+            <one-to-many class="com.qpp.model.TConvert" />
         </set>
-        <set name="TComments" table="t_comment" inverse="true" lazy="true" fetch="select">
+        <set name="TComments" table="t_comment" inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="userId" length="20" not-null="true" />
+                <column name="userId" />
             </key>
             <one-to-many class="com.qpp.model.TComment" />
         </set>

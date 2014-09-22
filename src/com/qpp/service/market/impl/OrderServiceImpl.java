@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.nio.charset.Charset;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -139,15 +139,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updtaOrder(TOrder order,String qid) {
-        TUser user =order.getTUser();
+        TUser user =order.getBuyer();
 //            user.setScore(Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("交易金额兑换积分系数")));
-        Map<String, Object> orderData = new HashMap<String, Object>();
-        Map<String, Object> userData = new HashMap<String, Object>();
+        Map<String, Object> orderData = new LinkedHashMap<String, Object>();
+        Map<String, Object> userData = new LinkedHashMap<String, Object>();
         orderData.put("status", "订单已支付");
         orderData.put("invnum", qid);
-        orderDao.update("t_order", orderData, order.getId());
+        orderData.put("id", order.getId());
+        orderDao.update("t_order", orderData);
         userData.put("score", Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("key"))); //TODO:key为交易金额兑换积分系数
-        userDao.update("t_user", userData, user.getId());
+        userData.put("id", user.getId());
+        userDao.update("t_user", userData);
 
     }
 

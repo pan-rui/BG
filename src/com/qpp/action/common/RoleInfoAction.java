@@ -66,11 +66,15 @@ public class RoleInfoAction extends BaseAction {
     @ResponseBody
     private BaseReturn updateRole(HttpServletRequest request,@PathVariable int roleCode,@RequestBody TRoleInfo roleInfo){
         TRoleInfo roleInfo1=roleInfoDao.getById(roleCode);
-        if (roleInfo!=null){
+        BaseReturn baseReturn=new BaseReturn();
+        if (roleInfo1!=null){
             roleInfo.setRole(roleCode);
             roleInfoDao.update(roleInfo);
+        }else{
+            baseReturn.setResult(102);
+            baseReturn.setErrMessage(getMessage(request,"data.inValid",null));
+            return baseReturn;
         }
-        BaseReturn baseReturn=new BaseReturn();
         baseReturn.setData(super.getMessage(request,"common.success",null));
         return baseReturn;
     }

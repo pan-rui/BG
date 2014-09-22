@@ -85,7 +85,7 @@ public class MDTest {
 
     }
 
-    public static void main(String[] args) throws SchedulerException {
+    public static void ma(String[] args) throws SchedulerException {
 //        XmlWebApplicationContext context=new XmlWebApplicationContext();
 //        context.setConfigLocation("/WEB-INF/spring/applicationContext-baseSet.xml");
 //        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("resources/abc.xml");
@@ -109,5 +109,18 @@ public class MDTest {
         Scheduler scheduler=new StdSchedulerFactory().getScheduler();
         scheduler.scheduleJob(jobDetail, trigger);
         scheduler.start();
+    }
+
+    public static void main(String[] args) {
+//        String path=System.getProperty("user.dir");
+//        System.out.println(path);
+//        ApplicationContext ctx=new FileSystemXmlApplicationContext(new String[]{path+"\\WebContent\\WEB-INF\\spring\\applicationContext-hibernate.xml",path+"\\WebContent\\WEB-INF\\spring\\applicationContext-basedao.xml",path+"\\WebContent\\WEB-INF\\spring\\applicationContext-baseSet.xml"});
+//        HibernateTemplate template = (HibernateTemplate) ctx.getBean("hibernateTemplate");
+//        template.loadAll(TConfig.class);
+//        ConfigDao dao= (ConfigDao) ctx.getBean("configDao");
+//
+//        dao.getBySQL("select * from t_config");
+        System.out.println(System.currentTimeMillis());
+        System.out.println(new Date().getTime());
     }
 }

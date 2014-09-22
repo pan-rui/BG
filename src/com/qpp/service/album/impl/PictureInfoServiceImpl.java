@@ -17,15 +17,14 @@ public class PictureInfoServiceImpl implements PictureInfoService {
 	private PictureInfoDao pictureInfoDao;
 
 	@Override
-	public String addPicture(PictureInfo pic) {
+	public Long addPicture(PictureInfo pic) {
 		pictureInfoDao.save(pic);
-		String photoId = pic.getPhotoId();
-		return photoId;
+		return pic.getPhotoId();
 	}
 
 	@Override
-	public PictureInfo getPictureById(String id) {
-		return pictureInfoDao.getPictureById(id);
+	public PictureInfo getPictureById(long id) {
+		return pictureInfoDao.getById(id);
 	}
 	
 	@Override

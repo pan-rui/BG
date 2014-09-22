@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TStore" table="t_store">
-        <id name="userId" type="string">
-            <column name="userId" length="20" />
+        <id name="userId" type="int">
+            <column name="userId" />
             <generator class="foreign">
                 <param name="property">TUser</param>
             </generator>
@@ -15,16 +15,16 @@
             <column name="name" length="20" not-null="true" />
         </property>
         <property name="comment" type="string">
-            <column name="comment" length="50" not-null="true" />
+            <column name="comment" length="50" />
         </property>
         <property name="seo" type="string">
-            <column name="seo" length="1024" not-null="true" />
+            <column name="seo" length="1024" />
         </property>
         <property name="state" type="string">
             <column name="state" length="3" not-null="true" />
         </property>
         <property name="contacts" type="string">
-            <column name="contacts" length="20" not-null="true" />
+            <column name="contacts" length="20" />
         </property>
         <property name="phone" type="int">
             <column name="phone" not-null="true" />
@@ -33,17 +33,17 @@
             <column name="template" length="1024" not-null="true" />
         </property>
         <property name="popularize" type="string">
-            <column name="popularize" length="2048" not-null="true" />
+            <column name="popularize" length="2048" />
         </property>
         <property name="share" type="string">
-            <column name="share" length="2048" not-null="true" />
+            <column name="share" length="2048" />
         </property>
         <property name="gameType" type="string">
-            <column name="gameType" length="1024" not-null="true" />
+            <column name="gameType" length="1024" />
         </property>
         <set name="TStoreOrders" table="t_store_order" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="storeId" length="20" />
+                <column name="storeId" />
             </key>
             <one-to-many class="com.qpp.model.TStoreOrder" />
         </set>

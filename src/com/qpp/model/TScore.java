@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,47 +9,53 @@ import java.util.Date;
  */
 public class TScore implements java.io.Serializable {
 
-	private String id;
+	private int id;
+	private TUser userId;
 	private Date ctime;
 	private String type;
 	private int size;
-	private String userId;
-	private Integer count;
+	private int count;
 	private String status;
 	private String comment;
 
 	public TScore() {
 	}
 
-	public TScore(String id, Date ctime, int size, String status, String comment) {
-		this.id = id;
+	public TScore(Date ctime, int size, String status, String comment) {
 		this.ctime = ctime;
 		this.size = size;
 		this.status = status;
 		this.comment = comment;
 	}
 
-	public TScore(String id, Date ctime, String type, int size, String userId,
-			Integer count, String status, String comment) {
-		this.id = id;
+	public TScore(TUser userId, Date ctime, String type, int size,
+			int count, String status, String comment) {
+        this.userId=userId;
 		this.ctime = ctime;
 		this.type = type;
 		this.size = size;
-		this.userId = userId;
 		this.count = count;
 		this.status = status;
 		this.comment = comment;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public Date getCtime() {
+    public TUser getUserId() {
+        return userId;
+    }
+
+    public void setUserId(TUser userId) {
+        this.userId = userId;
+    }
+
+    public Date getCtime() {
 		return this.ctime;
 	}
 
@@ -73,19 +79,11 @@ public class TScore implements java.io.Serializable {
 		this.size = size;
 	}
 
-	public String getUserId() {
-		return this.userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public Integer getCount() {
+	public int getCount() {
 		return this.count;
 	}
 
-	public void setCount(Integer count) {
+	public void setCount(int count) {
 		this.count = count;
 	}
 

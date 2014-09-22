@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,9 +9,9 @@ import java.util.Date;
  */
 public class TCartItem implements java.io.Serializable {
 
-	private String id;
-	private TUser TUser;
-	private String productId;
+	private int id;
+	private TUser userId;
+	private int productId;
 	private String productSpec;
 	private int productCount;
 	private Date ctime;
@@ -24,11 +24,16 @@ public class TCartItem implements java.io.Serializable {
 	public TCartItem() {
 	}
 
-	public TCartItem(String id, TUser TUser, String productId,
-			String productSpec, int productCount, Date ctime, String comment,
-			double price, String imgUrl, String url, String productName) {
-		this.id = id;
-		this.TUser = TUser;
+	public TCartItem(int productCount, Date ctime, double price) {
+		this.productCount = productCount;
+		this.ctime = ctime;
+		this.price = price;
+	}
+
+	public TCartItem(TUser userId, int productId, String productSpec,
+			int productCount, Date ctime, String comment, double price,
+			String imgUrl, String url, String productName) {
+		this.userId=userId;
 		this.productId = productId;
 		this.productSpec = productSpec;
 		this.productCount = productCount;
@@ -40,27 +45,27 @@ public class TCartItem implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TUser getUserId() {
+        return userId;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setUserId(TUser userId) {
+        this.userId = userId;
+    }
 
-	public String getProductId() {
+    public int getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 

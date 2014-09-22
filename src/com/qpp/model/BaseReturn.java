@@ -15,9 +15,14 @@ public class BaseReturn {
     public String toString(){
         return JsonTool.getJsonString(this);
     }
-    public BaseReturn(int lresult,String ldata){
+    public BaseReturn(int lresult,Object ldata){
         result=lresult;
         data=ldata;
+    }
+
+    public BaseReturn(String errMessage, int result) {
+        this.result=result;
+        this.errMessage=errMessage;
     }
     public int getResult() {
         return result;

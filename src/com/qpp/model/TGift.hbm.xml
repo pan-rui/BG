@@ -1,42 +1,42 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TGift" table="t_gift">
-        <id name="id" type="string">
-            <column name="id" length="20" />
-            <generator class="assigned" />
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
         </id>
         <property name="name" type="string">
-            <column name="name" length="30" not-null="true" unique="true" />
+            <column name="name" length="30" not-null="true" />
         </property>
         <property name="type" type="string">
-            <column name="type" length="10" not-null="true" />
+            <column name="type" length="10" />
         </property>
         <property name="price" type="int">
             <column name="price" not-null="true" />
         </property>
         <property name="priceTwo" type="int">
-            <column name="priceTwo" not-null="true" />
+            <column name="priceTwo" />
         </property>
         <property name="count" type="int">
-            <column name="count" not-null="true" />
+            <column name="count" />
         </property>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
         </property>
-        <set name="TUsers" table="t_user" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="present" length="20" />
-            </key>
-            <one-to-many class="com.qpp.model.TUser" />
-        </set>
         <set name="TConverts" table="t_convert" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="target" length="20" />
+                <column name="target" />
             </key>
             <one-to-many class="com.qpp.model.TConvert" />
+        </set>
+        <set name="TUsers" table="t_user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="present" />
+            </key>
+            <one-to-many class="com.qpp.model.TUser" />
         </set>
     </class>
 </hibernate-mapping>

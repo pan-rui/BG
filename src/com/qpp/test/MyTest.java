@@ -77,7 +77,7 @@ public class MyTest {
         TState tState=new TState();
         tState.setCountryCode("us");
         tState.setStateCode("ak");
-        TState tState1=stateDao.getState(tState);
+//        TState tState1=stateDao.getState(tState);
         System.out.println(tState.getStateDesc());
 
     }

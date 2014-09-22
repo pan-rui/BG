@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TConfig" table="t_config">
         <id name="configName" type="string">
@@ -12,16 +12,16 @@
             <column name="configValue" length="4096" not-null="true" />
         </property>
         <property name="module" type="string">
-            <column name="module" length="50" not-null="true" />
+            <column name="module" length="50" />
         </property>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
         </property>
         <property name="utime" type="timestamp">
-            <column name="utime" length="19" not-null="true" />
+            <column name="utime" length="19" />
         </property>
         <property name="comment" type="string">
-            <column name="comment" length="500" not-null="true" />
+            <column name="comment" length="500" />
         </property>
         <property name="state" type="string">
             <column name="state" length="5" not-null="true" />

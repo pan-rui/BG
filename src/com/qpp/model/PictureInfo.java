@@ -11,11 +11,13 @@ import java.util.Set;
  */
 public class PictureInfo {
 	
-	private String photoId;
+	private Long photoId;
 	
 	private Long folderId;
 	
 	private Long userId;
+	
+	private String masterFileId;
 	
 	private String name;
 	
@@ -33,11 +35,11 @@ public class PictureInfo {
 	
 	private Set<Tag> tags = new HashSet<Tag>();
 
-	public String getPhotoId() {
+	public Long getPhotoId() {
 		return photoId;
 	}
 
-	public void setPhotoId(String photoId) {
+	public void setPhotoId(Long photoId) {
 		this.photoId = photoId;
 	}
 
@@ -55,6 +57,14 @@ public class PictureInfo {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getMasterFileId() {
+		return masterFileId;
+	}
+
+	public void setMasterFileId(String masterFileId) {
+		this.masterFileId = masterFileId;
 	}
 
 	public String getName() {
@@ -113,12 +123,4 @@ public class PictureInfo {
 		this.modifyDate = modifyDate;
 	}
 
-	public Set<Tag> getTags() {
-		return tags;
-	}
-
-	public void setTags(Set<Tag> tags) {
-		this.tags = tags;
-	}
-	
 }

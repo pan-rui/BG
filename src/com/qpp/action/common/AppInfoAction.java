@@ -6,9 +6,7 @@ import com.qpp.dao.AppRightDao;
 import com.qpp.model.BaseReturn;
 import com.qpp.model.TAppInfo;
 import com.qpp.model.TAppRight;
-import com.qpp.model.TAppRightPK;
 import com.qpp.util.DESPlus;
-import net.rubyeye.xmemcached.MemcachedClient;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,16 +83,16 @@ public class AppInfoAction extends BaseAction {
     }
     @RequestMapping(value = "appRight/{role}",method = RequestMethod.POST)
     @ResponseBody
-    private BaseReturn newAppRight(@PathVariable short role,@RequestParam("url") String url,HttpServletRequest request){
-        TAppRightPK tAppRightPK=new TAppRightPK();
-        tAppRightPK.setRole(role);
-        tAppRightPK.setUrl(url);
-        TAppRight tAppRight=appRightDao.getById(tAppRightPK);
-        if (tAppRight==null) {
-            tAppRight=new TAppRight();
-            tAppRight.setRole(role);
-            tAppRight.setUrl(url);
+    private BaseReturn newAppRight(@PathVariable short role,@RequestParam("url") String url,@RequestParam(value = "ip",required = false) String Ip,HttpServletRequest request){
+        TAppRight tAppRight=new TAppRight();
+        tAppRight.setRole(role);
+        tAppRight.setUrl(url);
+        TAppRight tAppRightN=appRightDao.getById(tAppRight);
+        if (tAppRightN==null) {
             appRightDao.save(tAppRight);
+        }else {
+            tAppRight.setIp(Ip);
+            appRightDao.update(tAppRight);
         }
         BaseReturn baseReturn=new BaseReturn();
         baseReturn.setData(super.getMessage(request,"common.success",null));
@@ -103,11 +101,11 @@ public class AppInfoAction extends BaseAction {
     @RequestMapping(value = "appRight/{role}",method = RequestMethod.DELETE)
     @ResponseBody
     private BaseReturn delAppRight(@PathVariable short role,@RequestParam("url") String url,HttpServletRequest request){
-        TAppRightPK tAppRightPK=new TAppRightPK();
-        tAppRightPK.setRole(role);
-        tAppRightPK.setUrl(url);
-        TAppRight tAppRight=appRightDao.getById(tAppRightPK);
-        if (tAppRight!=null)
+        TAppRight tAppRight=new TAppRight();
+        tAppRight.setRole(role);
+        tAppRight.setUrl(url);
+        TAppRight tAppRightN=appRightDao.getById(tAppRight);
+        if (tAppRightN!=null)
             appRightDao.delete(tAppRight);
         BaseReturn baseReturn=new BaseReturn();
         baseReturn.setData(super.getMessage(request,"common.success",null));

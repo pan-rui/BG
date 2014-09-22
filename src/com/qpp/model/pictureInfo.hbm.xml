@@ -3,8 +3,11 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
 <hibernate-mapping>
 	<class name="com.qpp.model.PictureInfo" table="t_picture">
-		<id name="photoId" column="photoId" type="string"/>
+		<id name="photoId" column="photoId">
+			<generator class="native"/>
+		</id>
 		<property name="name" column="photoName" type="string"/>
+		<property name="masterFileId" column="masterFileId" type="string"/>
 		<property name="photoExp" column="photoExp" type="string"/>
 		<property name="folderId" column="folderId" type="java.lang.Long"/>
 		<property name="userId" column="userId" type="java.lang.Long"/>
@@ -13,9 +16,5 @@
 		<property name="photoRemark" column="photoRemark" type="string"/>
 		<property name="createDate" column="createDate" type="java.util.Date"/>
 		<property name="modifyDate" column="modifyDate" type="java.util.Date"/>
-		<set name="tags" table="t_picture_tag">
-			<key column="photoId"/>
-			<many-to-many class="com.qpp.model.Tag" column="tagId"/>
-		</set>
 	</class>
 </hibernate-mapping> 

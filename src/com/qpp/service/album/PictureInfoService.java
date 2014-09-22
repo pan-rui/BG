@@ -6,9 +6,9 @@ import com.qpp.model.PictureInfo;
 
 public interface PictureInfoService {
 	
-	public String addPicture (PictureInfo pic);
+	public Long addPicture (PictureInfo pic);
 	
-	public PictureInfo getPictureById (String id);
+	public PictureInfo getPictureById (long id);
 	
 	public List<PictureInfo> getPicturesByFolderId (long folderId);
 	

@@ -85,10 +85,10 @@ private OrderService orderServiceImpl;
     public BaseReturn orderCommit(TOrder order,HttpServletRequest request) {
         BaseReturn result = new BaseReturn();
         Date date = new Date();
-        order.setTUser((com.qpp.model.TUser) request.getSession().getAttribute("user"));
+//        order.setTUser((com.qpp.model.TUser) request.getSession().getAttribute("user"));
         order.setCtime(date);
         String orderId = RandomSymbol.getAllSymbol(16);
-        order.setId(orderId);
+//        order.setId(orderId);
         order.setStatus("下单待付款");
 //        order.setAmt();前台已计算
         String invnum = RandomSymbol.getAllSymbol(18);//流水号/跟踪号
@@ -102,8 +102,8 @@ private OrderService orderServiceImpl;
             for (TCartItem cartItem : cartList) {
                 TOrderItem orderItem = new TOrderItem();
                 BeanUtils.copyProperties(cartItem, orderItem, new String[]{"id", "userId", "ctime", "url", "imgUrl"});
-                orderItem.setTOrder(order);
-                orderItem.setId(RandomSymbol.getAllSymbol(16));
+                orderItem.setOrderId(order);
+//                orderItem.setId(RandomSymbol.getAllSymbol(16));
                 orderItem.setCtime(date);
                 orderItem.setUtime(date);
                 orderItemServiceImpl.save(orderItem);

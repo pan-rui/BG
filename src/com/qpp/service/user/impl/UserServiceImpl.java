@@ -5,14 +5,13 @@ import com.qpp.model.*;
 import com.qpp.service.user.UserService;
 import com.qpp.util.Email;
 import com.qpp.util.MD5;
-import com.qpp.util.RandomSymbol;
 import com.qpp.util.TriggerUtil;
 import org.quartz.JobDataMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.*;
@@ -37,11 +36,12 @@ public class UserServiceImpl implements UserService {
     private ConvertDao convertDao;
     @Resource
     private MailPublishDao mailPublishDao;
-    @Autowired
-    private HibernateTemplate hibernateTemplate;
     @Resource
     private UserEMailDao userEMailDao;
-
+    @Resource
+    private CountryDao countryDao;
+    @Resource
+    private JdbcTemplate jdbcTemplate;
     //    @Resource
 //    private Email Mail;
 //    @Resource
@@ -51,15 +51,15 @@ public class UserServiceImpl implements UserService {
         BaseReturn result = new BaseReturn();
         TUser tuser = null;
         if (patten.matcher(user).matches()) {
-            tuser = userDao.getBySQL("select name,email,password from t_user where email='" + user + "'");
+            tuser = userDao.getBySQL("select * from t_user where email='" + user + "'");
         } else
-            tuser = userDao.getBySQL("select name,email,password from t_user where name='" + user + "'");
+            tuser = userDao.getBySQL("select * from t_user where name='" + user + "'");
         if (tuser != null && tuser.getPassword().equals(md5.getMD5ofStr(password))) {
-            result.setResult(1);
-            result.setData(tuser);
-        } else {
             result.setResult(0);
-            result.setErrMessage("用户名(邮箱)与密码不匹配");
+//            result.setData(tuser);
+        } else {
+            result.setResult(1);
+            result.setErrMessage("err.user.login.check");
         }
         return result;
     }
@@ -67,40 +67,53 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseReturn checkRegister(String type, String value) {
         BaseReturn result = new BaseReturn();
-        TUser tuser = null;
-        if ("name".equals(type))
-            tuser = userDao.getBySQL("select name from t_user where name='" + value + "'");
-        else
-            tuser = userDao.getBySQL("select name from t_user where email='" + value + "'");
-        if (tuser != null) {
-            result.setResult(0); //0表示失败,1表示成功
-            result.setErrMessage(MessageFormat.format("该{0}已被其它用户注册", "name".equals(type) ? "用户名" : "邮箱"));
-        } else {
-            result.setResult(1);
+        if ("name".equals(type)){
+            if (!value.matches("^[\\w|-|_]{6,18}$") || Integer.parseInt(exists(userDao, "select count(1) from t_user where name='" + value + "'")) > 0)
+                return new BaseReturn("err.user.register.username.verify", 1);
+        }else{
+            if (!patten.matcher(value).matches() || Integer.parseInt(exists(userDao, "select count(1) from t_user where email='" + value + "'")) > 0)
+                return new BaseReturn("err.user.register.email.verify", 1);
         }
+            result.setResult(0);
         return result;
     }
 
     @Override
-    public BaseReturn emailActive(String userId, String time) {
+    public BaseReturn emailActive(int userId, String time) {
         BaseReturn result = new BaseReturn();
         int interval = 7 * 24 * 3600 * 1000;
         TUser tuser = userDao.getById(userId);
-        boolean valid = (Integer.parseInt(time) - tuser.getCtime().getTime()) < interval;
+        boolean valid = (Long.parseLong(time) - tuser.getCtime().getTime()) < interval;
         if (tuser != null && valid) {
-            tuser.setStatus('1');
+            tuser.setStatus("1");
             userDao.update(tuser);
-            result.setResult(1);
+            result.setResult(0);
             result.setData(tuser);
         } else {
-            result.setResult(0);
-            result.setErrMessage("验证失败,验证连接已过期..");
+            result.setResult(1);
+            result.setErrMessage("err.user.action.email.failed");
         }
         return result;
+    }
+
+    public String exists(BaseDao dao, String sql) {
+        Object obj = dao.getObjectBySQL(sql);
+        return String.valueOf(obj);
     }
 
     @Override
     public BaseReturn register(TUser user) {
+        if (!user.getName().matches("^[\\w|\\-|_]{6,18}$") || Integer.parseInt(exists(userDao, "select count(1) from t_user where name='" + user.getName() + "'")) > 0)
+            return new BaseReturn("err.user.register.username.verify", 1);
+        if (!patten.matcher(user.getEmail()).matches() || Integer.parseInt(exists(userDao, "select count(1) from t_user where email='" + user.getEmail() + "'")) > 0)
+            return new BaseReturn("err.user.register.email.verify", 1);
+        if(!user.getPassword().matches("^.{8,18}$"))
+            return new BaseReturn("err.user.register.password.verify", 1);
+        if(!String.valueOf(user.getPhone()).matches("(^(\\d{3}-){2}\\d{4})|((^\\+\\d{2})?[13|15|14|18]+\\d{9})"))
+            return new BaseReturn("err.user.register.phone.verify",1);
+        if (!mailPublishDao.queryAddr("select CountryCode from qb_country_info","CountryCode").contains(user.getCountryCode()))
+            return new BaseReturn("err.user.register.countryCode.verify", 1);
+        //可选 邮编验证.....
         BaseReturn result = new BaseReturn();
         if ("c".equals(user.getType())) {
             //CGP用户....事项
@@ -109,24 +122,25 @@ public class UserServiceImpl implements UserService {
         }
 
         Date date = new Date();
-        String userId = RandomSymbol.getAllSymbol(16);
-        user.setId(userId);
-        user.setStatus('0');
+//        String userId = RandomSymbol.getAllSymbol(16);
+//        user.setId(userId);
+        user.setStatus("0");
         user.setCtime(date);
         user.setUtime(date);
         user.setPassword(md5.getMD5ofStr(user.getPassword()));
+        if(user.getAddress()!=null&&!"".equals(user.getAddress()))
+            user.setAddress("[{'idDefault':true,'addr':'"+user.getAddress()+"'}]");
         try {
             userDao.save(user);
-//        Mail.sendMail(messageSource.getString());
-            result.setResult(1);
+            result.setResult(0);
             result.setData(user);
-            TConfig subject = configDao.getById("email.subject");
+            TConfig subject = configDao.getById("email.subject"); //TODO:需添加此配置在数据库中
             TConfig context = configDao.getById("email.context");
 //            Mail.sendMail(getMessage(request,"email.subject",null),getMessage(request,"email.context",new Object[]{tuser.getId(),new Date().getTime()}),tuser.getEmail());
             mail.sendMail(MessageFormat.format(subject.getConfigValue(), null), MessageFormat.format(context.getConfigValue(), user.getId(), new Date().getTime()), new String[]{user.getEmail()});
         } catch (Exception e) {
-            result.setResult(0);
-            result.setErrMessage("保存错误,注册失败...");
+            result.setResult(1);
+            result.setErrMessage("err.user.register.failed");
             return result;
         }
         return result;
@@ -135,23 +149,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseReturn rePassword(String name, String userEmail) {
         BaseReturn result = new BaseReturn();
-        if (!patten.matcher(name).matches()) {
-            TUser tuser = userDao.getBySQL("select name,email from t_user where name='" + name + "'");
-            if (!tuser.getEmail().equals(userEmail)) {
-                result.setResult(0);
-                result.setErrMessage("用户名与您填写的邮箱不匹配,请核对后重新输入.");
+        if (name.matches("^[\\w|-|_]{6,18}$")) {
+//            String email = mailPublishDao.queryAddr("select email from t_user where name='" + name + "'","email").get(0);
+            String email=exists(userDao, "select email from t_user where name='" + name + "'");
+            if (!email.equals(userEmail)) {
+                result.setResult(1);
+                result.setErrMessage("err.user.rePassword.verify");
                 return result;
             }
-        } else {
-            TUser tuser = userDao.getBySQL("select name,email from t_user where email='" + name + "'");
-            if (!tuser.getEmail().equals(userEmail)) {
-                result.setResult(0);
-                result.setErrMessage("该邮箱并未注册,请核对后重新输入.");
-                return result;
-            }
-        }
-        result.setResult(1);
-        TConfig subject = configDao.getById("email.rePass.subject");
+        } else
+            return new BaseReturn("err.user.register.username.verify",1);
+//        else {
+//            TUser tuser = userDao.getBySQL("select name,email from t_user where email='" + name + "'");
+//            if (!tuser.getEmail().equals(userEmail)) {
+//                result.setResult(0);
+//                result.setErrMessage("err.user.rePassword.verify2");
+//                return result;
+//            }
+//        }
+        result.setResult(0);
+        TConfig subject = configDao.getById("email.rePass.subject");//TODO:数据训预定义
         TConfig context = configDao.getById("email.rePass.context");
         mail.sendMail(MessageFormat.format(subject.getConfigValue(), null), MessageFormat.format(context.getConfigValue(), userEmail, new Date().getTime()), new String[]{userEmail});
         return result;
@@ -161,19 +178,22 @@ public class UserServiceImpl implements UserService {
     public BaseReturn rePass(TUser user, String oldPass, String newPass) {
         BaseReturn result = new BaseReturn();
         if (!user.getPassword().equals(md5.getMD5ofStr(oldPass))) {
-            result.setResult(0);
-            result.setErrMessage("您输入的旧密码不正确,修改失败....");
+            result.setResult(1);
+            result.setErrMessage("err.user.modify.Pass.oldPassword.verify");
+            return result;
         }
 //        user.setPassword(md5.getMD5ofStr(user.getPassword()));
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         dataMap.put("password", md5.getMD5ofStr(newPass));
+        dataMap.put("utime", new Date());
+        dataMap.put("id", user.getId());
         try {
-            userDao.update("t_user", dataMap, user.getId());
-            result.setResult(1);
+            userDao.update("t_user", dataMap);
+            result.setResult(0);
             result.setData(user);
         } catch (Exception e) {
-            result.setResult(0);
-            result.setErrMessage("数据更新错误,修改密码失败.");
+            result.setResult(1);
+            result.setErrMessage("err.user.modify.Pass.failed");
             return result;
         }
         return result;
@@ -183,13 +203,15 @@ public class UserServiceImpl implements UserService {
     public BaseReturn updateUser(TUser user) {
         BaseReturn result = new BaseReturn();
         Map<String, Object> dataMap = getMap(user);
+        dataMap.put("utime", new Date());
+        dataMap.put("id", user.getId());
         try {
-            userDao.update("t_user", dataMap, user.getId());
-            result.setResult(1);
-            result.setData(user);
-        } catch (Exception e) {
+            userDao.update("t_user", dataMap);
             result.setResult(0);
-            result.setErrMessage("数据更新错误,用户资料更新失败");
+//            result.setData(user);
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.update.failed");
             return result;
         }
         return result;
@@ -200,7 +222,7 @@ public class UserServiceImpl implements UserService {
 //        BaseReturn result = new BaseReturn();
 //        StringBuffer sql = new StringBuffer("select * from t_user");
 //        if(page.getSearchValue()!=null&&!page.getSearchValue().toString().trim().equals(""))
-//            sql.append(" where " + page.getSearchProperty() + "like '%" + page.getSearchValue().toString() + "%'");
+//            sql.append(" where " + page.getSearchProperty() + " like '%" + page.getSearchValue(). toString() + "%'");
 //        if(page.getOrderPropery()!=null&&!page.getOrderPropery().trim().equals(""))
 //            sql.append(" order by "+page.getOrderPropery());
 //        if(page.getIsDesc())
@@ -212,6 +234,27 @@ public class UserServiceImpl implements UserService {
         return queryPage(page, "t_user", userDao);
     }
 
+    public String joinPageSql(String searchProperty, String searchValue,String orderProperty, Boolean isDesc, int start, int end) {
+        StringBuffer sql = new StringBuffer("select * from t_user");
+        if (searchValue != null && !"".equals(searchValue))
+            sql.append(" where "+searchProperty+" like '%"+searchValue+"%'");
+        if(orderProperty!=null&&!"".equals(orderProperty))
+            sql.append(" order by " + orderProperty);
+        if(isDesc!=null&&isDesc)
+            sql.append(" desc");
+        sql.append(" limit " + start + "," + end);
+        return sql.toString();
+    }
+    public BaseReturn queryUser(String searchProperty, String searchValue,String orderProperty, Boolean isDesc, int start, int end){
+        try {
+            List<TUser> list = userDao.getsBySQL(joinPageSql(searchProperty, searchValue, orderProperty, isDesc, start, end));
+            return new BaseReturn(1, list);
+        }catch (Exception e) {
+            return new BaseReturn("err.user.query.faild", 0);
+        }
+    }
+
+
     @Override
     public BaseReturn queryScore(PageModel<TScore> page) {
 
@@ -219,9 +262,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseReturn scoreProcess(TUser user, TGift gift, String count) {
+    public BaseReturn scoreProcess(TUser user, TGift gift, int count) {
         BaseReturn result = new BaseReturn();
-        int needScore = gift.getPrice() * Integer.parseInt(count);
+        int needScore = gift.getPrice() * count;
 //        if(user.getStatus()==0){
 //            //未激活用户
 //            result.setResult(0);
@@ -229,25 +272,27 @@ public class UserServiceImpl implements UserService {
 //              return result;
 //        }
         if (user.getScore() < needScore) {
-            result.setResult(0);
-            result.setErrMessage("抱歉,您的积分数量不够,兑换不成功!");
+            result.setResult(1);
+            result.setErrMessage("err.user.score.convert.failed");
         }
         //更新单个字段
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         dataMap.put("score", user.getScore() - needScore);
-        userDao.update("t_user", dataMap, user.getId());
+        dataMap.put("utime", new Date());
+        dataMap.put("id", user.getId());
+        userDao.update("t_user", dataMap);
         //新增积分记录
         TConvert convert = new TConvert();
         Date date = new Date();
-        convert.setId(RandomSymbol.getAllSymbol(16));
+//        convert.setId(RandomSymbol.getAllSymbol(16));
         convert.setCtime(date);
-        convert.setTGift(gift);
-        convert.setTUser(user);
-        convert.setCount(Integer.parseInt(count));
+        convert.setTarget(gift);
+        convert.setUserId(user);
+        convert.setCount(count);
         convert.setType("fromScore");
         convert.setAmount(needScore);
         convertDao.save(convert);
-        result.setResult(1);
+        result.setResult(0);
         result.setData(user);
         return result;
     }
@@ -255,19 +300,23 @@ public class UserServiceImpl implements UserService {
     public BaseReturn rePasswordd(String email, String password, String time) {
         BaseReturn result = new BaseReturn();
         if (Long.parseLong(time) + 24 * 60 * 60 * 1000 < new Date().getTime()) {
-            result.setResult(0);
-            result.setErrMessage("链接已经过期,建议重新发起请求");
+            result.setResult(1);
+            result.setErrMessage("err.user.rePassword.expired");
             return result;
         }
-        TUser tuser = userDao.getBySQL("select * from t_user where email='" + email + "'");
-        tuser.setPassword(md5.getMD5ofStr(password));
+        String newEmail = exists(userDao,"select email from t_user where email='" + email + "'");
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+        dataMap.put("password",md5.getMD5ofStr(password));
+        dataMap.put("utime", new Date());
+        dataMap.put("email", newEmail);
+//        tuser.setPassword();
         try {
-            userDao.update(tuser);
-            result.setResult(1);
-            result.setData(tuser);
-        } catch (Exception e) {
+            userDao.update("t_user",dataMap);
             result.setResult(0);
-            result.setErrMessage("数据更新错误,重设密码失败.");
+//            result.setData(tuser);
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.rePassword.failed");
             return result;
         }
         return result;
@@ -297,10 +346,9 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    @Override
-    public boolean update(String tableName, Map data, String id) {
+    public boolean update(String tableName, Map data) {
         try {
-            userDao.update(tableName, data, id);
+            userDao.update(tableName, data);
         } catch (Exception e) {
             return false;
         }
@@ -308,62 +356,68 @@ public class UserServiceImpl implements UserService {
     }
 
     public Map<String, Object> getMap(TUser user) {
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         Field[] fields = user.getClass().getDeclaredFields();
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object obj = field.get(user);
-                if (obj != null && !"".equals(obj) && !(obj instanceof Set) && !obj.getClass().getName().startsWith("com.qpp.model"))
+                if (obj != null && !"".equals(obj) && !(obj instanceof Set) && !obj.getClass().getName().startsWith("com.qpp.model")&&!"id".equals(field.getName()))
                     dataMap.put(field.getName(), obj);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            return new HashMap<String, Object>();
+            return new LinkedHashMap<String, Object>();
         }
         return dataMap;
     }
 
-    public BaseReturn setUserStatus(String userId, String status) {
+    public BaseReturn setUserStatus(int userId, String status) {
         BaseReturn result = new BaseReturn();
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         dataMap.put("status", status);
+        dataMap.put("utime", new Date());
+        dataMap.put("id", userId);
         try {
-            userDao.update("t_user", dataMap, userId);
-            result.setResult(1);
-        } catch (Exception e) {
+            userDao.update("t_user", dataMap);
             result.setResult(0);
-            result.setErrMessage("用户状态更新失败....");
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.set.status.failed");
             return result;
         }
         return result;
     }
 
-    public BaseReturn setUserType(String userId, String type) {
+    public BaseReturn setUserType(int userId, String type) {
         BaseReturn result = new BaseReturn();
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         dataMap.put("type", type);
+        dataMap.put("utime", new Date());
+        dataMap.put("id", userId);
         try {
-            userDao.update("t_user", dataMap, userId);
-            result.setResult(1);
-        } catch (Exception e) {
+            userDao.update("t_user", dataMap);
             result.setResult(0);
-            result.setErrMessage("用户类型更新失败....");
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.set.type.failed");
             return result;
         }
         return result;
     }
 
-    public BaseReturn setUserAddr(String userId, String address) {
+    public BaseReturn setUserAddr(int userId, String address) {
         BaseReturn result = new BaseReturn();
-        Map<String, Object> dataMap = new HashMap<String, Object>();
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
         dataMap.put("address", address);
+        dataMap.put("utime", new Date());
+        dataMap.put("id", userId);
         try {
-            userDao.update("t_user", dataMap, userId);
-            result.setResult(1);
-        } catch (Exception e) {
+            userDao.update("t_user", dataMap);
             result.setResult(0);
-            result.setErrMessage("用户地址设置失败....");
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.set.address.failed");
             return result;
         }
         return result;
@@ -376,9 +430,11 @@ public class UserServiceImpl implements UserService {
             email.setCtime(new Date());
 //        email.setId(RandomSymbol.getAllSymbol(16));
         try {
-            mailPublishDao.save(email);
+            mailPublishDao.getHibernateTemplate().saveOrUpdate(email);
+//            System.out.println("...................");
             if ("1".equals(email.getIsPublish())) {
-                List<String> addressList = hibernateTemplate.find("select user.email from t_mailPublish mail join t_userEmail userE on mail.id=userE.emailId join t_user user on userE.userId=user.id where mail.id=?", email.getId());
+                List<String> addressList = mailPublishDao.queryAddr("select user.email from t_mailPublish mail join t_userEmail userE on mail.id=userE.emailId join t_user user on userE.userId=user.id where mail.id='" + email.getId() + "'","email");
+//                List<String> addressList = hibernateTemplate.find("select user.email from t_mailPublish mail inner join fetch t_userEmail userE on mail.id=userE.emailId inner join fetch t_user user on userE.userId=user.id where mail.id=?", email.getId());
                 if (addressList.size() > 0) {
                     JobDataMap dataMap = new JobDataMap();
                     dataMap.put("mailUtil", mail);
@@ -387,39 +443,43 @@ public class UserServiceImpl implements UserService {
                     TriggerUtil.simpleTask(dataMap, EmailJob.class, email.getSendDate());
                 }
             }
-            result.setResult(1);
+            result.setResult(0);
             result.setData(email);
         } catch (Exception e) {
-            result.setResult(0);
-            result.setErrMessage("添加失败...");
+            e.printStackTrace();
+            result.setResult(1);
+            result.setErrMessage("err.user.add.emailPublish");
             return result;
         }
         return result;
     }
 
-    public BaseReturn subscription(TUserEmail userEmail) {
+    public BaseReturn subscription(TUser user,int emailId) {
         BaseReturn result = new BaseReturn();
-        userEmail.setId(RandomSymbol.getAllSymbol(16));
+//        userEmail.setId(RandomSymbol.getAllSymbol(16));
         try {
+            TMailPublish email = mailPublishDao.getById(emailId);
+            TUserEmail userEmail=new TUserEmail(user,email);
             userEMailDao.save(userEmail);
-            result.setResult(1);
-            result.setData(userEmail);
-        } catch (Exception e) {
             result.setResult(0);
-            result.setErrMessage("保存错误,订阅失败");
+            result.setData(user);
+        } catch (Exception e) {
+            result.setResult(1);
+            result.setErrMessage("err.user.subscription.email");
             return result;
         }
         return result;
     }
 
-    public BaseReturn cancelSubscript(TUserEmail userEmail) {
+    public BaseReturn cancelSubscript(int userId,int emailId) {
         BaseReturn result = new BaseReturn();
         try {
-            userEMailDao.delete("id", userEmail.getId());
-            result.setResult(1);
-            result.setData(userEmail);
-        } catch (Exception e) {
+            userDao.execBySQL("delete t_userEmail where userId=" + userId + " and emailId=" + emailId);
+//            userEMailDao.delete("id", userEmail.getId());
             result.setResult(0);
+            result.setData(userId);
+        } catch (Exception e) {
+            result.setResult(1);
             return result;
         }
         return result;
@@ -431,6 +491,10 @@ public class UserServiceImpl implements UserService {
         else if (user.getType().equals("m"))
             return queryPage(page, "t_mailPublish mail join t_userEmail userE on mail.id=userE.emailId join t_user user on user.id=userE.userId", mailPublishDao);
         else
-            return new BaseReturn(0, "您没有此权限...");
+            return new BaseReturn("err.user.query.emailPublish.verify",0);
+    }
+
+    public TUser getById(Serializable id) {
+        return userDao.getById(id);
     }
 }

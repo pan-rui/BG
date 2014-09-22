@@ -22,10 +22,8 @@ public class FastdfsUtils {
 	static {
 		String classPath = "";
 		try {
-			classPath = new File(FastdfsUtils.class.getResource("/").getFile())
-					.getCanonicalPath();
-			String configFilePath = classPath + File.separator
-					+ "resources/fdfs_client.conf";
+			classPath = new File(FastdfsUtils.class.getResource("/").getFile()).getCanonicalPath();
+			String configFilePath = classPath + File.separator	+ "resources/fdfs_client.conf";
 			ClientGlobal.init(configFilePath);
 		} catch (Exception e) {
 			logger.error("init fastDfs fails", e);
@@ -47,32 +45,21 @@ public class FastdfsUtils {
 			logger.warn("Fail to upload file, because the format of filename is illegal.");
 			return null;
 		}
-		NameValuePair[] metaList = new NameValuePair[3];
-		metaList[0] = new NameValuePair("fileName", fileName);
-		metaList[1] = new NameValuePair("fileExtName", fileExtName);
-		metaList[2] = new NameValuePair("fileLength", "");
 		FileInputStream fis = (FileInputStream) inputstream;
 		byte[] file_buff = null;
+        int len=0;
 		if (fis != null) {
-			int len = fis.available();
+			len = fis.available();
 			file_buff = new byte[len];
 			fis.read(file_buff);
 		}
 		fis.close();
-//		String fileId = client.upload_file1(file_buff, fileExtName, metaList);
-//		
-//		if (fileId != null) {
-//			List<ImageThumbnail> list = ImageThumbnail.getList();
-//			for (int i = 0; i < list.size(); i++) {
-//				ImageThumbnail itn = list.get(i);
-//				String fileId2 = client.upload_file1(fileId, itn.getName(), ImageUtils.resize(file_buff, fileExtName, itn.getWidth(), itn.getHeight()), fileExtName, null);
-//				logger.info("fileID2:" + fileId2);
-//			}
-//		}
-//		trackerServer.close();
+        NameValuePair[] metaList = new NameValuePair[3];
+        metaList[0] = new NameValuePair("fileName", fileName);
+        metaList[1] = new NameValuePair("fileExtName", fileExtName);
+        metaList[2] = new NameValuePair("fileLength",String.valueOf(len));
 		String fileId = uploadFileBybyte (file_buff, fileExtName, metaList);
 		return fileId;
-		
 	}
 	
 	public static String uploadFileBybyte (byte[] buff, String picExp, NameValuePair[] metaList) throws Exception {
@@ -84,20 +71,18 @@ public class FastdfsUtils {
 			for (int i = 0; i < list.size(); i++) {
 				ImageThumbnail itn = list.get(i);
 				String fileId2 = client.upload_file1(fileId, itn.getName(), ImageUtils.resize(buff, picExp, itn.getWidth(), itn.getHeight()), picExp, null);
-				logger.info("fileID2:" + fileId2);
+				logger.info("Master:"+fileId+",Child:" + fileId2);
 			}
 		}
 		trackerServer.close();
 		return fileId;
 	}
 
-	/**
-	 * delete file
-	 * 
-	 * @param groupName
-	 * @param remoteName
-	 * @throws Exception
-	 */
+    /**
+     *
+     * @param filePath
+     * @throws Exception
+     */
 	public static void deleteFile(String filePath) throws Exception {
 		TrackerServer trackerServer = initTrackerServer();
 		StorageClient1 storageClient = initStorageClient(trackerServer);
@@ -137,4 +122,14 @@ public class FastdfsUtils {
 		StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
 		return storageClient;
 	}
+
+    public static void main(String[] args) {
+        File file=new File("d:\\temp\\fastdfs.jpg");
+        try{
+            InputStream is=new FileInputStream(file);
+            FastdfsUtils.uploadFile(file.getName(),is);
+        }catch (Exception e){
+
+        }
+    }
 }

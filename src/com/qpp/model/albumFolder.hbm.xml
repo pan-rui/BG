@@ -8,19 +8,9 @@
 		</id>
 		<property name="name" column="folderName" type="string"/>
 		<property name="folderRemark" column="folderRemark" type="string"/>
-		<property name="folderParentId" column="folderParentId" type="java.lang.Long" insert="false" update="false"/>
+		<property name="folderParentId" column="folderParentId" type="java.lang.Long"/>
 		<property name="userId" column="userId" type="java.lang.Long"/>
-		<property name="albumId" column="albumId" type="java.lang.Long"/>
 		<property name="createDate" column="createDate" type="java.util.Date"/>
 		<property name="modifyDate" column="modifyDate" type="java.util.Date"/>
-		<many-to-one name="parent" class="com.qpp.model.AlbumFolder" column="folderParentId"/>
-		<set name="children" cascade="save-update" inverse="true">
-			<key column="folderParentId"/>
-			<one-to-many class="com.qpp.model.AlbumFolder"/>
-		</set>
-		<set name="pictures">
-			<key column="folderId"/>
-			<one-to-many class="com.qpp.model.PictureInfo"/>
-		</set>
 	</class>
 </hibernate-mapping> 

@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,19 +9,24 @@ import java.util.Date;
  */
 public class TFavorite implements java.io.Serializable {
 
-	private String userId;
+	private int userId;
 	private TUser TUser;
 	private String type;
 	private String productName;
-	private String productId;
+	private int productId;
 	private String comment;
 	private Date ctime;
 
 	public TFavorite() {
 	}
 
+	public TFavorite(TUser TUser, Date ctime) {
+		this.TUser = TUser;
+		this.ctime = ctime;
+	}
+
 	public TFavorite(TUser TUser, String type, String productName,
-			String productId, String comment, Date ctime) {
+			int productId, String comment, Date ctime) {
 		this.TUser = TUser;
 		this.type = type;
 		this.productName = productName;
@@ -30,11 +35,11 @@ public class TFavorite implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
@@ -62,11 +67,11 @@ public class TFavorite implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public String getProductId() {
+	public int getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 

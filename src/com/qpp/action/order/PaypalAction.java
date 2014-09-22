@@ -60,7 +60,7 @@ public class PaypalAction extends BaseAction {
 //        encoder.add("REQCONFIRMSHIPPING","1");
         encoder.add("ADDROVERRIDE", "1");
         encoder.add("ITEMAMT", String.valueOf(order.getItemAmt()));
-        encoder.add("SHIPTONAME", order.getTUser().getId());
+        encoder.add("SHIPTONAME", String.valueOf(order.getBuyer().getId()));
         double taxAmt = order.getItemAmt() * Double.parseDouble(MessageInfo.getMessage(order.getLocalCode() + "_Tax"));
         encoder.add("TAXAMT", String.valueOf(taxAmt));
         order.setTaxAmt(taxAmt);
@@ -78,8 +78,8 @@ public class PaypalAction extends BaseAction {
             encoder.add("L_DESC" + i, TOrderItem.getComment());
             encoder.add("L_AMT" + i, String.valueOf(TOrderItem.getPrice()));
             encoder.add("QTY" + i, String.valueOf(TOrderItem.getProductCount()));
-            TOrderItem.setId(PaypalUtil.getUuid(16));
-            TOrderItem.setTOrder(order);
+//            TOrderItem.setId(PaypalUtil.getUuid(16));
+            TOrderItem.setOrderId(order);
             TOrderItem.setCtime(date);
             TOrderItem.setUtime(date);
             OrderItemServiceImpl.save(TOrderItem);
@@ -93,7 +93,7 @@ public class PaypalAction extends BaseAction {
         encoder.add("CALLBACKTIMEOUT", "4");
 
 //        order.setTOrderItems(list);
-        order.setId(orderId);
+//        order.setId(orderId);
         order.setCtime(date);
         order.setUtime(date);
         order.setTaxAmt(taxAmt);

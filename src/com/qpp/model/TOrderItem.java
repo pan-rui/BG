@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,11 +9,11 @@ import java.util.Date;
  */
 public class TOrderItem implements java.io.Serializable {
 
-	private String id;
-	private TOrder TOrder;
-	private String productId;
+        private int id;
+	private TOrder orderId;
+	private int productId;
 	private String productName;
-	private Integer productCount;
+	private int productCount;
 	private String productSpec;
 	private String comment;
 	private Date ctime;
@@ -24,16 +24,10 @@ public class TOrderItem implements java.io.Serializable {
 	public TOrderItem() {
 	}
 
-	public TOrderItem(String id, String productId) {
-		this.id = id;
-		this.productId = productId;
-	}
-
-	public TOrderItem(String id, TOrder TOrder, String productId,
-			String productName, Integer productCount, String productSpec,
-			String comment, Date ctime, Date utime, String isbn, Double price) {
-		this.id = id;
-		this.TOrder = TOrder;
+	public TOrderItem(TOrder orderId, int productId, String productName,
+			int productCount, String productSpec, String comment,
+			Date ctime, Date utime, String isbn, Double price) {
+        this.orderId=orderId;
 		this.productId = productId;
 		this.productName = productName;
 		this.productCount = productCount;
@@ -45,27 +39,27 @@ public class TOrderItem implements java.io.Serializable {
 		this.price = price;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TOrder getTOrder() {
-		return this.TOrder;
-	}
+    public TOrder getOrderId() {
+        return orderId;
+    }
 
-	public void setTOrder(TOrder TOrder) {
-		this.TOrder = TOrder;
-	}
+    public void setOrderId(TOrder orderId) {
+        this.orderId = orderId;
+    }
 
-	public String getProductId() {
+    public int getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 
@@ -77,11 +71,11 @@ public class TOrderItem implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public Integer getProductCount() {
+	public int getProductCount() {
 		return this.productCount;
 	}
 
-	public void setProductCount(Integer productCount) {
+	public void setProductCount(int productCount) {
 		this.productCount = productCount;
 	}
 

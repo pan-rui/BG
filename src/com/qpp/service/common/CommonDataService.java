@@ -22,7 +22,7 @@ public class CommonDataService {
 
     @Cacheable(value="commonData")
     public List<TCountry> getAllCountry(){
-        return countryDao.getsByQuery("from TCountry");
+        return countryDao.getAll();
     }
     @Cacheable(value="commonData",key="#countryCode")
     public TCountry getCountry(String countryCode){
@@ -30,7 +30,7 @@ public class CommonDataService {
         return country;
     }
     public List<TState> getAlState(){
-         return stateDao.getsByQuery("from TState");
+         return stateDao.getAll();
     }
     @Cacheable(value="commonData",key="#tStatePK.countryCode+#tStatePK.stateCode")
     public TState getState(TState tStatePK){

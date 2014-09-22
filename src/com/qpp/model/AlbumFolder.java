@@ -19,10 +19,7 @@ public class AlbumFolder {
 	
 	/**album folder folderParentId**/
 	private Long folderParentId;
-	
-	/**album folder albumId**/
-	private Long albumId;
-	
+
 	/**album folder creator**/
 	private Long userId;
 	
@@ -37,13 +34,7 @@ public class AlbumFolder {
 	
 	/**album folder parent**/
 	private AlbumFolder parent;
-	
-	/**album folder children**/
-	private Set<AlbumFolder> children = new HashSet<AlbumFolder>();
-	
-	/**album folder pictures**/
-	private Set<PictureInfo> pictures = new HashSet<PictureInfo>();
-	
+
 	/**
 	 * @return id
 	 */
@@ -91,21 +82,6 @@ public class AlbumFolder {
 
 	/**
 	 * @return albumId
-	 */
-	public Long getAlbumId() {
-		return albumId;
-	}
-
-	/**
-	 * set the albumId to albumId
-	 * @param albumId
-	 */
-	public void setAlbumId(Long albumId) {
-		this.albumId = albumId;
-	}
-
-	/**
-	 * @return userId
 	 */
 	public Long getUserId() {
 		return userId;
@@ -164,17 +140,6 @@ public class AlbumFolder {
 		this.modifyDate = modifyDate;
 	}
 
-	/**
-	 * @return parent
-	 */
-	public AlbumFolder getParent() {
-		return parent;
-	}
-
-	/**
-	 * set the parent to parent
-	 * @param parent
-	 */
 	public void setParent(AlbumFolder parent) {
 		this.parent = parent;
 	}
@@ -182,31 +147,4 @@ public class AlbumFolder {
 	/**
 	 * @return children
 	 */
-	public Set<AlbumFolder> getChildren() {
-		return children;
-	}
-
-	/**
-	 * set the children to children
-	 * @param children
-	 */
-	public void setChildren(Set<AlbumFolder> children) {
-		this.children = children;
-	}
-
-	/**
-	 * @return pictures
-	 */
-	public Set<PictureInfo> getPictures() {
-		return pictures;
-	}
-
-	/**
-	 * set the pictures to pictures
-	 * @param pictures
-	 */
-	public void setPictures(Set<PictureInfo> pictures) {
-		this.pictures = pictures;
-	}
-
 }

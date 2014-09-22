@@ -11,19 +11,14 @@ import java.util.List;
 
 @Repository
 public class AlbumFolderDao extends BaseDao<AlbumFolder> {
-	
-	public List<AlbumFolder> getAlbumFoldersByAlumId (long albumId) {
-		
-		Session session = this.getSession();
-		String hql = "select af from AlbumFolder af left join af.children ch where af.albumId=:albumId";
-		Query query = session.createQuery(hql);
-		query.setLong("albumId", albumId);
-		List<AlbumFolder> list = query.list();
-		return list;
+	public AlbumFolderDao() {
+		super(AlbumFolder.class);
 	}
-	
-	public AlbumFolder getAlbumFolderById (long id) {
-		AlbumFolder albumFolder = getHibernateTemplate().get(AlbumFolder.class, id);
-		return albumFolder;
+
+    public List<AlbumFolder> getAlbumFoldersByUid (long uid) {
+        return super.getsByQuery("from AlbumFolder where userId="+uid);
+    }
+	public List<AlbumFolder> getAlbumFoldersByAlumId (long albumId) {
+        return super.getsByQuery("from AlbumFolder where id="+albumId);
 	}
 }

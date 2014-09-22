@@ -3,7 +3,7 @@ package com.qpp.action.common;
 import com.qpp.action.BaseAction;
 import com.qpp.dao.LocInfoDao;
 import com.qpp.model.BaseReturn;
-import com.qpp.model.TLocinfo;
+import com.qpp.model.TLocationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ public class LocAction extends BaseAction {
     @RequestMapping(value = "location",method = RequestMethod.GET)
     @ResponseBody
     private BaseReturn getStateList(){
-        List<TLocinfo> list=locInfoDao.getsByQuery("from TLocinfo");
+        List<TLocationType> list=locInfoDao.getAll();
         BaseReturn baseReturn=new BaseReturn();
         baseReturn.setData(list);
         return baseReturn;

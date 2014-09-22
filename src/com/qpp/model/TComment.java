@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class TComment implements java.io.Serializable {
 
-	private String id;
-	private TUser TUser;
+	private int id;
+	private TUser userId;
 	private String message;
 	private String image;
 	private String super_;
@@ -20,10 +20,14 @@ public class TComment implements java.io.Serializable {
 	public TComment() {
 	}
 
-	public TComment(String id, TUser TUser, String message, String image,
-			String super_, Date ctime, String type) {
-		this.id = id;
-		this.TUser = TUser;
+	public TComment(String message, Date ctime) {
+		this.message = message;
+		this.ctime = ctime;
+	}
+
+	public TComment(TUser userId, String message, String image, String super_,
+			Date ctime, String type) {
+        this.userId=userId;
 		this.message = message;
 		this.image = image;
 		this.super_ = super_;
@@ -31,23 +35,23 @@ public class TComment implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TUser getUserId() {
+        return userId;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setUserId(TUser userId) {
+        this.userId = userId;
+    }
 
-	public String getMessage() {
+    public String getMessage() {
 		return this.message;
 	}
 

@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class TStore implements java.io.Serializable {
 
-	private String userId;
+	private int userId;
 	private TUser TUser;
 	private String name;
 	private String comment;
@@ -27,20 +27,13 @@ public class TStore implements java.io.Serializable {
 	public TStore() {
 	}
 
-	public TStore(TUser TUser, String name, String comment, String seo,
-			String state, String contacts, int phone, String template,
-			String popularize, String share, String gameType) {
+	public TStore(TUser TUser, String name, String state, int phone,
+			String template) {
 		this.TUser = TUser;
 		this.name = name;
-		this.comment = comment;
-		this.seo = seo;
 		this.state = state;
-		this.contacts = contacts;
 		this.phone = phone;
 		this.template = template;
-		this.popularize = popularize;
-		this.share = share;
-		this.gameType = gameType;
 	}
 
 	public TStore(TUser TUser, String name, String comment, String seo,
@@ -61,11 +54,11 @@ public class TStore implements java.io.Serializable {
 		this.TStoreOrders = TStoreOrders;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 

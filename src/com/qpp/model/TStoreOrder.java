@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,63 +9,50 @@ import java.util.Date;
  */
 public class TStoreOrder implements java.io.Serializable {
 
-	private String id;
-	private TUser TUser;
-	private TStore TStore;
+	private int id;
+	private TStore storeId;
 	private String comment;
 	private Date ctime;
 	private int amount;
+	private int byuserId;
 	private String status;
 
 	public TStoreOrder() {
 	}
 
-	public TStoreOrder(String id, TUser TUser, String comment, Date ctime,
-			int amount, String status) {
-		this.id = id;
-		this.TUser = TUser;
-		this.comment = comment;
+	public TStoreOrder(Date ctime, int amount, String status) {
 		this.ctime = ctime;
 		this.amount = amount;
 		this.status = status;
 	}
 
-	public TStoreOrder(String id, TUser TUser, TStore TStore, String comment,
-			Date ctime, int amount, String status) {
-		this.id = id;
-		this.TUser = TUser;
-		this.TStore = TStore;
+	public TStoreOrder(TStore storeId, String comment, Date ctime, int amount,
+			int byuserId, String status) {
+        this.storeId=storeId;
 		this.comment = comment;
 		this.ctime = ctime;
 		this.amount = amount;
+		this.byuserId = byuserId;
 		this.status = status;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TStore getStoreId() {
+        return storeId;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setStoreId(TStore storeId) {
+        this.storeId = storeId;
+    }
 
-	public TStore getTStore() {
-		return this.TStore;
-	}
-
-	public void setTStore(TStore TStore) {
-		this.TStore = TStore;
-	}
-
-	public String getComment() {
+    public String getComment() {
 		return this.comment;
 	}
 
@@ -87,6 +74,14 @@ public class TStoreOrder implements java.io.Serializable {
 
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+	public int getByuserId() {
+		return this.byuserId;
+	}
+
+	public void setByuserId(int byuserId) {
+		this.byuserId = byuserId;
 	}
 
 	public String getStatus() {

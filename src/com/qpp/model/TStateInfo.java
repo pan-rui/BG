@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -16,6 +16,12 @@ public class TStateInfo implements java.io.Serializable {
 	private Date ctime;
 
 	public TStateInfo() {
+	}
+
+	public TStateInfo(String stateCode, String currencyCode, Date ctime) {
+		this.stateCode = stateCode;
+		this.currencyCode = currencyCode;
+		this.ctime = ctime;
 	}
 
 	public TStateInfo(String stateCode, String currencyCode, String cardInfo,

@@ -8,6 +8,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,10 +21,13 @@ public class EmailJob implements Job {
         Email mailUtil= (Email) dataMap.get("mailUtil");
         TMailPublish email = (TMailPublish) dataMap.get("email");
         List<String> addrs = (List<String>) dataMap.get("addrs");
+        List<String> ccs = email.getCc() != null ? JSON.parseArray(email.getCc(), String.class) : new ArrayList<String>();
+        String[] address = new String[addrs.size()];
+        String[] ccss = new String[ccs.size()];
         if(email.getAttachment()!=null&&!"".equals(email.getAttachment()))
-            mailUtil.sendMail(email.getSubject(),email.getContent(), (String[]) addrs.toArray(), (String[])JSON.parseArray(email.getCc(),String.class).toArray());
+            mailUtil.sendMail(email.getSubject(),email.getContent(), addrs.toArray(address), ccs.toArray(ccss),null,email.getAttachment());
         else
-            mailUtil.sendMail(email.getSubject(),email.getContent(),(String[]) addrs.toArray(), (String[])JSON.parseArray(email.getCc(),String.class).toArray(),null,email.getAttachment());
+            mailUtil.sendMail(email.getSubject(),email.getContent(), addrs.toArray(address), ccs.toArray(ccss));
         System.out.println("send success.....");
     }
 }

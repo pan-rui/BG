@@ -2,6 +2,7 @@ package com.qpp.service.user;
 
 import com.qpp.model.*;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -15,13 +16,13 @@ public interface UserService {
     public BaseReturn checkRegister(String type, String value);
 
     //email激活
-    public BaseReturn emailActive(String userId,String time);
+    public BaseReturn emailActive(int userId,String time);
 
     //注册
     public BaseReturn register(TUser user);
 
     //重设密码
-    public BaseReturn rePassword(String userId,String userEmail);
+    public BaseReturn rePassword(String name,String userEmail);
 
     //更改密码
     public BaseReturn rePass(TUser user,String oldPass,String newPass);
@@ -32,11 +33,17 @@ public interface UserService {
     //查询用户
     public BaseReturn queryUser(PageModel<TUser> page);
 
+        //查询用户
+    public BaseReturn queryUser(String searchProperty, String searchValue,String orderProperty, Boolean isDesc, int start, int end);
+
     //用户积分记录
     public BaseReturn queryScore(PageModel<TScore> page);
 
     //用户积分兑换
-    public BaseReturn scoreProcess(TUser user,TGift gift,String count);
+    public BaseReturn scoreProcess(TUser user,TGift gift,int count);
 
-    public boolean update(String tableName, Map data, String id);
+    public boolean update(String tableName, Map data);
+
+    public TUser getById(Serializable id);
+
 }

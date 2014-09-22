@@ -1,5 +1,6 @@
 package com.qpp.test;
 
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class BaseTest extends AbstractJUnit4SpringContextTests {
 
 	private static final Logger LOGGER = Logger.getLogger(BaseTest.class);
-	
+
 	@Before
 	public void init(){
 		LOGGER.info("================test start===================");

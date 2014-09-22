@@ -1,11 +1,23 @@
 package com.qpp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by admin on 2014/8/5.
  */
-public class TAppRight {
+public class TAppRight implements Serializable{
+    private static final long serialVersionUID = -7357650302701042766L;
     private Short role;
     private String url;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public void setRole(short role) {
         this.role = role;

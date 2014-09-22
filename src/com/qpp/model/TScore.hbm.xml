@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TScore" table="t_score">
-        <id name="id" type="string">
-            <column name="id" length="20" />
-            <generator class="assigned" />
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
         </id>
+        <many-to-one name="userId" class="com.qpp.model.TUser" fetch="select">
+            <column name="userId" />
+        </many-to-one>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
         </property>
@@ -17,10 +20,7 @@
         <property name="size" type="int">
             <column name="size" not-null="true" />
         </property>
-        <property name="userId" type="string">
-            <column name="userId" length="20" />
-        </property>
-        <property name="count" type="java.lang.Integer">
+        <property name="count" type="int">
             <column name="count" />
         </property>
         <property name="status" type="string">

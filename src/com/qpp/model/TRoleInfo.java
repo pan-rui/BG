@@ -1,13 +1,19 @@
 package com.qpp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by admin on 2014/8/21.
  */
-public class TRoleInfo {
+public class TRoleInfo implements Serializable{
+    private static final long serialVersionUID = -8655089772418943339L;
     private int role;
     private String roleDesc;
     private String defaultPage;
 
+    public TRoleInfo(){
+
+    }
     public int getRole() {
         return role;
     }

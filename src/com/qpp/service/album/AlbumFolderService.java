@@ -6,8 +6,8 @@ import com.qpp.model.AlbumFolder;
 
 public interface AlbumFolderService {
 
-	public List<AlbumFolder> getAlbumFoldersByAlbumId (long albumId);
-	
+    public List<AlbumFolder> getAlbumFoldersByUid(long uid);
+
 	public Long addAlbumFolder (AlbumFolder albumFolder);
 	
 	public AlbumFolder getAlbumFolderById (long albumId);

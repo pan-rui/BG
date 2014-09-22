@@ -4,7 +4,10 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -38,6 +41,15 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public void save(T po) {
         hibernateTemplate.save(po);
     }
+    public void save(String name,T po) {
+        hibernateTemplate.save(name,po);
+    }
+
+    public String getTableByClass(Class cls){
+        SessionFactory factory = getHibernateTemplate().getSessionFactory();
+        AbstractEntityPersister classMetadata = (SingleTableEntityPersister) factory.getClassMetadata(cls);
+        return classMetadata.getTableName();
+    }
 
     public void delete(T po) {
         hibernateTemplate.delete(po);
@@ -46,9 +58,15 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public void update(T po) {
         hibernateTemplate.update(po);
     }
+    public void update(String name,T po) {
+        hibernateTemplate.update(name, po);
+    }
 
     public List<T> getAll(){
         return hibernateTemplate.loadAll(priClass);
+    }
+    public List<T> getAll(Class pclass){
+        return hibernateTemplate.loadAll(pclass);
     }
     public List<T> getsByCriteria(DetachedCriteria criteria){
         return hibernateTemplate.findByCriteria(criteria);
@@ -57,9 +75,9 @@ public class BaseDao<T> extends HibernateDaoSupport{
 
 
     public T getById(final Serializable id) {
-        return this.getById(id,priClass);
+        return this.getById(id, priClass);
     }
-    protected T getById(final Serializable id, final Class poClass) {
+    public T getById(final Serializable id, final Class poClass) {
         return (T) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session)
                     throws HibernateException, SQLException {
@@ -151,7 +169,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public List<T> getsBySQL(final String sqlString) {
         return this.getsBySQL(sqlString,priClass);
     }
-    protected List<T> getsBySQL(final String sqlString, final Class poClass) {
+    public List<T> getsBySQL(final String sqlString, final Class poClass) {
         return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query query = session.createSQLQuery(sqlString).addEntity(poClass);
@@ -192,7 +210,8 @@ public class BaseDao<T> extends HibernateDaoSupport{
         return userCount;
     }
 
-    // jdbc:mysql://<host>:<port>/<database_name>
+
+// jdbc:mysql://<host>:<port>/<database_name>
 //    public boolean updateOnMap(String tableName, Map<String, Object> newData, String cond) {
 //        Connection conn = null;
 //        PreparedStatement pstmt = null;
@@ -328,7 +347,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
             e.printStackTrace();
         }
     }
-    public void update(String tableName, Map data, String id)
+    public void update(String tableName, Map data)
     {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -342,23 +361,24 @@ public class BaseDao<T> extends HibernateDaoSupport{
             int len = data.size();
             for(Object key : data.keySet())
             {
-                if(i == len)
+                if(i == len-1)
                 {
                     col.append(key);
                     col.append("=?");
                 }
-                else
+                else if(i<len-1)
                 {
                     col.append(key);
                     col.append("=?,");
-                }
+                }else
+                    col.append(" where "+key+"=?");
                 i++;
             }
             sql.append("update ");
             sql.append(tableName);
             sql.append(" set ");
             sql.append(col.toString());
-            sql.append(" where id=?");
+//            sql.append(" where ?=?");
             //System.out.println(sql);
             stmt = conn.prepareStatement(sql.toString());
             i = 1;
@@ -366,7 +386,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
                 stmt.setObject(i, data.get(key));
                 i++;
             }
-            stmt.setString(i, id);
+//            stmt.setString(i, id);
             stmt.executeUpdate();
         }
         catch (Exception e)

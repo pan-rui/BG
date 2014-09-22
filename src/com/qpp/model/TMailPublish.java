@@ -1,6 +1,8 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Attachmentls 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,12 +13,13 @@ import java.util.Set;
  */
 public class TMailPublish implements java.io.Serializable {
 
-	private String id;
+	private int id;
 	private String subject;
 	private String fromm;
 	private String attachment;
 	private String cc;
 	private String content;
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
 	private Date sendDate;
 	private Date ctime;
 	private String comment;
@@ -26,9 +29,8 @@ public class TMailPublish implements java.io.Serializable {
 	public TMailPublish() {
 	}
 
-	public TMailPublish(String id, String subject, String content,
-			Date sendDate, Date ctime, String isPublish) {
-		this.id = id;
+	public TMailPublish(String subject, String content, Date sendDate,
+			Date ctime, String isPublish) {
 		this.subject = subject;
 		this.content = content;
 		this.sendDate = sendDate;
@@ -36,10 +38,9 @@ public class TMailPublish implements java.io.Serializable {
 		this.isPublish = isPublish;
 	}
 
-	public TMailPublish(String id, String subject, String fromm, String attachment,
+	public TMailPublish(String subject, String fromm, String attachment,
 			String cc, String content, Date sendDate, Date ctime,
 			String comment, String isPublish, Set<TUserEmail> TUserEmails) {
-		this.id = id;
 		this.subject = subject;
 		this.fromm = fromm;
 		this.attachment = attachment;
@@ -52,11 +53,11 @@ public class TMailPublish implements java.io.Serializable {
 		this.TUserEmails = TUserEmails;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

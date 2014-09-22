@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,22 +9,27 @@ import java.util.Date;
  */
 public class TUserOrder implements java.io.Serializable {
 
-	private String id;
-	private TUser TUser;
+	private int id;
+	private TUser userId;
 	private String type;
 	private int amount;
 	private Date ctime;
 	private String comment;
-	private char payType;
+	private Character payType;
 	private String status;
 
 	public TUserOrder() {
 	}
 
-	public TUserOrder(String id, TUser TUser, String type, int amount,
-			Date ctime, String comment, char payType, String status) {
-		this.id = id;
-		this.TUser = TUser;
+	public TUserOrder(int amount, Date ctime, String status) {
+		this.amount = amount;
+		this.ctime = ctime;
+		this.status = status;
+	}
+
+	public TUserOrder(TUser userId, String type, int amount, Date ctime,
+			String comment, Character payType, String status) {
+        this.userId=userId;
 		this.type = type;
 		this.amount = amount;
 		this.ctime = ctime;
@@ -33,23 +38,23 @@ public class TUserOrder implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TUser getUserId() {
+        return userId;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setUserId(TUser userId) {
+        this.userId = userId;
+    }
 
-	public String getType() {
+    public String getType() {
 		return this.type;
 	}
 
@@ -81,11 +86,11 @@ public class TUserOrder implements java.io.Serializable {
 		this.comment = comment;
 	}
 
-	public char getPayType() {
+	public Character getPayType() {
 		return this.payType;
 	}
 
-	public void setPayType(char payType) {
+	public void setPayType(Character payType) {
 		this.payType = payType;
 	}
 

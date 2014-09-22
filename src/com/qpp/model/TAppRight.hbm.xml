@@ -5,9 +5,10 @@
 <hibernate-mapping>
 
     <class name="com.qpp.model.TAppRight" table="t_app_right">
-        <composite-id mapped="true" class="com.qpp.model.TAppRightPK">
+        <composite-id mapped="true">
             <key-property name="role" column="role"/>
             <key-property name="url" column="url"/>
         </composite-id>
+        <property name="ip" column="ip"/>
     </class>
 </hibernate-mapping>

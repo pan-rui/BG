@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,9 +9,9 @@ import java.util.Date;
  */
 public class TConvert implements java.io.Serializable {
 
-	private String id;
-	private TGift TGift;
-	private TUser TUser;
+	private int id;
+	private TGift target;
+	private TUser userId;
 	private String type;
 	private int amount;
 	private Date ctime;
@@ -21,10 +21,16 @@ public class TConvert implements java.io.Serializable {
 	public TConvert() {
 	}
 
-	public TConvert(String id, TUser TUser, String type, int amount,
+	public TConvert(int amount, Date ctime, int count) {
+		this.amount = amount;
+		this.ctime = ctime;
+		this.count = count;
+	}
+
+	public TConvert(TGift TGift, TUser userId, String type, int amount,
 			Date ctime, String comment, int count) {
-		this.id = id;
-		this.TUser = TUser;
+        this.userId=userId;
+        this.target=target;
 		this.type = type;
 		this.amount = amount;
 		this.ctime = ctime;
@@ -32,43 +38,31 @@ public class TConvert implements java.io.Serializable {
 		this.count = count;
 	}
 
-	public TConvert(String id, TGift TGift, TUser TUser, String type,
-			int amount, Date ctime, String comment, int count) {
-		this.id = id;
-		this.TGift = TGift;
-		this.TUser = TUser;
-		this.type = type;
-		this.amount = amount;
-		this.ctime = ctime;
-		this.comment = comment;
-		this.count = count;
-	}
-
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TGift getTGift() {
-		return this.TGift;
-	}
+    public TGift getTarget() {
+        return target;
+    }
 
-	public void setTGift(TGift TGift) {
-		this.TGift = TGift;
-	}
+    public void setTarget(TGift target) {
+        this.target = target;
+    }
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TUser getUserId() {
+        return userId;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setUserId(TUser userId) {
+        this.userId = userId;
+    }
 
-	public String getType() {
+    public String getType() {
 		return this.type;
 	}
 

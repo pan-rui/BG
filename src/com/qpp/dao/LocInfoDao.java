@@ -1,14 +1,14 @@
 package com.qpp.dao;
 
-import com.qpp.model.TLocinfo;
+import com.qpp.model.TLocationType;
 import org.springframework.stereotype.Repository;
 
 /**
  * Created by admin on 2014/7/29.
  */
 @Repository
-public class LocInfoDao extends BaseDao<TLocinfo> {
+public class LocInfoDao extends BaseDao<TLocationType> {
     public LocInfoDao(){
-        super(TLocinfo.class);
+        super(TLocationType.class);
     }
 }

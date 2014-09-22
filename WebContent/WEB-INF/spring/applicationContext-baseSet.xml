@@ -66,5 +66,36 @@
     	<property name="loginUrl" value="https://api.instagram.com/oauth/authorize"/>
     	<property name="authUrl" value="https://api.instagram.com/oauth/access_token"/>
  </bean>
+    <bean id="httpClientFactory" class="org.springframework.http.client.SimpleClientHttpRequestFactory">
+        <property name="connectTimeout"  value="30"/>
+        <property name="readTimeout"  value="30"/>
+    </bean>
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="httpClientFactory"/>
+    </bean>
+   <!--add activemq support-->
+    <bean id="queueConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://192.168.26.15:61616" />
+        <!-- <property name="brokerURL" value="vm://normandy.notify" /> -->
+        <property name="useAsyncSend" value="true" />
+    </bean>
+    <!-- 定义消息队列 -->
+    <bean id="dest" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="queueDest" />
+    </bean>
+    <!-- PTP jms模板 -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="queueConnectionFactory"></property>
+        <property name="defaultDestination" ref="dest" />
+        <!--<property name="messageConverter" ref="messageConvertForSys" />-->
+        <property name="pubSubDomain" value="false" />
+        <property name="receiveTimeout" value="1"/>
+    </bean>
+    <!-- 消息监听容器 -->
+    <bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="queueConnectionFactory" />
+        <property name="destination" ref="dest" />
+        <property name="messageListener" ref="messageReceiver" />
+    </bean>
     <!--<import resource="Quartz.xml" />-->
 </beans>

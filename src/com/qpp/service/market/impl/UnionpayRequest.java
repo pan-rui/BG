@@ -390,7 +390,7 @@ public class UnionpayRequest implements PaymentRequest {
     @Override
     public void setOrderParam(TOrder order) {
         setOrderTime(UnionPayment.formatDate(order.getCtime()));
-        setOrderNumber(order.getId());
+        setOrderNumber(String.valueOf(order.getId()));
         setTransferFee(String.valueOf(order.getShippingAmt()));
         setOrderAmount(String.valueOf(order.getAmt()));
         setOrderCurrency(order.getCurrencyCode());

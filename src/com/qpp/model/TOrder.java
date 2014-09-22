@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 5:21:03 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,8 +11,8 @@ import java.util.Set;
  */
 public class TOrder implements java.io.Serializable {
 
-	private String id;
-	private TUser TUser;
+	private int id;
+	private TUser buyer;
 	private Double amt;
 	private String currencyCode;
 	private Double maxAmt;
@@ -40,20 +40,18 @@ public class TOrder implements java.io.Serializable {
 	public TOrder() {
 	}
 
-	public TOrder(String id, String type) {
-		this.id = id;
+	public TOrder(String type) {
 		this.type = type;
 	}
 
-	public TOrder(String id, TUser TUser, Double amt, String currencyCode,
-			Double maxAmt, String payMentAction, String email, String address,
-			String phone, String zipCode, String desc, String invnum,
-			String transactionId, String localCode, Date ctime, Date utime,
-			String status, Double itemAmt, Double taxAmt, Double shippingAmt,
+	public TOrder(TUser buyer, Double amt, String currencyCode, Double maxAmt,
+			String payMentAction, String email, String address, String phone,
+			String zipCode, String desc, String invnum, String transactionId,
+			String localCode, Date ctime, Date utime, String status,
+			Double itemAmt, Double taxAmt, Double shippingAmt,
 			Double insuranceAmt, String shippingType, Double shippingNum,
 			String type, Set<TOrderItem> TOrderItems) {
-		this.id = id;
-		this.TUser = TUser;
+        this.buyer=buyer;
 		this.amt = amt;
 		this.currencyCode = currencyCode;
 		this.maxAmt = maxAmt;
@@ -79,23 +77,23 @@ public class TOrder implements java.io.Serializable {
 		this.TOrderItems = TOrderItems;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public TUser getTUser() {
-		return this.TUser;
-	}
+    public TUser getBuyer() {
+        return buyer;
+    }
 
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
-	}
+    public void setBuyer(TUser buyer) {
+        this.buyer = buyer;
+    }
 
-	public Double getAmt() {
+    public Double getAmt() {
 		return this.amt;
 	}
 

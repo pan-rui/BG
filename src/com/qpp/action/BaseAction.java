@@ -4,6 +4,7 @@ import com.danga.MemCached.MemCachedClient;
 import com.qpp.listener.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.ServletInputStream;
@@ -35,6 +36,11 @@ public class BaseAction{
         else
             return null;
     }
+    protected long getUserId(HttpServletRequest request){
+        //memcachedClient.get("UserToken")
+        return 0;
+    }
+
 
     //日期格式化为常用格式
     public static String formatDate(Date date) {
@@ -60,6 +66,11 @@ public class BaseAction{
         }
         return line;
     }
-
+/*
+    @ExceptionHandler
+    public String exp(HttpServletRequest request, Exception ex) {
+        return "";
+    }
+*/
     //protected final org.slf4j.Logger loger = org.slf4j.LoggerFactory.getLogger(this.getClass().getName());
 }

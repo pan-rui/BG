@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -18,6 +18,14 @@ public class TConfig implements java.io.Serializable {
 	private String state;
 
 	public TConfig() {
+	}
+
+	public TConfig(String configName, String configValue, Date ctime,
+			String state) {
+		this.configName = configName;
+		this.configValue = configValue;
+		this.ctime = ctime;
+		this.state = state;
 	}
 
 	public TConfig(String configName, String configValue, String module,

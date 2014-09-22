@@ -1,57 +1,31 @@
 package com.qpp.action.album;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.font.TextAttribute;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.text.AttributedString;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.qpp.action.BaseAction;
+import com.qpp.model.AlbumFolder;
+import com.qpp.model.BaseReturn;
+import com.qpp.model.PictureInfo;
+import com.qpp.model.TextInfo;
+import com.qpp.service.album.AlbumFolderService;
+import com.qpp.service.album.PictureInfoService;
+import com.qpp.util.FastdfsUtils;
+import com.qpp.util.JsonTool;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.qpp.action.BaseAction;
-import com.qpp.model.BaseReturn;
-import com.qpp.model.PictureInfo;
-import com.qpp.model.TextInfo;
-import com.qpp.service.album.PictureInfoService;
-import com.qpp.util.FastdfsUtils;
-import com.qpp.util.JsonTool;
+import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.text.AttributedString;
+import java.util.Date;
+import java.util.List;
 /**
  * picture managerment
  * @author kevin liu 2014/7/29
@@ -64,76 +38,99 @@ public class PictureAction extends BaseAction {
 	
 	@Autowired
 	private PictureInfoService pictureInfoService;
-	
-	@RequestMapping(value="/product/addPicture", method=RequestMethod.POST)
+    @Autowired
+    private AlbumFolderService albumFolderService;
+
+	@RequestMapping(value="/picture/{folderId}", method=RequestMethod.POST)
 	@ResponseBody
-	public BaseReturn uploadImage (HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
-//		File file = new File("");
+	public BaseReturn uploadImage (HttpServletRequest request,@PathVariable(value="folderId")long folderId,@RequestParam(value = "file") MultipartFile file) throws Exception {
+        BaseReturn baseReturn = new BaseReturn();
+        if (!checkFolderOwner(folderId,request)){
+            baseReturn.setResult(100);
+            baseReturn.setErrMessage(getMessage(request,"data.empty",null));
+        }
 		String fileName = file.getOriginalFilename();
-		logger.info("file name===>>>" + fileName);
-		BaseReturn baseReturn = new BaseReturn();
 		String fileId = FastdfsUtils.uploadFile(fileName, file.getInputStream());
-		logger.info(fileId);
+		logger.info("UserId:"+super.getUserId(request)+",fileName"+fileName+",fileId"+fileId);
 		if (fileId != null) {
 			BufferedImage image = ImageIO.read(file.getInputStream());
 			PictureInfo pic = getPicInfo(fileId, image);
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("photoId", pic.getPhotoId());
-			map.put("photoExp", pic.getPhotoExp());
-			String pictureId = pictureInfoService.addPicture(pic);
+            pic.setName(fileName);
+            pic.setFolderId(folderId);
+			Long pictureId = pictureInfoService.addPicture(pic);
 			if (pictureId != null && !"".equals(pictureId)) {
-				baseReturn.setData(map);
-				logger.info("pictureId:" + pictureId);
+				baseReturn.setData(super.getMessage(request, "album.photo.upload.success", new String[]{fileId}));
+				logger.info("pictureId:" + pictureId);		 
 			} else {
-				baseReturn.setErrMessage("Photo save error, fileId:" + fileId);
+				baseReturn.setErrMessage(super.getMessage(request, "err.album.photo.save.failed", null));
+				logger.info("fileId==>>>" + fileId);
 			}
 		} else {
-			baseReturn.setErrMessage("Photo upload fail");
+			baseReturn.setErrMessage(super.getMessage(request, "err.album.photo.upload.failed", null));
 		}
 	    return baseReturn;
 	}
 	
-	@RequestMapping(value="/product/getPicsByFolderId/{folderId}", method=RequestMethod.GET)
+	@RequestMapping(value="/picture/{folderId}", method=RequestMethod.GET)
 	@ResponseBody
 	public BaseReturn getPicturesByFolderId (@PathVariable("folderId")long folderId, HttpServletRequest request, HttpServletResponse response) {
-		List<PictureInfo> picList = pictureInfoService.getPicturesByFolderId(folderId);
-		BaseReturn baseReturn = new BaseReturn();
-		baseReturn.setData(JsonTool.jsonByObjectDirecdt(picList, new String[]{"pictures"}));
-		for (PictureInfo picture : picList) {
-			logger.info("picId:" + picture.getPhotoId());
-			logger.info("picName:" + picture.getName());
-			logger.info("picWidth:" + picture.getWidth());
-			logger.info("picHeight:" + picture.getHeight());
-			logger.info("userId:" + picture.getUserId());
-		}
+        BaseReturn baseReturn = new BaseReturn();
+        if (!checkFolderOwner(folderId,request)){
+            baseReturn.setResult(100);
+            baseReturn.setErrMessage(getMessage(request,"data.empty",null));
+        }
+        List<PictureInfo> picList = pictureInfoService.getPicturesByFolderId(folderId);
+		//baseReturn.setData(JsonTool.jsonByObjectDirecdt(picList, new String[]{"pictures"}));
+        baseReturn.setData(picList);
 		return baseReturn;
 	}
 	
-	@RequestMapping(value="/product/modifyPicture", method=RequestMethod.PUT)
+	@RequestMapping(value="/picture/{picId}", method=RequestMethod.PUT)
 	@ResponseBody
-	public BaseReturn modifyPicture (HttpServletRequest request, HttpServletResponse response, @RequestBody PictureInfo pictureInfo) {
-		BaseReturn baseReturn = new BaseReturn();
-		boolean flag = pictureInfoService.updatePicture(pictureInfo);
-		baseReturn.setData(flag);
-		logger.info("update picture:" + flag);
-		return baseReturn;
-	}
-	
-	@RequestMapping(value="/product/removePicture", method=RequestMethod.DELETE)
-	@ResponseBody
-	public BaseReturn removePicture (HttpServletRequest request, HttpServletResponse response, @RequestBody PictureInfo pictureInfo) {
-		BaseReturn baseReturn = new BaseReturn();
-		boolean flag = pictureInfoService.deletePicture(pictureInfo);
-		logger.info("delete picture success:" + flag);
-		if (flag) {
-			String filePath = pictureInfo.getPhotoId() + "." + pictureInfo.getPhotoExp();
-			try {
-				FastdfsUtils.deleteFile(filePath);
-			} catch (Exception e) {
-				logger.error("delete file on fastdfsUtils fail", e);
+	public BaseReturn modifyPicture (HttpServletRequest request, HttpServletResponse response, @PathVariable("picId") long picId, @RequestBody PictureInfo pictureInfo) {
+        BaseReturn baseReturn = new BaseReturn();
+		PictureInfo picture = pictureInfoService.getPictureById(picId);
+		if (picture != null) {
+			pictureInfo.setPhotoId(picId);
+			pictureInfo.setMasterFileId(picture.getMasterFileId());
+			pictureInfo.setPhotoExp(picture.getPhotoExp());
+			pictureInfo.setCreateDate(picture.getCreateDate());
+			pictureInfo.setModifyDate(new Date());
+			boolean flag = pictureInfoService.updatePicture(pictureInfo);
+			if (flag) {
+				baseReturn.setData(super.getMessage(request, "album.photo.modify.success", null));
+			} else {
+				baseReturn.setData(super.getMessage(request, "album.photo.modify.fail", null));
 			}
+			logger.info("update picture:" + flag);
+		} else {
+			baseReturn.setErrMessage(super.getMessage(request, "err.album.photo.not.exist", null));
 		}
-		baseReturn.setData(flag);
+		return baseReturn;
+	}
+	
+	@RequestMapping(value="/picture/{picId}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public BaseReturn removePicture ( @PathVariable("picId") long picId, HttpServletRequest request, HttpServletResponse response) {
+		BaseReturn baseReturn = new BaseReturn();
+		PictureInfo picture = pictureInfoService.getPictureById(picId);
+		if (picture != null) {
+			boolean flag = pictureInfoService.deletePicture(picture);
+			logger.info("delete picture success:" + flag);
+			if (flag) {
+				baseReturn.setData(super.getMessage(request, "album.photo.delete.success", null));
+				String filePath = picture.getPhotoId() + "." + picture.getPhotoExp();
+				try {
+					FastdfsUtils.deleteFile(filePath);
+				} catch (Exception e) {
+					logger.error("delete file on fastdfsUtils fail", e);
+				}
+			} else {
+				baseReturn.setErrMessage(super.getMessage(request, "album.photo.delete.fail", null));
+			}
+		} else {
+			baseReturn.setErrMessage(super.getMessage(request, "err.album.photo.not.exist", null));
+		}
 	return baseReturn;
 	}
 	
@@ -149,7 +146,7 @@ public class PictureAction extends BaseAction {
 		return totalSize;
 	}
 
-	@RequestMapping(value="/product/getPicsByTagIds/{tagIds}", method=RequestMethod.GET)
+	@RequestMapping(value="/picsByTagIds/{tagIds}", method=RequestMethod.GET)
 	@ResponseBody
 	public BaseReturn getPicturesByTagIds (@PathVariable("tagIds")long[] tagIds, HttpServletRequest request, HttpServletResponse response) {
 		logger.info("tagIds===>>" + tagIds.length);
@@ -166,7 +163,7 @@ public class PictureAction extends BaseAction {
 		return baseReturn;
 	}
 	
-	@RequestMapping(value="/product/text", method=RequestMethod.POST)
+	@RequestMapping(value="/picture/text", method=RequestMethod.POST)
 	@ResponseBody
 	public BaseReturn textGeneratePic (HttpServletRequest request, HttpServletResponse response, @RequestBody TextInfo textInfo) throws Exception {
 		BaseReturn baseReturn = new BaseReturn();
@@ -175,27 +172,25 @@ public class PictureAction extends BaseAction {
 		try {
 			buff = graphicsGeneration(textInfo, "png");
 			fileId = FastdfsUtils.uploadFileBybyte(buff, "png", null);
+			if (fileId != null) {
+				BufferedImage image = ImageIO.read(new ByteArrayInputStream(buff));
+				PictureInfo pic = getPicInfo(fileId, image);
+				Long pictureId = pictureInfoService.addPicture(pic);
+				if (pictureId != null && !"".equals(pictureId)) {
+					baseReturn.setData(super.getMessage(request, "album.photo.upload.success", new String[]{fileId}));
+					logger.info("pictureId:" + pictureId);
+				} else {
+					baseReturn.setErrMessage(super.getMessage(request, "err.album.photo.save.failed", null));
+					logger.info("fileID:" + fileId);
+				}
+			} else {
+				baseReturn.setErrMessage(super.getMessage(request, "text.generate.photo.fail", null));
+			}
 		} catch (Exception e) {
-			baseReturn.setErrMessage(e.toString());
+			baseReturn.setErrMessage(super.getMessage(request, "text.generate.photo.fail", null));
 			logger.info("upload image exception", e);
 		}
 		
-		if (fileId != null) {
-			BufferedImage image = ImageIO.read(new ByteArrayInputStream(buff));
-			PictureInfo pic = getPicInfo(fileId, image);
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("photoId", pic.getPhotoId());
-			map.put("photoExp", pic.getPhotoExp());
-			String pictureId = pictureInfoService.addPicture(pic);
-			if (pictureId != null && !"".equals(pictureId)) {
-				baseReturn.setData(map);
-				logger.info("pictureId:" + pictureId);
-			} else {
-				baseReturn.setErrMessage("Photo save error, fileId:" + fileId);
-			}
-		} else {
-			baseReturn.setErrMessage("Photo upload fail");
-		}
 		return baseReturn;
 	}
 	
@@ -268,11 +263,19 @@ public class PictureAction extends BaseAction {
 		pic.setWidth(width);
 		pic.setHeight(height);
 		pic.setName("bird");
-		String photoId = fileId.substring(0, fileId.lastIndexOf("."));
+		String masterFileId = fileId.substring(0, fileId.lastIndexOf("."));
 		String photoExp = fileId.substring(fileId.lastIndexOf(".") + 1);
-		pic.setPhotoId(photoId);
+		pic.setMasterFileId(masterFileId);
 		pic.setPhotoExp(photoExp);
 		pic.setCreateDate(new Date());
 		return pic;
 	}
+    public boolean checkFolderOwner(long albumId,HttpServletRequest request){
+        AlbumFolder albumFolder = albumFolderService.getAlbumFolderById(albumId);
+        BaseReturn baseReturn = new BaseReturn();
+        if (albumFolder!=null && albumFolder.getUserId()==super.getUserId(request))
+            return true;
+        else
+            return false;
+    }
 }

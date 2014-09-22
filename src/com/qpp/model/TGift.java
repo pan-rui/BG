@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 22, 2014 1:22:34 PM by Hibernate Tools 3.4.0.CR1
+// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,48 +11,43 @@ import java.util.Set;
  */
 public class TGift implements java.io.Serializable {
 
-	private String id;
+	private int id;
 	private String name;
 	private String type;
 	private int price;
 	private int priceTwo;
 	private int count;
 	private Date ctime;
-	private Set<TUser> TUsers = new HashSet<TUser>(0);
 	private Set<TConvert> TConverts = new HashSet<TConvert>(0);
+	private Set<TUser> TUsers = new HashSet<TUser>(0);
 
 	public TGift() {
 	}
 
-	public TGift(String id, String name, String type, int price, int priceTwo,
-			int count, Date ctime) {
-		this.id = id;
+	public TGift(String name, int price, Date ctime) {
 		this.name = name;
-		this.type = type;
 		this.price = price;
-		this.priceTwo = priceTwo;
-		this.count = count;
 		this.ctime = ctime;
 	}
 
-	public TGift(String id, String name, String type, int price, int priceTwo,
-			int count, Date ctime, Set<TUser> TUsers, Set<TConvert> TConverts) {
-		this.id = id;
+	public TGift(String name, String type, int price, int priceTwo,
+			int count, Date ctime, Set<TConvert> TConverts,
+			Set<TUser> TUsers) {
 		this.name = name;
 		this.type = type;
 		this.price = price;
 		this.priceTwo = priceTwo;
 		this.count = count;
 		this.ctime = ctime;
-		this.TUsers = TUsers;
 		this.TConverts = TConverts;
+		this.TUsers = TUsers;
 	}
 
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -104,20 +99,20 @@ public class TGift implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
-	public Set<TUser> getTUsers() {
-		return this.TUsers;
-	}
-
-	public void setTUsers(Set<TUser> TUsers) {
-		this.TUsers = TUsers;
-	}
-
 	public Set<TConvert> getTConverts() {
 		return this.TConverts;
 	}
 
 	public void setTConverts(Set<TConvert> TConverts) {
 		this.TConverts = TConverts;
+	}
+
+	public Set<TUser> getTUsers() {
+		return this.TUsers;
+	}
+
+	public void setTUsers(Set<TUser> TUsers) {
+		this.TUsers = TUsers;
 	}
 
 }

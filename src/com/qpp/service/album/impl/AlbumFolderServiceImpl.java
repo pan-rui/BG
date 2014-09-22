@@ -16,10 +16,11 @@ public class AlbumFolderServiceImpl implements AlbumFolderService {
 	@Resource
 	private AlbumFolderDao albumFolderDao;
 
-	@Override
-	public List<AlbumFolder> getAlbumFoldersByAlbumId(long albumId) {
-		return albumFolderDao.getAlbumFoldersByAlumId(albumId);
-	}
+    @Override
+    public List<AlbumFolder> getAlbumFoldersByUid(long uid) {
+        return albumFolderDao.getAlbumFoldersByUid(uid);
+    }
+
 
 	@Override
 	public Long addAlbumFolder(AlbumFolder albumFolder) {
@@ -51,8 +52,6 @@ public class AlbumFolderServiceImpl implements AlbumFolderService {
 
 	@Override
 	public AlbumFolder getAlbumFolderById(long albumId) {
-		return albumFolderDao.getAlbumFolderById(albumId);
+		return albumFolderDao.getById(albumId);
 	}
-
-	
 }

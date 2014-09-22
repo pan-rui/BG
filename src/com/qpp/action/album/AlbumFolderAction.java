@@ -1,24 +1,18 @@
 package com.qpp.action.album;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.qpp.action.BaseAction;
 import com.qpp.model.AlbumFolder;
 import com.qpp.model.BaseReturn;
 import com.qpp.service.album.AlbumFolderService;
-import com.qpp.util.JsonTool;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * album folder managerment
@@ -32,57 +26,72 @@ public class AlbumFolderAction  extends BaseAction  {
 	
 	@Autowired
 	private AlbumFolderService albumFolderService;
-	
-	@RequestMapping(value="/album/getAlbumFolders/{albumId}", method=RequestMethod.GET)
+
+    @RequestMapping(value="/album", method=RequestMethod.GET)
+    @ResponseBody
+    public BaseReturn getAlbumFolders (HttpServletRequest request) {
+        long uid=super.getUserId(request);
+        List<AlbumFolder> albumFolderList = albumFolderService.getAlbumFoldersByUid(uid);
+        BaseReturn baseReturn = new BaseReturn();
+        baseReturn.setData(albumFolderList);
+        return baseReturn;
+    }
+
+	@RequestMapping(value="/album/{albumId}", method=RequestMethod.GET)
 	@ResponseBody
-	public BaseReturn getAlbumFoldersByAlbumId (@PathVariable("albumId")long albumId, HttpServletRequest request, HttpServletResponse response) {
-		List<AlbumFolder> albumFolderList = albumFolderService.getAlbumFoldersByAlbumId(albumId);
+	public BaseReturn getAlbumFoldersByAlbumId (@PathVariable("albumId")long albumId, HttpServletRequest request) {
+		AlbumFolder albumFolder = albumFolderService.getAlbumFolderById(albumId);
 		BaseReturn baseReturn = new BaseReturn();
-		baseReturn.setData(JsonTool.jsonByObjectDirecdt(albumFolderList, new String[]{"tags"}));
-		for (AlbumFolder albumFolder : albumFolderList) {
-			logger.info("folder name:" + albumFolder.getName());
-			logger.info("AlbumId:" + albumFolder.getAlbumId());
-			logger.info("userId:" + albumFolder.getUserId());
-			logger.info("folder createDate:" + albumFolder.getCreateDate());
-		}
+        if (albumFolder!=null && albumFolder.getUserId()==super.getUserId(request))
+		    baseReturn.setData(albumFolder);
+        else{
+            baseReturn.setResult(100);
+            baseReturn.setErrMessage(getMessage(request,"data.empty",null));
+        }
 		return baseReturn;
 	}
 	
-	@RequestMapping(value="/album/addAlbumFolder", method=RequestMethod.POST)
+	@RequestMapping(value="/album", method=RequestMethod.POST)
 	@ResponseBody
-	public BaseReturn createAlbumFolder (HttpServletRequest request, HttpServletResponse response, @RequestBody AlbumFolder albumFolder) {
+	public BaseReturn createAlbumFolder (HttpServletRequest request, @RequestBody AlbumFolder albumFolder) {
+        albumFolder.setUserId(super.getUserId(request));
+        albumFolder.setCreateDate(new Date());
 		Long albumFolderId = albumFolderService.addAlbumFolder(albumFolder);
 		BaseReturn baseReturn = new BaseReturn();
 		baseReturn.setData(albumFolderId);
-		logger.info("AlbumFolder Id:" + albumFolderId);
 		return baseReturn;
 	}
 	
-	@RequestMapping(value="/album/modifyAlbumFolder/{folderId}", method=RequestMethod.PUT)
+	@RequestMapping(value="/album/{albumId}", method=RequestMethod.PUT)
 	@ResponseBody
-	public BaseReturn modifyAlbumFolder (HttpServletRequest request, HttpServletResponse response, @PathVariable long folderId, @RequestBody AlbumFolder albumFolder) {
-		AlbumFolder folder = albumFolderService.getAlbumFolderById(folderId);
-		boolean flag = false;
-		if(folder != null) {
-			albumFolder.setId(folderId);
-			albumFolder.setCreateDate(folder.getCreateDate());
-			flag = albumFolderService.updateAlbumFolder(albumFolder);
-		}
+	public BaseReturn modifyAlbumFolder (HttpServletRequest request,@PathVariable long albumId, @RequestBody AlbumFolder albumFolder) {
+		AlbumFolder folder = albumFolderService.getAlbumFolderById(albumId);
 		BaseReturn baseReturn = new BaseReturn();
-		baseReturn.setData(flag);
-		logger.info("AlbumFolder update Success:" + flag);
+		if(folder != null && folder.getUserId()==super.getUserId(request)) {
+			albumFolder.setId(albumId);
+            albumFolder.setUserId(super.getUserId(request));
+			albumFolder.setModifyDate(folder.getCreateDate());
+			albumFolderService.updateAlbumFolder(albumFolder);
+    		baseReturn.setData(super.getMessage(request, "album.folder.modify.success", null));
+		}else{
+            baseReturn.setResult(100);
+            baseReturn.setErrMessage(getMessage(request,"data.empty",null));
+        }
 		return baseReturn;
 	}
-	
-	@RequestMapping(value="/album/removeAlbumFolder/{folderId}", method=RequestMethod.DELETE)
+
+	@RequestMapping(value="/album/{albumId}", method=RequestMethod.DELETE)
 	@ResponseBody
-	public BaseReturn removeAlbumFolder (@PathVariable("folderId")long folderId, HttpServletRequest request, HttpServletResponse response) {
-		AlbumFolder folder = new AlbumFolder();
-		folder.setId(folderId);
-		boolean flag = albumFolderService.deleteAlbumFolder(folder);
-		BaseReturn baseReturn = new BaseReturn();
-		baseReturn.setData(flag);
-		logger.info("AlbumFolder delete Success:" + flag);
+	public BaseReturn removeAlbumFolder (@PathVariable long albumId, HttpServletRequest request) {
+        AlbumFolder folder = albumFolderService.getAlbumFolderById(albumId);
+        BaseReturn baseReturn = new BaseReturn();
+        if(folder != null && folder.getUserId()==super.getUserId(request)) {
+            albumFolderService.deleteAlbumFolder(folder);
+            baseReturn.setData(super.getMessage(request, "album.folder.modify.success", null));
+        }else{
+            baseReturn.setResult(100);
+            baseReturn.setErrMessage(getMessage(request,"data.empty",null));
+        }
 		return baseReturn;
 	}
 }
