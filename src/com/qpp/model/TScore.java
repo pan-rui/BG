@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,12 +9,12 @@ import java.util.Date;
  */
 public class TScore implements java.io.Serializable {
 
-	private int id;
-	private TUser userId;
+	private long id;
 	private Date ctime;
 	private String type;
 	private int size;
-	private int count;
+	private long userId;
+	private long count;
 	private String status;
 	private String comment;
 
@@ -28,34 +28,26 @@ public class TScore implements java.io.Serializable {
 		this.comment = comment;
 	}
 
-	public TScore(TUser userId, Date ctime, String type, int size,
-			int count, String status, String comment) {
-        this.userId=userId;
+	public TScore(Date ctime, String type, int size, long userId,
+			long count, String status, String comment) {
 		this.ctime = ctime;
 		this.type = type;
 		this.size = size;
+		this.userId = userId;
 		this.count = count;
 		this.status = status;
 		this.comment = comment;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TUser getUserId() {
-        return userId;
-    }
-
-    public void setUserId(TUser userId) {
-        this.userId = userId;
-    }
-
-    public Date getCtime() {
+	public Date getCtime() {
 		return this.ctime;
 	}
 
@@ -79,11 +71,19 @@ public class TScore implements java.io.Serializable {
 		this.size = size;
 	}
 
-	public int getCount() {
+	public long getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getCount() {
 		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(long count) {
 		this.count = count;
 	}
 

@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class TComment implements java.io.Serializable {
 
-	private int id;
-	private TUser userId;
+	private long id;
+	private long userId;
 	private String message;
 	private String image;
 	private String super_;
@@ -25,9 +25,9 @@ public class TComment implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
-	public TComment(TUser userId, String message, String image, String super_,
-			Date ctime, String type) {
-        this.userId=userId;
+	public TComment(long userId, String message, String image,
+			String super_, Date ctime, String type) {
+		this.userId = userId;
 		this.message = message;
 		this.image = image;
 		this.super_ = super_;
@@ -35,23 +35,23 @@ public class TComment implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TUser getUserId() {
-        return userId;
-    }
+	public long getUserId() {
+		return this.userId;
+	}
 
-    public void setUserId(TUser userId) {
-        this.userId = userId;
-    }
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
-    public String getMessage() {
+	public String getMessage() {
 		return this.message;
 	}
 

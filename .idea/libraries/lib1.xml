@@ -75,14 +75,12 @@
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/log4j-1.2.15.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/mail.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/mchange-commons-java-0.2.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/mongo-2.9.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/mybatis-3.2.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/mysql-connector-java-5.1.21-bin.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/neethi-2.0.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/ognl-2.7.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/pdf-transcoder.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/saaj.jar!/" />
-      <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/slf4j-api-1.6.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/slf4j-simple-1.6.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/spring-aop-3.2.4.RELEASE.jar!/" />
       <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/spring-aspects-3.2.4.RELEASE.jar!/" />

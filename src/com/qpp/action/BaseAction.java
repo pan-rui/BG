@@ -1,14 +1,19 @@
 package com.qpp.action;
 
 import com.danga.MemCached.MemCachedClient;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.qpp.listener.SpringContextUtil;
+import com.qpp.model.BaseReturn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
@@ -66,11 +71,20 @@ public class BaseAction{
         }
         return line;
     }
-/*
     @ExceptionHandler
-    public String exp(HttpServletRequest request, Exception ex) {
-        return "";
+    @ResponseBody
+    public BaseReturn exp(HttpServletRequest request, Exception ex,HttpServletResponse response) {
+        BaseReturn baseReturn=new BaseReturn();
+        ex.printStackTrace();
+        if (ex instanceof HttpMessageNotReadableException){
+            baseReturn.setResult(BaseReturn.Err_data_inValid);
+            baseReturn.setErrMessage(getMessage(request,"data.inValid",null));
+        }else{
+            baseReturn.setResult(BaseReturn.Err_system_error);
+            baseReturn.setErrMessage(ex.getMessage());
+        }
+        loger.error(ex.getMessage());
+        return baseReturn;
     }
-*/
     //protected final org.slf4j.Logger loger = org.slf4j.LoggerFactory.getLogger(this.getClass().getName());
 }

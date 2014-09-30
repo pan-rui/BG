@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,10 +9,10 @@ import java.util.Date;
  */
 public class TUserOrder implements java.io.Serializable {
 
-	private int id;
-	private TUser userId;
+	private long id;
+	private long userId;
 	private String type;
-	private int amount;
+	private double amount;
 	private Date ctime;
 	private String comment;
 	private Character payType;
@@ -21,15 +21,15 @@ public class TUserOrder implements java.io.Serializable {
 	public TUserOrder() {
 	}
 
-	public TUserOrder(int amount, Date ctime, String status) {
+	public TUserOrder(double amount, Date ctime, String status) {
 		this.amount = amount;
 		this.ctime = ctime;
 		this.status = status;
 	}
 
-	public TUserOrder(TUser userId, String type, int amount, Date ctime,
+	public TUserOrder(long userId, String type, double amount, Date ctime,
 			String comment, Character payType, String status) {
-        this.userId=userId;
+		this.userId = userId;
 		this.type = type;
 		this.amount = amount;
 		this.ctime = ctime;
@@ -38,23 +38,23 @@ public class TUserOrder implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TUser getUserId() {
-        return userId;
-    }
+	public long getUserId() {
+		return this.userId;
+	}
 
-    public void setUserId(TUser userId) {
-        this.userId = userId;
-    }
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
-    public String getType() {
+	public String getType() {
 		return this.type;
 	}
 
@@ -62,11 +62,11 @@ public class TUserOrder implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

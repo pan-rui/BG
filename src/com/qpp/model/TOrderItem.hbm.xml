@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Sep 24, 2014 2:42:54 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TOrderItem" table="t_orderItem">
-        <id name="id" type="int">
+        <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="native" />
         </id>
-        <many-to-one name="orderId" class="com.qpp.model.TOrder" fetch="select">
+        <property name="orderId" type="java.lang.Integer">
             <column name="orderId" />
-        </many-to-one>
-        <property name="productId" type="int">
+        </property>
+        <property name="productId" type="java.lang.Integer">
             <column name="productId" />
         </property>
         <property name="productName" type="string">
             <column name="productName" length="1024" />
         </property>
-        <property name="productCount" type="int">
+        <property name="productCount" type="java.lang.Integer">
             <column name="productCount" />
         </property>
         <property name="productSpec" type="string">

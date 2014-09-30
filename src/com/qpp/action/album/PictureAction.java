@@ -114,7 +114,7 @@ public class PictureAction extends BaseAction {
 	public BaseReturn removePicture ( @PathVariable("picId") long picId, HttpServletRequest request, HttpServletResponse response) {
 		BaseReturn baseReturn = new BaseReturn();
 		PictureInfo picture = pictureInfoService.getPictureById(picId);
-		if (picture != null) {
+		if (picture != null && picture.getUserId()==super.getUserId(request)) {
 			boolean flag = pictureInfoService.deletePicture(picture);
 			logger.info("delete picture success:" + flag);
 			if (flag) {

@@ -1,30 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Sep 24, 2014 2:42:54 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TConvert" table="t_convert">
-        <id name="id" type="int">
+        <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="native" />
         </id>
-        <many-to-one name="target" class="com.qpp.model.TGift" fetch="select">
-            <column name="target" />
-        </many-to-one>
-        <many-to-one name="userId" class="com.qpp.model.TUser" fetch="select">
-            <column name="userId" />
-        </many-to-one>
         <property name="type" type="string">
             <column name="type" length="10" />
         </property>
-        <property name="amount" type="int">
+        <property name="amount" type="java.lang.Long">
             <column name="amount" not-null="true" />
         </property>
         <property name="ctime" type="timestamp">
             <column name="ctime" length="19" not-null="true" />
         </property>
+        <property name="userId" type="java.lang.Integer">
+            <column name="userId" />
+        </property>
         <property name="comment" type="string">
             <column name="comment" length="50" />
+        </property>
+        <property name="giftId" type="java.lang.Integer">
+            <column name="giftId" />
         </property>
         <property name="count" type="int">
             <column name="count" not-null="true" />

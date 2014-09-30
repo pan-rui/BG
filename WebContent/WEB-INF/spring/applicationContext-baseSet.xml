@@ -2,7 +2,10 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="emboriderySet" class="com.qpp.emboridery.base.EmboriderySet">
     	<property name="domain" value="http://trial3.stitchport.com/stitchportwebapi"/>
     	<property name="imagePath" value="/emboridery/image/"/>
@@ -97,5 +100,12 @@
         <property name="destination" ref="dest" />
         <property name="messageListener" ref="messageReceiver" />
     </bean>
+    <mongo:mongo host="192.168.26.15" port="27017" id="mongo">
+    </mongo:mongo>
+    <mongo:db-factory id="mongoDbFactory" dbname="cgp" mongo-ref="mongo"/>
+    <bean class="org.springframework.data.mongodb.core.MongoTemplate" name="mongoTemplate" id="mongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+    <mongo:mapping-converter base-package="com.qpp.model" db-factory-ref="mongoDbFactory" />
     <!--<import resource="Quartz.xml" />-->
 </beans>

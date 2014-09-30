@@ -4,13 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.qpp.dao.CartItemDao;
 import com.qpp.model.TOrder;
 import com.qpp.service.user.impl.CartJob;
-import org.quartz.*;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -122,5 +129,15 @@ public class MDTest {
 //        dao.getBySQL("select * from t_config");
         System.out.println(System.currentTimeMillis());
         System.out.println(new Date().getTime());
+        System.out.println(new Timestamp(new Date().getTime()));
+        System.out.println(JSON.parse(null)==null);
+        System.out.println("-------------------");
+        List arrayList = Arrays.asList(11l, 32l, 36l);
+        System.out.println(arrayList instanceof ArrayList);
+        System.out.println(arrayList.getClass());
+        System.out.println(arrayList.contains(32l));
+        System.out.println("---------------------");
+        System.out.println("Long is Max:"+Long.MAX_VALUE);
+        System.out.println(Integer.MAX_VALUE);
     }
 }

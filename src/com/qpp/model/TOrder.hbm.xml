@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 28, 2014 5:21:03 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Sep 24, 2014 2:42:54 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TOrder" table="t_order">
-        <id name="id" type="int">
+        <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="native" />
         </id>
-        <many-to-one name="buyer" class="com.qpp.model.TUser" fetch="select">
-            <column name="buyer" />
-        </many-to-one>
         <property name="amt" type="java.lang.Double">
             <column name="amt" precision="22" scale="0" />
         </property>
@@ -22,6 +19,9 @@
         </property>
         <property name="payMentAction" type="string">
             <column name="payMentAction" length="20" />
+        </property>
+        <property name="buyer" type="java.lang.Integer">
+            <column name="buyer" />
         </property>
         <property name="email" type="string">
             <column name="email" length="30" />
@@ -77,11 +77,5 @@
         <property name="type" type="string">
             <column name="type" length="20" not-null="true" />
         </property>
-        <set name="TOrderItems" table="t_orderItem" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="orderId" />
-            </key>
-            <one-to-many class="com.qpp.model.TOrderItem" />
-        </set>
     </class>
 </hibernate-mapping>

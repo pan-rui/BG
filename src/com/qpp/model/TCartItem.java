@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,9 +9,9 @@ import java.util.Date;
  */
 public class TCartItem implements java.io.Serializable {
 
-	private int id;
-	private TUser userId;
-	private int productId;
+	private long id;
+	private long userId;
+	private long productId;
 	private String productSpec;
 	private int productCount;
 	private Date ctime;
@@ -30,10 +30,10 @@ public class TCartItem implements java.io.Serializable {
 		this.price = price;
 	}
 
-	public TCartItem(TUser userId, int productId, String productSpec,
+	public TCartItem(long userId, long productId, String productSpec,
 			int productCount, Date ctime, String comment, double price,
 			String imgUrl, String url, String productName) {
-		this.userId=userId;
+		this.userId = userId;
 		this.productId = productId;
 		this.productSpec = productSpec;
 		this.productCount = productCount;
@@ -45,27 +45,27 @@ public class TCartItem implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TUser getUserId() {
-        return userId;
-    }
+	public long getUserId() {
+		return this.userId;
+	}
 
-    public void setUserId(TUser userId) {
-        this.userId = userId;
-    }
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
-    public int getProductId() {
+	public long getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 

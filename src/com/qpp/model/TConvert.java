@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,13 +9,13 @@ import java.util.Date;
  */
 public class TConvert implements java.io.Serializable {
 
-	private int id;
-	private TGift target;
-	private TUser userId;
+	private long id;
 	private String type;
 	private int amount;
 	private Date ctime;
+	private long userId;
 	private String comment;
+	private long giftId;
 	private int count;
 
 	public TConvert() {
@@ -27,42 +27,26 @@ public class TConvert implements java.io.Serializable {
 		this.count = count;
 	}
 
-	public TConvert(TGift TGift, TUser userId, String type, int amount,
-			Date ctime, String comment, int count) {
-        this.userId=userId;
-        this.target=target;
+	public TConvert(String type, int amount, Date ctime, long userId,
+			String comment, long giftId, int count) {
 		this.type = type;
 		this.amount = amount;
 		this.ctime = ctime;
+		this.userId = userId;
 		this.comment = comment;
+		this.giftId = giftId;
 		this.count = count;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TGift getTarget() {
-        return target;
-    }
-
-    public void setTarget(TGift target) {
-        this.target = target;
-    }
-
-    public TUser getUserId() {
-        return userId;
-    }
-
-    public void setUserId(TUser userId) {
-        this.userId = userId;
-    }
-
-    public String getType() {
+	public String getType() {
 		return this.type;
 	}
 
@@ -86,6 +70,14 @@ public class TConvert implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
+	public long getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
 	public String getComment() {
 		return this.comment;
 	}
@@ -93,7 +85,6 @@ public class TConvert implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
 	public int getCount() {
 		return this.count;
 	}
@@ -102,4 +93,11 @@ public class TConvert implements java.io.Serializable {
 		this.count = count;
 	}
 
+    public long getGiftId() {
+        return giftId;
+    }
+
+    public void setGiftId(long giftId) {
+        this.giftId = giftId;
+    }
 }

@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Sep 24, 2014 2:42:54 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.qpp.model.TStore" table="t_store">
-        <id name="userId" type="int">
+        <id name="userId" type="java.lang.Integer">
             <column name="userId" />
-            <generator class="foreign">
-                <param name="property">TUser</param>
-            </generator>
+            <generator class="native" />
         </id>
-        <one-to-one name="TUser" class="com.qpp.model.TUser" constrained="true"></one-to-one>
         <property name="name" type="string">
             <column name="name" length="20" not-null="true" />
         </property>
@@ -26,7 +23,7 @@
         <property name="contacts" type="string">
             <column name="contacts" length="20" />
         </property>
-        <property name="phone" type="int">
+        <property name="phone" type="string">
             <column name="phone" not-null="true" />
         </property>
         <property name="template" type="string">
@@ -41,11 +38,5 @@
         <property name="gameType" type="string">
             <column name="gameType" length="1024" />
         </property>
-        <set name="TStoreOrders" table="t_store_order" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="storeId" />
-            </key>
-            <one-to-many class="com.qpp.model.TStoreOrder" />
-        </set>
     </class>
 </hibernate-mapping>

@@ -4,19 +4,25 @@ import com.alibaba.fastjson.JSON;
 import com.paypal.sdk.core.nvp.NVPDecoder;
 import com.paypal.sdk.core.nvp.NVPEncoder;
 import com.qpp.action.BaseAction;
+import com.qpp.dao.OrderDao;
 import com.qpp.model.TOrder;
 import com.qpp.model.TOrderItem;
 import com.qpp.service.market.MessageInfo;
 import com.qpp.service.market.PaypalUtil;
 import com.qpp.service.market.impl.OrderItemServiceImpl;
 import com.qpp.service.market.impl.OrderServiceImpl;
+import com.qpp.service.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by qpp on 7/14/2014.
@@ -29,6 +35,10 @@ public class PaypalAction extends BaseAction {
     private PaypalUtil paypalUtil;
     @Resource
     private OrderServiceImpl orderServiceImpl;
+    @Resource
+    private OrderDao orderDao;
+    @Resource
+    private UserService userServiceImpl;
     @Resource
     private OrderItemServiceImpl OrderItemServiceImpl;
 
@@ -60,7 +70,8 @@ public class PaypalAction extends BaseAction {
 //        encoder.add("REQCONFIRMSHIPPING","1");
         encoder.add("ADDROVERRIDE", "1");
         encoder.add("ITEMAMT", String.valueOf(order.getItemAmt()));
-        encoder.add("SHIPTONAME", String.valueOf(order.getBuyer().getId()));
+//        encoder.add("SHIPTONAME", String.valueOf(order.getBuyer().getId()));//TODO:待确定...
+        encoder.add("SHIPTONAME", String.valueOf(order.getBuyer()));//TODO:待确定...
         double taxAmt = order.getItemAmt() * Double.parseDouble(MessageInfo.getMessage(order.getLocalCode() + "_Tax"));
         encoder.add("TAXAMT", String.valueOf(taxAmt));
         order.setTaxAmt(taxAmt);
@@ -71,6 +82,16 @@ public class PaypalAction extends BaseAction {
         List<TOrderItem> list = request.getParameter("cart") != null ? JSON.parseArray(request.getParameter("cart"), TOrderItem.class) : new ArrayList<TOrderItem>();
         String orderId = PaypalUtil.getUuid(16);
         Date date = new Date();
+        //        order.setTOrderItems(list);
+//        order.setId(orderId);
+        order.setCtime(date);
+        order.setUtime(date);
+        order.setTaxAmt(taxAmt);
+        order.setInvnum(invnum);
+        order.setMaxAmt(order.getAmt() + 50);
+        order.setStatus(OrderServiceImpl.OrderStatus.no_Pay.getValue());
+        orderServiceImpl.save(order);
+        long oid = Long.parseLong(userServiceImpl.exists(orderDao, "select oid from t_order where invnum='" + invnum + "'"));
         for (int i = 0; i < list.size(); i++) {
             TOrderItem TOrderItem = list.get(i);
             encoder.add("L_NAME" + i, TOrderItem.getProductName());
@@ -79,7 +100,7 @@ public class PaypalAction extends BaseAction {
             encoder.add("L_AMT" + i, String.valueOf(TOrderItem.getPrice()));
             encoder.add("QTY" + i, String.valueOf(TOrderItem.getProductCount()));
 //            TOrderItem.setId(PaypalUtil.getUuid(16));
-            TOrderItem.setOrderId(order);
+            TOrderItem.setOrderId(oid);
             TOrderItem.setCtime(date);
             TOrderItem.setUtime(date);
             OrderItemServiceImpl.save(TOrderItem);
@@ -92,15 +113,7 @@ public class PaypalAction extends BaseAction {
         encoder.add("CALLBACK", "https://www.ppcallback.com/callback.pl");
         encoder.add("CALLBACKTIMEOUT", "4");
 
-//        order.setTOrderItems(list);
-//        order.setId(orderId);
-        order.setCtime(date);
-        order.setUtime(date);
-        order.setTaxAmt(taxAmt);
-        order.setInvnum(invnum);
-        order.setMaxAmt(order.getAmt() + 50);
-        order.setStatus(OrderServiceImpl.OrderStatus.no_Pay.getValue());
-        orderServiceImpl.save(order);
+
         Map<String, Object> sMap = paypalUtil.setExpress(encoder, PaypalUtil.LogType.SET_EXPRESS_CHECKOUT.getValue());
         Map<String, Object> verifyy = new HashMap<String, Object>();
         verifyy.put("SHIPTOSTREET", order.getAddress());

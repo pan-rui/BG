@@ -1,23 +1,25 @@
 package com.qpp.dao;
 
-import com.qpp.model.TAppInfo;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.annotations.Cache;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import com.qpp.model.AppKey;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by admin on 2014/7/29.
  */
 @Repository
-public class AppInfoDao extends BaseDao<TAppInfo> {
+public class AppInfoDao extends BaseDao<AppKey> {
     public AppInfoDao(){
-        super(TAppInfo.class);
+        super(AppKey.class);
     }
+
+    public List<AppKey> getUserApp(long userId){
+        return super.getsByQuery("from AppKey where userId="+userId);
+    }
+
     public String insertApp(String appId){
         return super.getObjectBySQL("select p_newApp('"+appId+"')").toString();
     }

@@ -2,16 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="autoStartup" value="false"/>
         <property name="triggers">
             <list>
-                <!--<ref local="stestSchedule"/>-->
+                &lt;!&ndash;<ref local="stestSchedule"/>&ndash;&gt;
                 <ref bean="cartTrigger"/>
             </list>
         </property>
     </bean>
-    <!--<bean id="stest" class="com.gary.testClass.MyTest"/>-->
+    &lt;!&ndash;<bean id="stest" class="com.gary.testClass.MyTest"/>&ndash;&gt;
     <bean id="stestSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
             <ref bean="jobDetail"/>
@@ -23,13 +24,13 @@
     </bean>
     <bean id="cartTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail"/>
-        <!--延迟18个小时执行-->
+        &lt;!&ndash;延迟18个小时执行&ndash;&gt;
         <property name="startDelay" value="64800000"/>
     </bean>
     <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="group" value="cartJob"/>
         <property name="name" value="userCart"/>
-        <!--<property name="concurrent" value="false"/>-->
+        &lt;!&ndash;<property name="concurrent" value="false"/>&ndash;&gt;
 
         <property name="targetObject">
             <ref bean="cartJob" />
@@ -38,5 +39,6 @@
     </bean>
 
     <bean id="cartJob" class="com.qpp.service.user.impl.CartJob" />
+-->
 
 </beans>

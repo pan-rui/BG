@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,12 +9,12 @@ import java.util.Date;
  */
 public class TStoreOrder implements java.io.Serializable {
 
-	private int id;
-	private TStore storeId;
+	private long id;
+	private long storeId;
 	private String comment;
 	private Date ctime;
 	private int amount;
-	private int byuserId;
+	private long byuserId;
 	private String status;
 
 	public TStoreOrder() {
@@ -26,9 +26,9 @@ public class TStoreOrder implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public TStoreOrder(TStore storeId, String comment, Date ctime, int amount,
-			int byuserId, String status) {
-        this.storeId=storeId;
+	public TStoreOrder(long storeId, String comment, Date ctime, int amount,
+			long byuserId, String status) {
+		this.storeId = storeId;
 		this.comment = comment;
 		this.ctime = ctime;
 		this.amount = amount;
@@ -36,23 +36,23 @@ public class TStoreOrder implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TStore getStoreId() {
-        return storeId;
-    }
+	public long getStoreId() {
+		return this.storeId;
+	}
 
-    public void setStoreId(TStore storeId) {
-        this.storeId = storeId;
-    }
+	public void setStoreId(long storeId) {
+		this.storeId = storeId;
+	}
 
-    public String getComment() {
+	public String getComment() {
 		return this.comment;
 	}
 
@@ -76,11 +76,11 @@ public class TStoreOrder implements java.io.Serializable {
 		this.amount = amount;
 	}
 
-	public int getByuserId() {
+	public long getByuserId() {
 		return this.byuserId;
 	}
 
-	public void setByuserId(int byuserId) {
+	public void setByuserId(long byuserId) {
 		this.byuserId = byuserId;
 	}
 

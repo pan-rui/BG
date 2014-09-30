@@ -2,6 +2,7 @@ package com.qpp.action.order;
 
 import com.paypal.sdk.core.nvp.NVPEncoder;
 import com.qpp.action.BaseAction;
+import com.qpp.dao.OrderDao;
 import com.qpp.model.BaseReturn;
 import com.qpp.model.TCartItem;
 import com.qpp.model.TOrder;
@@ -38,6 +39,8 @@ import java.util.*;
 public class OrderAction extends BaseAction {
 @Resource
 private OrderService orderServiceImpl;
+    @Resource
+    private OrderDao orderDao;
     @Resource
     private OrderItemService orderItemServiceImpl;
     @Resource
@@ -87,7 +90,7 @@ private OrderService orderServiceImpl;
         Date date = new Date();
 //        order.setTUser((com.qpp.model.TUser) request.getSession().getAttribute("user"));
         order.setCtime(date);
-        String orderId = RandomSymbol.getAllSymbol(16);
+//        String orderId = RandomSymbol.getAllSymbol(16);
 //        order.setId(orderId);
         order.setStatus("下单待付款");
 //        order.setAmt();前台已计算
@@ -97,23 +100,24 @@ private OrderService orderServiceImpl;
         order.setTransactionId(transId);
 //        order.setType();  支付方式
         List<TCartItem> cartList = (List<TCartItem>) request.getSession().getAttribute("cartList");
-        Set<TOrderItem> orderItems = new HashSet<TOrderItem>();
+//        Set<TOrderItem> orderItems = new HashSet<TOrderItem>();
+            orderServiceImpl.save(order);
+        long oid = Long.parseLong(userServiceImpl.exists(orderDao, "select oid from t_order where invnum='" + invnum + "'"));
         try {
             for (TCartItem cartItem : cartList) {
                 TOrderItem orderItem = new TOrderItem();
                 BeanUtils.copyProperties(cartItem, orderItem, new String[]{"id", "userId", "ctime", "url", "imgUrl"});
-                orderItem.setOrderId(order);
+                orderItem.setOrderId(oid);
 //                orderItem.setId(RandomSymbol.getAllSymbol(16));
                 orderItem.setCtime(date);
                 orderItem.setUtime(date);
                 orderItemServiceImpl.save(orderItem);
-                orderItems.add(orderItem);
+//                orderItems.add(orderItem);
             }
-            order.setTOrderItems(orderItems);
-            orderServiceImpl.save(order);
+//            order.setTOrderItems(orderItems);
             request.setAttribute("invnum", invnum);
-            memcachedClient.set("order" + invnum, order, 18 * 60 * 60 * 1000);
-            memcachedClient.set("order" + orderId, order, 18 * 60 * 60 * 1000);
+            memcachedClient.set("order_" + invnum, order, 18 * 60 * 60 * 1000);
+            memcachedClient.set("order_" + oid, order, 18 * 60 * 60 * 1000);
             result.setResult(1);
             result.setData(order);
         }catch (Exception e){
@@ -140,7 +144,7 @@ private OrderService orderServiceImpl;
             result.setResult(0);
             result.setErrMessage("支付类型不正确....");
         }
-        TOrder order = (TOrder) memcachedClient.get("order" + request.getSession().getAttribute("invnum"));
+        TOrder order = (TOrder) memcachedClient.get("order_" + request.getSession().getAttribute("invnum"));
         switch (payType){
             case Union:
                 UnionpayRequest uReq = new UnionpayRequest();
@@ -210,7 +214,7 @@ private OrderService orderServiceImpl;
         String respCode = respMap.get("respCode")[0];
         if (respCode.equals("00")) {
             //TODO:更新
-            TOrder order = (TOrder) memcachedClient.get("order" + respMap.get("orderNumber")[0]);
+            TOrder order = orderServiceImpl.getById(String.valueOf(memcachedClient.get("order_" + respMap.get("orderNumber")[0])));
 //            order.setStatus("订单已支付");
             orderServiceImpl.updtaOrder(order, qid);
             loger.info(MessageFormat.format("Event:Order is Payment,invnum:{0},time:{1},result:Success", qid, formatDateTime(new Date())));
@@ -224,7 +228,7 @@ private OrderService orderServiceImpl;
         BaseReturn result = new BaseReturn();
         PaypalRequest paypalRequest = new PaypalRequest();
         paypalRequest.setToken(request.getParameter("token"));
-        TOrder order = (TOrder) memcachedClient.get("order" + request.getParameter("invnum"));
+        TOrder order = (TOrder) memcachedClient.get("order_" + request.getParameter("invnum"));
         paypalRequest.setOrderParam(order);
         Map<String, String> resultMap = orderServiceImpl.preAuth(paypalRequest, OrderServiceImpl.PayType.Paypal, order);
         if (resultMap != null && ("Success".equals(resultMap.get("ACK")) || "SuccessWithWarning".equals(resultMap.get("ACK")))) {

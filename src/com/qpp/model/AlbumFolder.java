@@ -1,15 +1,14 @@
 package com.qpp.model;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * album folder model
  * @author Kevin Liu
  *
  */
-public class AlbumFolder {
+public class AlbumFolder implements Serializable {
 	
 	/**album folder id**/
 	private Long id;

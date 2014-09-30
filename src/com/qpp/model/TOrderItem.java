@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,11 +9,11 @@ import java.util.Date;
  */
 public class TOrderItem implements java.io.Serializable {
 
-        private int id;
-	private TOrder orderId;
-	private int productId;
+	private long id;
+	private long orderId;
+	private long productId;
 	private String productName;
-	private int productCount;
+	private long productCount;
 	private String productSpec;
 	private String comment;
 	private Date ctime;
@@ -24,10 +24,10 @@ public class TOrderItem implements java.io.Serializable {
 	public TOrderItem() {
 	}
 
-	public TOrderItem(TOrder orderId, int productId, String productName,
-			int productCount, String productSpec, String comment,
+	public TOrderItem(long orderId, long productId, String productName,
+			long productCount, String productSpec, String comment,
 			Date ctime, Date utime, String isbn, Double price) {
-        this.orderId=orderId;
+		this.orderId = orderId;
 		this.productId = productId;
 		this.productName = productName;
 		this.productCount = productCount;
@@ -39,27 +39,27 @@ public class TOrderItem implements java.io.Serializable {
 		this.price = price;
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-    public TOrder getOrderId() {
-        return orderId;
-    }
+	public long getOrderId() {
+		return this.orderId;
+	}
 
-    public void setOrderId(TOrder orderId) {
-        this.orderId = orderId;
-    }
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
 
-    public int getProductId() {
+	public long getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 
@@ -71,11 +71,11 @@ public class TOrderItem implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public int getProductCount() {
+	public long getProductCount() {
 		return this.productCount;
 	}
 
-	public void setProductCount(int productCount) {
+	public void setProductCount(long productCount) {
 		this.productCount = productCount;
 	}
 

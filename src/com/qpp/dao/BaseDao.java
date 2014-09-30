@@ -68,6 +68,11 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public List<T> getAll(Class pclass){
         return hibernateTemplate.loadAll(pclass);
     }
+    public List<T> getAllByPage(Class pclass,int from,int size){
+        return getsByQueryPage("from "+pclass.getSimpleName(),from,size);
+        //return hibernateTemplate.loadAll(pclass);
+    }
+
     public List<T> getsByCriteria(DetachedCriteria criteria){
         return hibernateTemplate.findByCriteria(criteria);
     }
@@ -111,7 +116,11 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public List<T> getsByQueryPage(final String sqlString, final int start,final int end) {
         return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                Query query = session.createQuery(sqlString).setFirstResult(start).setMaxResults(end);
+                Query query = session.createQuery(sqlString);
+                if (start>=0)
+                    query.setFirstResult(start);
+                if (end>=0)
+                    query.setMaxResults(end);
                 return query.list();
             }
         }
@@ -210,111 +219,6 @@ public class BaseDao<T> extends HibernateDaoSupport{
         return userCount;
     }
 
-
-// jdbc:mysql://<host>:<port>/<database_name>
-//    public boolean updateOnMap(String tableName, Map<String, Object> newData, String cond) {
-//        Connection conn = null;
-//        PreparedStatement pstmt = null;
-//        StringBuffer sql = new StringBuffer("update " + tableName + " set");
-//        try {
-//            conn=getConnetion();
-//            conn.setReadOnly(false);
-////            stmt=conn.prepareStatement()
-//            Set<Map.Entry<String, Object>> entry = newData.entrySet();
-//            Iterator<Map.Entry<String, Object>> iterator = entry.iterator();
-//            while (iterator.hasNext()) {
-//                Map.Entry<String, Object> KV = iterator.next();
-//                if (!"".equals(KV.getValue()))
-//                    sql.append(" " + KV.getKey() + "=" + KV.getValue());
-//            }
-//            sql.append(" " + cond);
-//            pstmt = conn.prepareStatement(sql.toString());
-//            int result = pstmt.executeUpdate();
-//            conn.commit();
-//            return result > 0;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            logger.error("Update 失败，失败的SQL为:\t" + sql.toString());
-//            try {
-//                conn.rollback();
-//            } catch (SQLException e1) {
-//                e1.printStackTrace();
-//            }
-//        } finally {
-//            try {
-//                pstmt.close();
-//                conn.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return false;
-//    }
-
-//    public boolean insert(T t) {
-//        StringBuffer sql = new StringBuffer("insert into t_" + getTableName(t.getClass().getName()));
-//        boolean result=false;
-//        StringBuffer fis = new StringBuffer(" (");
-//        StringBuffer vus = new StringBuffer(" (");
-//        Connection conn = getConnetion();
-//        PreparedStatement pstmt=null;
-//        Field[] fields = t.getClass().getDeclaredFields();
-//        int i = 0;
-//        try {
-//            for (Field field : fields) {
-//                field.setAccessible(true);
-//                Class type =field.getType();
-//                Object value=field.get(t);
-//                if (i != fields.length - 1) {
-//                    if (value != null) {
-//                        fis.append(field.getName() + ",");
-//                        if (type.isInstance(""))
-//                            vus.append("'" + value + "',");
-//                        else if(type.isInstance(new java.util.Date()))
-//                            vus.append("'"+PaypalUtil.dateFormat((java.util.Date)value) + "',");
-//                        else
-//                            vus.append(value + ",");
-//                    }
-//                } else {
-//                    if (!fis.toString().contains(")")) {
-//                        if(value!=null) {
-//                            fis.append(field.getName() + ")");
-//                            if (type.isInstance(""))
-//                                vus.append("'" + value + "')");
-//                            else if (type.isInstance(new java.util.Date()))
-//                                vus.append("'" + PaypalUtil.dateFormat((java.util.Date) value) + "')");
-//                            else
-//                                vus.append(value + ")");
-//                        }else{
-//                            fis=new StringBuffer(fis.substring(0,fis.length()-1)).append(")");
-//                            vus=new StringBuffer(vus.substring(0,vus.length()-1)).append(")");
-//                        }
-//                    }
-//                }
-//
-//                i++;
-//            }
-//            sql.append(fis.toString()).append(" values").append(vus);
-//            pstmt=conn.prepareStatement(sql.toString());
-//            result=pstmt.execute();
-//            conn.commit();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            try {
-//                conn.rollback();
-//            } catch (SQLException e1) {
-//                e1.printStackTrace();
-//            }
-//        }finally {
-//            close(conn,pstmt,null);
-//        }
-//        return result;
-//    }
-
-//    public List<T> query(){}
 
     public String getTableName(String className) {
         int index=className.lastIndexOf('.')+1;

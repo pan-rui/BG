@@ -1,6 +1,6 @@
 package com.qpp.model;
 
-// Generated Aug 28, 2014 4:18:51 PM by Hibernate Tools 3.4.0.CR1
+// Generated Sep 24, 2014 2:42:53 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -9,25 +9,22 @@ import java.util.Date;
  */
 public class TFavorite implements java.io.Serializable {
 
-	private int userId;
-	private TUser TUser;
+	private long userId;
 	private String type;
 	private String productName;
-	private int productId;
+	private long productId;
 	private String comment;
 	private Date ctime;
 
 	public TFavorite() {
 	}
 
-	public TFavorite(TUser TUser, Date ctime) {
-		this.TUser = TUser;
+	public TFavorite(Date ctime) {
 		this.ctime = ctime;
 	}
 
-	public TFavorite(TUser TUser, String type, String productName,
-			int productId, String comment, Date ctime) {
-		this.TUser = TUser;
+	public TFavorite(String type, String productName, long productId,
+			String comment, Date ctime) {
 		this.type = type;
 		this.productName = productName;
 		this.productId = productId;
@@ -35,20 +32,12 @@ public class TFavorite implements java.io.Serializable {
 		this.ctime = ctime;
 	}
 
-	public int getUserId() {
+	public long getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
-	}
-
-	public TUser getTUser() {
-		return this.TUser;
-	}
-
-	public void setTUser(TUser TUser) {
-		this.TUser = TUser;
 	}
 
 	public String getType() {
@@ -67,11 +56,11 @@ public class TFavorite implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	public int getProductId() {
+	public long getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 

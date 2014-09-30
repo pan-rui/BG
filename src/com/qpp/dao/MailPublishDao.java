@@ -18,17 +18,17 @@ import java.util.Map;
 @Repository
 public class MailPublishDao extends BaseDao<TMailPublish> {
     @Resource
-    private JdbcTemplate jdbcTemplate;
+    public JdbcTemplate jdbcTemplate;
 
     public MailPublishDao() {
         super(TMailPublish.class);
     }
 
-    public List<String> queryAddr(String sql,String field) {
+    public List<Object> queryAddr(String sql,String field) {
         List<Map<String,Object>> resultList=jdbcTemplate.queryForList(sql);
-        List<String> list = new ArrayList<String>();
+        List<Object> list = new ArrayList<Object>();
         for (Map<String, Object> map : resultList)
-            list.add(String.valueOf(map.get(field)));
+            list.add(map.get(field));
         return list;
     }
 

@@ -12,8 +12,9 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/aop	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd" default-autowire="byName">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"  default-autowire="byName">
 
+    <aop:aspectj-autoproxy/>
     <cache:annotation-driven cache-manager="cacheManager" />
     <bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:ehcache.xml"
@@ -41,8 +42,11 @@
                 <value>text/plain;charset=UTF-8</value>
             </list>
         </property>
+        <property name="objectMapper">
+            <bean class="com.qpp.util.JsonMapper"  factory-method="BuildObjectMapper"/>
+        </property>
     </bean>
-    <mvc:annotation-driven>
+    <mvc:annotation-driven validator="validator">
 		<mvc:message-converters>
             <ref local="jsonHttpMessageConverter"/>
     	</mvc:message-converters>
@@ -57,21 +61,30 @@
 	<!--<mvc:view-controller path="/jsp/" view-name="hello"/>-->
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+        <bean class="com.qpp.filter.apiLogFilter"/>
+        <!--<bean class="com.qpp.filter.appFilter"/>-->
 <!--
         <mvc:interceptor>
-            <mvc:mapping path="/common/*" />
+            <mvc:mapping path="/common/country/*" />
             <bean class="com.qpp.filter.springFilter"/>
         </mvc:interceptor>
 -->
+
         </mvc:interceptors>
     <mvc:default-servlet-handler/>
 	<!-- Saves a locale change using a cookie -->
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="message" />
+        <property name="basename" value="resources/message" />
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="commonMessages" value="resources/message"/>
         <!--<property name="basenames" value="message" />-->
     </bean>
-	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+    <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
 		<property name="prefix" value="/jsp/"/>
@@ -87,17 +100,5 @@
         </property>
     </bean>
 -->
-
-    <!--
-     <bean id="simpleUrlHandlerMapping"
-         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-         <property name="mappings">
-             <props>
-                 <prop key="/hello.do">helloController</prop>
-                 <prop key="/show.do">showController</prop>
-             </props>
-         </property>
-     </bean>
-      -->
 	
 </beans>

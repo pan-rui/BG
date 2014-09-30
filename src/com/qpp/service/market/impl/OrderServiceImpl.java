@@ -139,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updtaOrder(TOrder order,String qid) {
-        TUser user =order.getBuyer();
+        TUser user = userDao.getById(order.getBuyer());
 //            user.setScore(Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("交易金额兑换积分系数")));
         Map<String, Object> orderData = new LinkedHashMap<String, Object>();
         Map<String, Object> userData = new LinkedHashMap<String, Object>();
@@ -148,7 +148,7 @@ public class OrderServiceImpl implements OrderService {
         orderData.put("id", order.getId());
         orderDao.update("t_order", orderData);
         userData.put("score", Integer.parseInt(String.valueOf(Math.round(order.getAmt()))) * Integer.parseInt(MessageInfo.getMessage("key"))); //TODO:key为交易金额兑换积分系数
-        userData.put("id", user.getId());
+        userData.put("id",order.getBuyer());
         userDao.update("t_user", userData);
 
     }
