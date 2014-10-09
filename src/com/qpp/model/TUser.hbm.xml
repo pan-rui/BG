@@ -23,6 +23,9 @@
         <property name="currentPassword" type="java.lang.Long">
             <column name="currentPassword" not-null="false" />
         </property>
+        <property name="defaultAddr" type="java.lang.Long">
+            <column name="defaultAddr" not-null="false" />
+        </property>
         <property name="nickname" type="string">
             <column name="nickname" length="20" />
         </property>

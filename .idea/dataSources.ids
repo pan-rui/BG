@@ -495,6 +495,16 @@
       <column name="IsBuildIn" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="appId"/>
     </table>
+    <table name="t_address" schema="" catalog="bgm" type="TABLE">
+      <column name="oid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="countryCode" sqlType="VARCHAR" precision="5" scale="0" nullable="false" jdbcType="12"/>
+      <column name="stateCode" sqlType="VARCHAR" precision="5" scale="0" nullable="false" jdbcType="12"/>
+      <column name="city" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="street" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="userId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="oid"/>
+    </table>
     <table name="t_album" schema="" catalog="bgm" type="TABLE">
       <column name="albumId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="55u45YaMSUQ=" autoIncrement="true"/>
       <column name="albumName" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12" remarks="55u45YaM5ZCN56ew"/>
@@ -822,6 +832,7 @@
       <column name="utime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <column name="countryCode" sqlType="VARCHAR" precision="2" scale="0" nullable="true" jdbcType="12"/>
       <column name="registerType" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="defaultAddr" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="oid"/>
     </table>
     <table name="t_userEmail" schema="" catalog="bgm" type="TABLE">
@@ -3315,11 +3326,5 @@
       <foreign-key name="FK_mdmbuydyy3en21wika3mxevsa" columns="wtq_tp_id" ref-table="typesetting_product" ref-schema="" ref-catalog="typesetting" ref-columns="tp_id" update-rule="3" delete-rule="3" deferrability="2"/>
       <index name="FK_mdmbuydyy3en21wika3mxevsa" unique="false" columns="wtq_tp_id"/>
     </table>
-    <procedure name="p_newApp" schema="" catalog="bgm" type="2">
-      <prototype>
-        <parameter name="lappid" sqlType="VARCHAR" precision="32" scale="0" nullable="true" jdbcType="12" type="1" index="1"/>
-        <parameter name="" sqlType="VARCHAR" precision="32" scale="0" nullable="true" jdbcType="12" type="5" index="0"/>
-      </prototype>
-    </procedure>
   </data-source>
 </component>

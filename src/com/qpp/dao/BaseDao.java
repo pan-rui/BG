@@ -1,6 +1,7 @@
 package com.qpp.dao;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -222,7 +223,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
 
     public String getTableName(String className) {
         int index=className.lastIndexOf('.')+1;
-        return className.substring(index,index+1).toLowerCase() + className.substring(index+1);
+        return className.substring(index, index + 1).toLowerCase() + "_" + StringUtils.uncapitalize(className.substring(index + 1));
     }
 
     public Connection getConnetion() {
@@ -303,10 +304,15 @@ public class BaseDao<T> extends HibernateDaoSupport{
         }
     }
 
-    public int delete(String property, Object value) {
-        List<T> list=hibernateTemplate.findByNamedQuery(property,value);
-        hibernateTemplate.deleteAll(list);
-        return  list.size();
+    public void delete(String property, Object value) {
+        if(property==null) {
+            jdbcTemplate.execute("delete from " + getTableName(priClass.getName()) + " where oid='" + value + "'");
+        }else{
+            jdbcTemplate.execute("delete from "+getTableName(priClass.getName())+ "where "+property+"='"+value+"'");
+        }
+//        List<T> list=hibernateTemplate.findByNamedQuery(property,value);
+//        hibernateTemplate.deleteAll(list);
     }
+
 
 }

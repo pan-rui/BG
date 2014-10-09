@@ -3,6 +3,7 @@ package com.qpp.action.user;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qpp.action.BaseAction;
+import com.qpp.dao.AddressDao;
 import com.qpp.dao.CartItemDao;
 import com.qpp.dao.MailPublishDao;
 import com.qpp.dao.UserRoleDao;
@@ -41,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +61,8 @@ public class UserAction extends BaseAction {
     private MemcacheCommonService memcacheCommonService;
     @Resource
     private CartItemDao cartItemDao;
+    @Resource
+    private AddressDao addressDao;
     @Resource
     private UserRoleDao userRoleDao;
     private int userExpire=18 * 60 * 60000; //用户信息缓存周期
@@ -89,6 +93,21 @@ public class UserAction extends BaseAction {
         }else result.setErrMessage(getMessage(request, result.getErrMessage(), null));
         return result;
 //        return new BaseReturn(1, getMessage(request, "login error is Argments inValid.. ", null));
+    }
+
+    /**
+     * 注销
+     * @param tokenId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "{tokenId}",method = RequestMethod.DELETE)
+    public @ResponseBody BaseReturn logout(@PathVariable String tokenId,HttpServletRequest request){
+        Object userCache=memcachedClient.get(tokenId);
+        if(userCache==null)
+            return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        memcachedClient.delete(tokenId);
+       return new BaseReturn(1, null);
     }
 
     /**
@@ -140,7 +159,8 @@ public class UserAction extends BaseAction {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public BaseReturn register(@RequestBody String jsonStr, HttpServletRequest request) {
-        AppKey appKey=memcacheCommonService.getAppInfo(request);
+//        AppKey appKey=memcacheCommonService.getAppInfo(request);
+        AppKey appKey=new AppKey();appKey.setIsbuildin((short) 1);//TODO:内部用户
         Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
         try {
             jsonMap.put("birthDay", new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(jsonMap.get("birthDay"))));
@@ -148,7 +168,7 @@ public class UserAction extends BaseAction {
             e.printStackTrace();
         }
 //        BaseReturn result=userServiceImpl.register(jsonMap,appKey.getOid()); //TODO:appKey
-        BaseReturn result=userServiceImpl.register(jsonMap,1000l);
+        BaseReturn result=userServiceImpl.register(jsonMap,appKey);
         if(result.getResult()==0){
             loger.info(MessageFormat.format("EventType: New User Register. UserId: {0} . DateTime: {1} . Result:Success",((TUser)result.getData()).getOid(),formatDateTime(new Date())));
 
@@ -314,30 +334,33 @@ public class UserAction extends BaseAction {
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public BaseReturn updateUser(@RequestBody String jsonStr, HttpServletRequest request) {
+//        AppKey appKey = memcacheCommonService.getAppInfo(request);
+        AppKey appKey=new AppKey();appKey.setIsbuildin((short)1); //TODO:内部用户
         Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
-        String tokenId = (String) jsonMap.remove("tokenId");
-        if(tokenId==null||memcachedClient.get(tokenId) instanceof HttpSession)
-            return new BaseReturn(getMessage(request,"err.user.noLogin",null), 1);
+            String tokenId = (String) jsonMap.remove("tokenId");
+            if (appKey.getIsbuildin()!=1&&(tokenId == null || memcachedClient.get(tokenId) instanceof HttpSession))
+                return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         TUser obj = (TUser) memcachedClient.get(tokenId);
         try {
             jsonMap.put("utime", new Date());
-            jsonMap.remove("password");jsonMap.remove("email"); //TODO:字段过滤.....
-        if(jsonMap.containsKey("name")&&obj.getRegisterType()!=20){
-            jsonMap.remove("name");
-            BeanUtils.populate(obj,jsonMap); //TODO:验证...
-        }
-            Set<ConstraintViolation<TUser>> constraints= userServiceImpl.validator.validate(obj);
+            jsonMap.remove("password");
+           if(appKey.getIsbuildin()!=1) jsonMap.remove("email"); //TODO:字段过滤.....
+            if (jsonMap.containsKey("name") && obj.getRegisterType() != 20) {
+                jsonMap.remove("name");
+                BeanUtils.populate(obj, jsonMap); //TODO:验证...
+            }
+            Set<ConstraintViolation<TUser>> constraints = userServiceImpl.validator.validate(obj);
             for (ConstraintViolation<TUser> constraintViolation : constraints)
-                return new BaseReturn(getMessage(request,constraintViolation.getMessageTemplate(),null), 1);
+                return new BaseReturn(getMessage(request, constraintViolation.getMessageTemplate(), null), 1);
             jsonMap.put("oid", obj.getOid());
             memcachedClient.set(tokenId, obj, userExpire);
             userServiceImpl.update("t_user", jsonMap);
 //            BaseReturn result = userServiceImpl.updateUser(user);
 //            if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
-            return new BaseReturn(0,obj);
+            return new BaseReturn(0, obj);
         } catch (Exception e) {
             e.printStackTrace();
-            return new BaseReturn(getMessage(request,"err.parameter.inValid",new Object[]{jsonStr}), 1);
+            return new BaseReturn(getMessage(request, "err.parameter.inValid", new Object[]{jsonStr}), 1);
         }
     }
 
@@ -481,7 +504,7 @@ public class UserAction extends BaseAction {
      * @param status 状态值:1 激活,0 未激活 3 黑名单
      * @return
      */
-    @RequestMapping(value = "status-{status}/{tokenId}",method = RequestMethod.PUT)
+    @RequestMapping(value = "{status}/{tokenId}",method = RequestMethod.PUT)
     @ResponseBody
     public BaseReturn setUserStatus(@PathVariable String tokenId,@PathVariable String status,HttpServletRequest request) {
         Object userCache=memcachedClient.get(tokenId);
@@ -515,23 +538,89 @@ public class UserAction extends BaseAction {
 //    }
 
     /**
-     * 用户地址增、删、改
+     * 用户地址增加
      * @param tokenId
-     * @param address eg: [{"isDefault":"true","addr":"xxxxxxx"},{"isDefault":"false","addr":"xxxxxxx"}]
+     * @param address
      * @return
      */
-@RequestMapping(value = "addr/{tokenId}",method = RequestMethod.PUT)
+@RequestMapping(value = "addr/{tokenId}",method = RequestMethod.POST)
 @ResponseBody
-    public BaseReturn setUserAddr(@PathVariable String tokenId,@RequestBody List<Map> address,HttpServletRequest request) {
+    public BaseReturn addAddr(@PathVariable String tokenId,@RequestBody TAddress address,HttpServletRequest request) {
     Object userCache = memcachedClient.get(tokenId);
     if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
-    if (address.size() > 0) {
-        BaseReturn result = userServiceImpl.setUserAddr(((TUser)userCache).getOid(), JSON.toJSONString(address));
-        if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
-        return result;
-    }
+//    if (address.size() > 0) {
+//        BaseReturn result = userServiceImpl.setUserAddr(((TUser)userCache).getOid(), JSON.toJSONString(address));
+    if(address!=null)
+       return userServiceImpl.addAddr(address);
+//        if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
     return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
 }
+
+    /**
+     * 用户地址修改
+     * @param tokenId
+     * @param address
+     * @return
+     */
+    @RequestMapping(value = "addr/{tokenId}",method = RequestMethod.PUT)
+    @ResponseBody
+    public BaseReturn setUserAddr(@PathVariable String tokenId,@RequestBody TAddress address,HttpServletRequest request) {
+        Object userCache = memcachedClient.get(tokenId);
+        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        if(address!=null)
+            return userServiceImpl.updateAddr(address);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+    }
+
+    /**
+     * 用户地址查询
+     * @param tokenId
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "addr/{tokenId}",method = RequestMethod.GET)
+    @ResponseBody
+    public BaseReturn queryAddr(@PathVariable String tokenId,Long userId,HttpServletRequest request) {
+        Object userCache = memcachedClient.get(tokenId);
+        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        if(userId!=null)
+            return userServiceImpl.queryAddr(userId);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+    }
+
+    /**
+     * 用户默认地址查询
+     * @param tokenId
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "dAddr/{tokenId}",method = RequestMethod.GET)
+    @ResponseBody
+    public BaseReturn getDefaultAddr(@PathVariable String tokenId,Long userId,HttpServletRequest request) {
+        Object userCache = memcachedClient.get(tokenId);
+        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        if(userId!=null) {
+            TUser user=userServiceImpl.getById(userId);
+            return new BaseReturn(1,addressDao.getById(user.getDefaultAddr()));
+        }
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+    }
+
+    /**
+     * 用户地址删除
+     * @param tokenId
+     * @param address
+     * @return
+     */
+    @RequestMapping(value = "addr/{tokenId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public BaseReturn delAddr(@PathVariable String tokenId,Long address,HttpServletRequest request) {
+        Object userCache = memcachedClient.get(tokenId);
+        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        if(address!=null)
+            return userServiceImpl.delAddr(address);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+    }
 
     /**
      * 添加或修改邮件订阅
@@ -654,6 +743,13 @@ public class UserAction extends BaseAction {
     if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
     return result;
 }
+
+    /**
+     * 删除用户
+     * @param dataStr
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.DELETE)
     public @ResponseBody BaseReturn delete(String dataStr,HttpServletRequest request) {
 //        AppKey appKey = memcacheCommonService.getAppInfo(request);
@@ -667,6 +763,14 @@ public class UserAction extends BaseAction {
        return userServiceImpl.delete(userList);
         return new BaseReturn(getMessage(request, "err.parameter.inValid", new Object[]{dataStr}), 1);
     }
+
+    /**
+     * 检查访问权限
+     * @param request
+     * @param tokenId
+     * @param dataAuth
+     * @return
+     */
     public BaseReturn checkAuth(HttpServletRequest request,String tokenId,Map<AppKey,List<TRole>> dataAuth) {
         AppKey appKey = memcacheCommonService.getAppInfo(request);  //可读取注解判断权限级别
         if(!dataAuth.containsKey(appKey)) return new BaseReturn(getMessage(request, "err.user.authorized", null), 1);
@@ -679,5 +783,24 @@ public class UserAction extends BaseAction {
                 return new BaseReturn(0, null);
         }
         return new BaseReturn("err.user.authorized", 1);
+    }
+
+    /**
+     * 设置默认地址
+     * @param tokenId
+     * @param jsonStr
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "addrUp/{tokenId}", method = RequestMethod.PUT)
+    public @ResponseBody BaseReturn setAddr(@PathVariable String tokenId, @RequestBody String jsonStr, HttpServletRequest request) {
+        Object userCache = memcachedClient.get(tokenId);
+        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        JSONObject jsonObject = JSON.parseObject(jsonStr);
+        Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+        dataMap.put("defaultAddr", jsonObject.get("addrId"));
+        dataMap.put("oid",((TUser)userCache).getOid());
+        userServiceImpl.update("t_user", dataMap);
+        return new BaseReturn(1, null);
     }
 }

@@ -175,7 +175,7 @@
         function changeImg(el){
 //            alert((Math.random()*1000+"").substr(0,3));
 //            el.src="RandImg.jpg?time="+(Math.random()*1000+"").substr(0,3);
-            el.src="RandImg.jpg?time="+new Date().getTime();
+//            el.src="RandImg.jpg?time="+new Date().getTime();
 //            alert(el.src);
         }
     </script>
@@ -222,8 +222,9 @@
                 </dd>
             </dl>
         </div>
-           <img src="/RandImg.jpg" alt="验证码" onclick="changeImg(this)"/><input type="text" name="RandImg" value="" onblur="alert(this.value);"/>
-    <c:out value="${sessionScope.imageCode}"></c:out>
+     <!--      <img src="/RandImg.jpg" alt="验证码" onclick="changeImg(this)"/><input type="text" name="RandImg" value="" onblur="alert(this.value);"/>
+   <%-- <c:out value="${sessionScope.imageCode}"></c:out> --%>
+    -->
     </form>
 </div>
 </body>

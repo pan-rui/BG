@@ -24,6 +24,7 @@ public class TUser extends Priciple implements java.io.Serializable {
 	private int registerType;
 //    @Pattern(regexp = "^[a-f0-9]{16,32}$",message = "err.user.register.password.verify")
 	private long currentPassword;
+    private long defaultAddr;
 	private String nickname;
 	private Double money;
 	private long score;
@@ -224,4 +225,11 @@ public class TUser extends Priciple implements java.io.Serializable {
 		this.countryCode = countryCode;
 	}
 
+    public long getDefaultAddr() {
+        return defaultAddr;
+    }
+
+    public void setDefaultAddr(long defaultAddr) {
+        this.defaultAddr = defaultAddr;
+    }
 }

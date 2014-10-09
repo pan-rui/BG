@@ -1,7 +1,9 @@
 package com.qpp.service.user;
 
 import com.qpp.dao.BaseDao;
+import com.qpp.model.AppKey;
 import com.qpp.model.BaseReturn;
+import com.qpp.model.TAddress;
 import com.qpp.model.TGift;
 import com.qpp.model.TUser;
 
@@ -23,7 +25,7 @@ public interface UserService {
     public BaseReturn emailActive(long userId,String time);
 
     //注册
-    public BaseReturn register(Map<String,Object> data,long appId);
+    public BaseReturn register(Map<String,Object> data,AppKey appKey);
 
     //重设密码
     public BaseReturn rePassword(String name,String userEmail);
@@ -52,5 +54,16 @@ public interface UserService {
     public String exists(BaseDao dao, String sql);
 
     public BaseReturn delete(List<Object> userList);
+    //用户地址增加
+    public BaseReturn addAddr(TAddress address);
+
+    //用户地址删除
+    public BaseReturn delAddr(Serializable addr);
+
+    //用户地址查询
+    public BaseReturn queryAddr(Serializable user);
+
+    //用户地址更改
+    public BaseReturn updateAddr(TAddress address);
 
 }
