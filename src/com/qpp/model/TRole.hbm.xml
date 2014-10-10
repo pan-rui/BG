@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 29, 2014 2:40:36 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TRole" table="t_role">
+        <id name="oid" type="java.lang.Long">
+            <column name="oid" />
+            <generator class="identity" />
+        </id>
+        <property name="roleName" type="string">
+            <column name="roleName" length="100" not-null="true" />
+        </property>
+        <property name="roleDesc" type="string">
+            <column name="roleDesc" length="500" not-null="false" />
+        </property>
+        <property name="appId" type="java.lang.Long">
+            <column name="appId" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

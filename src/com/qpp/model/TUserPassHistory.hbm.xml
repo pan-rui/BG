@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 24, 2014 2:42:54 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.qpp.model.TUserPassHistory" table="t_userPassHistory">
+        <id name="oid" type="java.lang.Long">
+            <column name="oid" />
+            <generator class="native" />
+        </id>
+        <property name="userId" type="java.lang.Long">
+            <column name="userId" not-null="true" />
+        </property>
+        <property name="ctime" type="timestamp">
+            <column name="ctime" length="19" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="32" />
+        </property>
+    </class>
+</hibernate-mapping>

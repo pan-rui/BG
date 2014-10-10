@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.qpp.model.VAppApi" table="v_app_api">
+        <composite-id>
+            <key-property name="oid" column="oid"/>
+            <key-property name="type" column="type">
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">com.qpp.model.AppKeyType</param>
+                </type>
+            </key-property>
+            <key-property name="apiid" column="apiid"/>
+        </composite-id>
+        <property name="apiurl" column="apiurl"/>
+        <property name="apidesc" column="apidesc"/>
+    </class>
+</hibernate-mapping>

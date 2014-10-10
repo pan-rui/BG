@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.qpp.model.AppLevel" table="t_app_level">
+        <id name="oid" column="oid">
+            <generator class="native"/>
+        </id>
+        <property name="levelName" column="levelname"/>
+        <property name="levelDesc" column="leveldesc"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.qpp.model.TLocationType" table="qb_shipping_locationtype_info">
+        <id name="code" column="Code">
+            <generator class="native"/>
+         </id>
+        <property name="description" column="Description"/>
+        <property name="status" column="Status"/>
+        <property name="sortNo" column="SortNo"/>
+        <property name="remark" column="Remark"/>
+        <property name="creator" column="Creator"/>
+        <property name="createDate" column="CreateDate"/>
+    </class>
+</hibernate-mapping>

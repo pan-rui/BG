@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.qpp.model.AppKey" table="t_app_info">
+        <id name="oid" column="appid">
+            <generator class="native"/>
+         </id>
+        <property name="appkey" column="appkey" update="false"/>
+        <property name="userid" column="userid"/>
+        <property name="domain" column="domain"/>
+        <property name="status" column="status"/>
+        <property name="isbuildin" column="isbuildin"/>
+        <property name="token" column="token"/>
+        <property name="startTime" column="start_time"/>
+        <property name="create_date" column="create_date" update="false"/>
+    </class>
+<!--
+    <sql-query name="p_newApp" callable="true">
+        {call p_newApp(?)}
+    </sql-query>
+-->
+</hibernate-mapping>

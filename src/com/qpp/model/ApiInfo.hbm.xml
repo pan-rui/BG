@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<!--
+    <filter-def name="apiFilter">
+        <filter-param name="api" type="int"/>
+    </filter-def>
+-->
+    <class name="com.qpp.model.ApiInfo" table="t_api_info">
+        <id name="apiId" column="apiid">
+            <generator class="native"/>
+        </id>
+        <property name="apiUrl" column="apiurl"/>
+        <property name="httpMethod" column="httpmethod"/>
+        <property name="apiDesc" column="apidesc"/>
+        <!--<filter name="apiFilter"  condition="apiId>=:api"/>-->
+    </class>
+</hibernate-mapping>
