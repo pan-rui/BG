@@ -153,15 +153,15 @@ public class UserAction extends BaseAction {
 
     /**
      * 注册
-     * @param jsonStr
+     * @param jsonMap
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public BaseReturn register(@RequestBody String jsonStr, HttpServletRequest request) {
+    public BaseReturn register(@RequestBody JSONObject jsonMap, HttpServletRequest request) {
 //        AppKey appKey=memcacheCommonService.getAppInfo(request);
         AppKey appKey=new AppKey();appKey.setIsbuildin((short) 1);//TODO:内部用户
-        Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
+//        Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
         try {
             jsonMap.put("birthDay", new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(jsonMap.get("birthDay"))));
         } catch (ParseException e) {
@@ -170,11 +170,10 @@ public class UserAction extends BaseAction {
 //        BaseReturn result=userServiceImpl.register(jsonMap,appKey.getOid()); //TODO:appKey
         BaseReturn result=userServiceImpl.register(jsonMap,appKey);
         if(result.getResult()==0){
-            loger.info(MessageFormat.format("EventType: New User Register. UserId: {0} . DateTime: {1} . Result:Success",((TUser)result.getData()).getOid(),formatDateTime(new Date())));
-
-        }else{
             result.setErrMessage(getMessage(request, result.getErrMessage(), null));
             loger.info(MessageFormat.format("EventType: New User Register. . DateTime: {0} . Result:Error",formatDateTime(new Date())));
+        }else{
+            loger.info(MessageFormat.format("EventType: New User Register. UserId: {0} . DateTime: {1} . Result:Success",((TUser)result.getData()).getOid(),formatDateTime(new Date())));
         }
         return result;
     }
@@ -244,14 +243,14 @@ public class UserAction extends BaseAction {
 
     /**
      * 重设提交
-     * @param jsonStr
+     * @param jsonMap
      * @return
      */
     @RequestMapping(value = "rePass",method = RequestMethod.PUT)
     @ResponseBody
-    public BaseReturn rePassM(@RequestBody String jsonStr, HttpServletRequest request) {
-        JSONObject obj = JSON.parseObject(jsonStr);
-        BaseReturn result = userServiceImpl.rePasswordd(String.valueOf(obj.get("email")), String.valueOf(obj.get("password")), String.valueOf(obj.get("time")).replaceAll(",", ""));//TODO:currentPassword->
+    public BaseReturn rePassM(@RequestBody JSONObject jsonMap, HttpServletRequest request) {
+//        JSONObject obj = JSON.parseObject(jsonStr);
+        BaseReturn result = userServiceImpl.rePasswordd(String.valueOf(jsonMap.get("email")), String.valueOf(jsonMap.get("password")), String.valueOf(jsonMap.get("time")).replaceAll(",", ""));//TODO:currentPassword->
         if (result.getResult() == 0) {
             loger.info(MessageFormat.format("EventType: ReplacePassWord . DateTime: {0}.Result:Success", formatDateTime(new Date())));
         } else {
@@ -327,40 +326,41 @@ public class UserAction extends BaseAction {
 
     /**
      * 更新用户资料
-     * @param jsonStr
+     * @param jsonMap
      * @param request
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    public BaseReturn updateUser(@RequestBody String jsonStr, HttpServletRequest request) {
+    public BaseReturn updateUser(@RequestBody Map jsonMap, HttpServletRequest request) {
 //        AppKey appKey = memcacheCommonService.getAppInfo(request);
         AppKey appKey=new AppKey();appKey.setIsbuildin((short)1); //TODO:内部用户
-        Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
+//        Map<String, Object> jsonMap = (Map<String, Object>) JSON.parse(jsonStr);
             String tokenId = (String) jsonMap.remove("tokenId");
             if (appKey.getIsbuildin()!=1&&(tokenId == null || memcachedClient.get(tokenId) instanceof HttpSession))
                 return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
-        TUser obj = (TUser) memcachedClient.get(tokenId);
+        TUser obj = (TUser) memcachedClient.get(tokenId)==null?new TUser():(TUser)memcachedClient.get(tokenId);
         try {
             jsonMap.put("utime", new Date());
             jsonMap.remove("password");
            if(appKey.getIsbuildin()!=1) jsonMap.remove("email"); //TODO:字段过滤.....
-            if (jsonMap.containsKey("name") && obj.getRegisterType() != 20) {
+            if (jsonMap.containsKey("name") && obj.getRegisterType() != 20)
                 jsonMap.remove("name");
+            if(jsonMap.containsKey("birthDay")) jsonMap.put("birthDay",new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(jsonMap.get("birthDay"))));
                 BeanUtils.populate(obj, jsonMap); //TODO:验证...
-            }
             Set<ConstraintViolation<TUser>> constraints = userServiceImpl.validator.validate(obj);
             for (ConstraintViolation<TUser> constraintViolation : constraints)
                 return new BaseReturn(getMessage(request, constraintViolation.getMessageTemplate(), null), 1);
-            jsonMap.put("oid", obj.getOid());
-            memcachedClient.set(tokenId, obj, userExpire);
+            jsonMap=new LinkedHashMap<String,Object>(jsonMap);
+            jsonMap.put("oid", jsonMap.remove("oid"));
+//            memcachedClient.set(tokenId, obj, userExpire);
             userServiceImpl.update("t_user", jsonMap);
 //            BaseReturn result = userServiceImpl.updateUser(user);
 //            if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
             return new BaseReturn(0, obj);
         } catch (Exception e) {
             e.printStackTrace();
-            return new BaseReturn(getMessage(request, "err.parameter.inValid", new Object[]{jsonStr}), 1);
+            return new BaseReturn(getMessage(request, "err.parameter.inValid", new Object[]{jsonMap}), 1);
         }
     }
 
@@ -386,24 +386,24 @@ public class UserAction extends BaseAction {
     /**
      * 修改密码
      * @param tokenId
-     * @param jsonStr
+     * @param jsonMap
      * @return
      */
     @RequestMapping(value = "{tokenId}",method = RequestMethod.PUT)
     @ResponseBody
-    public BaseReturn modifyPass(@PathVariable String tokenId,@RequestBody String jsonStr, HttpServletRequest request) {
+    public BaseReturn modifyPass(@PathVariable String tokenId,@RequestBody JSONObject jsonMap, HttpServletRequest request) {
         Object userCache = memcachedClient.get(tokenId);
         if(userCache==null || userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         TUser user=(TUser)userCache;
         BaseReturn result = new BaseReturn();
 //        TUser user = userServiceImpl.getById(userId);
-        JSONObject obj = JSON.parseObject(jsonStr);
+//        JSONObject obj = JSON.parseObject(jsonStr);
 //        if (memcachedClient.get(String.valueOf(userId)) == null || user == null) {
 //            result.setResult(1);
 //            result.setErrMessage(getMessage(request, "err.user.modify.Pass.noLogin", null));
 //            return result;
 //        } else
-            result = userServiceImpl.rePass(user, obj.getString("oldPass"), obj.getString("newPass"));
+            result = userServiceImpl.rePass(user, jsonMap.getString("oldPass"), jsonMap.getString("newPass"));
         if (result.getResult() == 0)
             loger.info(MessageFormat.format("EventType: ModifyPassWord .UserId: {0} . DateTime: {1}.Result:Success", user.getOid(), formatDateTime(new Date())));
         else {
@@ -515,7 +515,7 @@ public class UserAction extends BaseAction {
             if(result.getErrMessage()!=null) result.setErrMessage(getMessage(request,result.getErrMessage(),null));
             return result;
         }
-        return new BaseReturn(getMessage(request,"err.user.set.status.notNull",null),0);
+        return new BaseReturn(getMessage(request,"err.user.set.status.notNull",null),1);
     }
 
     /**
@@ -553,7 +553,7 @@ public class UserAction extends BaseAction {
     if(address!=null)
        return userServiceImpl.addAddr(address);
 //        if (result.getErrMessage() != null) result.setErrMessage(getMessage(request, result.getErrMessage(), null));
-    return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+    return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 1);
 }
 
     /**
@@ -569,7 +569,7 @@ public class UserAction extends BaseAction {
         if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         if(address!=null)
             return userServiceImpl.updateAddr(address);
-        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 1);
     }
 
     /**
@@ -585,7 +585,7 @@ public class UserAction extends BaseAction {
         if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         if(userId!=null)
             return userServiceImpl.queryAddr(userId);
-        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 1);
     }
 
     /**
@@ -601,9 +601,9 @@ public class UserAction extends BaseAction {
         if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         if(userId!=null) {
             TUser user=userServiceImpl.getById(userId);
-            return new BaseReturn(1,addressDao.getById(user.getDefaultAddr()));
+            return new BaseReturn(0,addressDao.getById(user.getDefaultAddr()));
         }
-        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 1);
     }
 
     /**
@@ -619,7 +619,7 @@ public class UserAction extends BaseAction {
         if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         if(address!=null)
             return userServiceImpl.delAddr(address);
-        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 0);
+        return new BaseReturn(getMessage(request, "err.user.set.address.notNull", null), 1);
     }
 
     /**
@@ -635,7 +635,7 @@ public class UserAction extends BaseAction {
         JSONObject json = new JSONObject();
         Object userCache = memcachedClient.get(tokenId); //TODO:非匿名用户
         if (userCache == null || userCache instanceof HttpSession || !"1000".equals(appKey.getOid())) //TODO:用户类型待定
-            return new BaseReturn(getMessage(request, "err.user.email.add.authorized", null), 0);
+            return new BaseReturn(getMessage(request, "err.user.email.add.authorized", null), 1);
         File file = null;
         int maxFileSize = Integer.parseInt(MessageInfo.getMessage("upload.File.MaxSize"));
         int maxMemSize = Integer.parseInt(MessageInfo.getMessage("upload.Mem.MaxSize"));
@@ -753,11 +753,12 @@ public class UserAction extends BaseAction {
     @RequestMapping(method = RequestMethod.DELETE)
     public @ResponseBody BaseReturn delete(String dataStr,HttpServletRequest request) {
 //        AppKey appKey = memcacheCommonService.getAppInfo(request);
+        AppKey appKey=new AppKey();appKey.setIsbuildin((short)1); //TODO:内部用户
 //        if(appKey.getOid()!=1000l) return new BaseReturn(getMessage(request, "err.user.delete.authorized", null), 1); //TODO:删除权限
         Map<String, Object> dataMap = (Map<String, Object>) JSON.parse(dataStr);
         String tokenId = (String) dataMap.remove("tokenId");
         Object userCache = memcachedClient.get(tokenId);
-        if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
+        if(appKey.getIsbuildin()!=1&&(userCache==null||userCache instanceof HttpSession)) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
         List<Object> userList = (List<Object>) dataMap.get("users");
         if(userList!=null&&userList.size()>0)
        return userServiceImpl.delete(userList);
@@ -788,19 +789,19 @@ public class UserAction extends BaseAction {
     /**
      * 设置默认地址
      * @param tokenId
-     * @param jsonStr
+     * @param jsonMap
      * @param request
      * @return
      */
     @RequestMapping(value = "addrUp/{tokenId}", method = RequestMethod.PUT)
-    public @ResponseBody BaseReturn setAddr(@PathVariable String tokenId, @RequestBody String jsonStr, HttpServletRequest request) {
+    public @ResponseBody BaseReturn setAddr(@PathVariable String tokenId, @RequestBody JSONObject jsonMap, HttpServletRequest request) {
         Object userCache = memcachedClient.get(tokenId);
         if(userCache==null||userCache instanceof HttpSession) return new BaseReturn(getMessage(request, "err.user.noLogin", null), 1);
-        JSONObject jsonObject = JSON.parseObject(jsonStr);
+//        JSONObject jsonObject = JSON.parseObject(jsonStr);
         Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
-        dataMap.put("defaultAddr", jsonObject.get("addrId"));
+        dataMap.put("defaultAddr", jsonMap.get("addrId"));
         dataMap.put("oid",((TUser)userCache).getOid());
         userServiceImpl.update("t_user", dataMap);
-        return new BaseReturn(1, null);
+        return new BaseReturn(1, getMessage(request, "common.success", null));
     }
 }

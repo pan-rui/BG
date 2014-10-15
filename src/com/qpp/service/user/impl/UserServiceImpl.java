@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     private Email mail;
     @Resource
     private ConfigDao configDao;
-    private Pattern patten = Pattern.compile("^([\\w|-]+)@(\\w+)\\.(\\w+)$");
+    private Pattern patten = Pattern.compile("^([\\w|\\-]+)@(\\w+)\\.(\\w+)$");
     private MD5 md5 = new MD5();
     @Resource
     private ScoreDao scoreDao;
@@ -70,10 +70,10 @@ public class UserServiceImpl implements UserService {
         long passordId=tuser.getCurrentPassword();
         TUserPassHistory userPassHistory = userPassHistoryDao.getById(passordId);
         if (tuser != null && userPassHistory.getPassword().equals(md5.getMD5ofStr(password))) {
-            result.setResult(1);
+            result.setResult(0);
             result.setData(tuser);
         } else {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.login.check");
         }
         return result;
@@ -101,10 +101,10 @@ public class UserServiceImpl implements UserService {
                 TUser tUser=userDao.getBySQL("select * from t_user where ctime='" + new Timestamp(date.getTime()).toString().replaceFirst("\\.\\d{1,3}",".0") + "'");
                 openidInfo = new TOpenidInfo(openId, siteId, tUser.getOid());
                 openidInfoDao.save(openidInfo);
-                return new BaseReturn(1,tUser);
+                return new BaseReturn(0,tUser);
             } catch (Exception e) {
                 e.printStackTrace();
-                return new BaseReturn("err.user.login.unknow", 0);
+                return new BaseReturn("err.user.login.unknow", 1);
             }
         }
     }
@@ -134,10 +134,10 @@ public class UserServiceImpl implements UserService {
             dataMap.put("status", "1");
             dataMap.put("oid", userId);
             userDao.update("t_user",dataMap);
-            result.setResult(1);
+            result.setResult(0);
             result.setData(tuser);
         } else {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.action.email.failed");
         }
         return result;
@@ -160,7 +160,6 @@ public class UserServiceImpl implements UserService {
         if(data.containsKey("password"))
             password = String.valueOf(data.remove("password"));
         TAddress address = new TAddress();
-        address.setCountryCode(String.valueOf(data.remove("countryCode")));
         address.setStateCode(String.valueOf(data.remove("stateCode")));
         address.setArea(String.valueOf(data.remove("area")));
         address.setStreet(String.valueOf(data.remove("street")));
@@ -168,10 +167,13 @@ public class UserServiceImpl implements UserService {
         TUser user = new TUser();
         BaseReturn result = new BaseReturn();
         try {
+            if (data.get("countryCode")!=null&&!mailPublishDao.queryAddr("select CountryCode from qb_country_info","CountryCode").contains(data.get("countryCode")))
+                return new BaseReturn("err.user.register.countryCode.verify", 1);
+            else
+                address.setCountryCode(String.valueOf(data.remove("countryCode")));
             BeanUtils.populate(user,data);
 //            Set<ConstraintViolation<TUser>> constraints= validator.validate(user);
 //            for (ConstraintViolation<TUser> constraintViolation : constraints)
-
         if (!user.getName().matches("^[\\w|\\-|_]{6,18}$") || Integer.parseInt(exists(userDao, "select count(1) from t_user where name='" + user.getName() + "'")) > 0)
             return new BaseReturn("err.user.register.username.verify", 1);
         if (!patten.matcher(user.getEmail()).matches() || Integer.parseInt(exists(userDao, "select count(1) from t_user where email='" + user.getEmail() + "'")) > 0)
@@ -180,8 +182,7 @@ public class UserServiceImpl implements UserService {
             return new BaseReturn("err.user.register.password.verify", 1);
         if(!String.valueOf(user.getPhone()).matches("(^(\\d{3}-){2}\\d{4})|((^\\+\\d{2})?[13|15|14|18|17]+\\d{9})"))
             return new BaseReturn("err.user.register.phone.verify",1);
-        if (!mailPublishDao.queryAddr("select CountryCode from qb_country_info","CountryCode").contains(user.getCountryCode()))
-            return new BaseReturn("err.user.register.countryCode.verify", 1);
+
         //可选 邮编验证.....
         Date date = new Date();
 //        String userId = RandomSymbol.getAllSymbol(16);
@@ -220,7 +221,7 @@ public class UserServiceImpl implements UserService {
 //                openidInfo.setUserId(oid);
 //                openidInfoDao.save(openidInfo);
 //            }
-            result.setResult(1);
+            result.setResult(0);
             result.setData(user);
             TConfig subject = configDao.getById("email.subject"); //TODO:需添加此配置在数据库中
             TConfig context = configDao.getById("email.context");
@@ -228,7 +229,7 @@ public class UserServiceImpl implements UserService {
             mail.sendMail(MessageFormat.format(subject.getConfigValue(), null), MessageFormat.format(context.getConfigValue(), user.getOid(),new Date().getTime()), new String[]{user.getEmail()});
         } catch (Exception e) {
 //            e.printStackTrace();
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.register.failed");
             return result;
         }
@@ -242,7 +243,7 @@ public class UserServiceImpl implements UserService {
 //            String email = mailPublishDao.queryAddr("select email from t_user where name='" + name + "'","email").get(0);
             String email=exists(userDao, "select email from t_user where name='" + name + "'");
             if (!email.equals(userEmail)) {
-                result.setResult(0);
+                result.setResult(1);
                 result.setErrMessage("err.user.rePassword.verify");
                 return result;
             }
@@ -268,7 +269,7 @@ public class UserServiceImpl implements UserService {
         BaseReturn result = new BaseReturn();
         TUserPassHistory userPassHistory=userPassHistoryDao.getById(user.getCurrentPassword());
         if (!userPassHistory.getPassword().equals(md5.getMD5ofStr(oldPass))) {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.modify.Pass.oldPassword.verify");
             return result;
         }
@@ -283,10 +284,10 @@ public class UserServiceImpl implements UserService {
         dataMap.put("utime", date);
         dataMap.put("oid", user.getOid());
             userDao.update("t_user", dataMap);
-            result.setResult(1);
+            result.setResult(0);
             result.setData(user);
         } catch (Exception e) {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.modify.Pass.failed");
             return result;
         }
@@ -301,10 +302,10 @@ public class UserServiceImpl implements UserService {
 //        dataMap.put("id", user.getId());
         try {
             userDao.update("t_user", dataMap);
-            result.setResult(1);
+            result.setResult(0);
 //            result.setData(user);
         } catch (Exception e) {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.update.failed");
             return result;
         }
@@ -350,11 +351,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//    @Override
-//    public BaseReturn queryScore(PageModel<TScore> page) {
-//
-//        return queryPage(page, "t_score", scoreDao);
-//    }
 
     @Override
     public BaseReturn scoreProcess(TUser user, TGift gift, int count) {
@@ -362,7 +358,7 @@ public class UserServiceImpl implements UserService {
         int needScore = gift.getPrice() * count;
         if(user.getStatus().equals("0")){
             //未激活用户
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.not.active");
               return result;
         }
@@ -411,10 +407,10 @@ public class UserServiceImpl implements UserService {
 //        tuser.setPassword();
         try {
             userDao.update("t_user",dataMap);
-            result.setResult(1);
+            result.setResult(0);
 //            result.setData(tuser);
         } catch (Exception e) {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.rePassword.failed");
             return result;
         }
@@ -434,10 +430,11 @@ public class UserServiceImpl implements UserService {
         StringBuffer sql = new StringBuffer("select * from " + tableName+" where user.oid='"+userId+"'");
         if (page.getSearchValue() != null && !page.getSearchValue().toString().trim().equals(""))
             sql.append(" and " + page.getSearchProperty() + "like '%" + page.getSearchValue().toString() + "%'");
-        if (page.getOrderPropery() != null && !page.getOrderPropery().trim().equals(""))
+        if (page.getOrderPropery() != null && !page.getOrderPropery().trim().equals("")) {
             sql.append(" order by " + page.getOrderPropery());
-        if (page.getIsDesc())
-            sql.append(" desc");
+            if (page.getIsDesc())
+                sql.append(" desc");
+        }
         page.setRowCount(dao.getKeyBySQL(sql.toString()));
         page.setData(dao.getsByQueryPage(sql.toString(), page.getStart(), page.getPageSize()));
 //        result.setResult(page.getRowCount());
@@ -479,9 +476,9 @@ public class UserServiceImpl implements UserService {
         dataMap.put("oid", userId);
         try {
             userDao.update("t_user", dataMap);
-            result.setResult(1);
-        } catch (Exception e) {
             result.setResult(0);
+        } catch (Exception e) {
+            result.setResult(1);
             result.setErrMessage("err.user.set.status.failed");
             return result;
         }
@@ -496,9 +493,9 @@ public class UserServiceImpl implements UserService {
         dataMap.put("id", userId);
         try {
             userDao.update("t_user", dataMap);
-            result.setResult(1);
-        } catch (Exception e) {
             result.setResult(0);
+        } catch (Exception e) {
+            result.setResult(1);
             result.setErrMessage("err.user.set.type.failed");
             return result;
         }
@@ -513,9 +510,9 @@ public class UserServiceImpl implements UserService {
         dataMap.put("oid", userId);
         try {
             userDao.update("t_user", dataMap);
-            result.setResult(1);
-        } catch (Exception e) {
             result.setResult(0);
+        } catch (Exception e) {
+            result.setResult(1);
             result.setErrMessage("err.user.set.address.failed");
             return result;
         }
@@ -542,11 +539,11 @@ public class UserServiceImpl implements UserService {
                     TriggerUtil.simpleTask(dataMap, EmailJob.class, email.getSendDate());
                 }
             }
-            result.setResult(1);
+            result.setResult(0);
             result.setData(email);
         } catch (Exception e) {
             e.printStackTrace();
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.add.emailPublish");
             return result;
         }
@@ -560,10 +557,10 @@ public class UserServiceImpl implements UserService {
 //            TMailPublish email = mailPublishDao.getById(emailId);
             TUserEmail userEmail=new TUserEmail(userId,emailId);
             userEMailDao.save(userEmail);
-            result.setResult(1);
+            result.setResult(0);
 //            result.setData(user);
         } catch (Exception e) {
-            result.setResult(0);
+            result.setResult(1);
             result.setErrMessage("err.user.subscription.email");
             return result;
         }
@@ -573,7 +570,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseReturn addAddr(TAddress address) {
         addressDao.save(address);
-        return new BaseReturn(1,address);
+        return new BaseReturn(0,address);
     }
 
     @Override
@@ -581,13 +578,13 @@ public class UserServiceImpl implements UserService {
         List<TAddress> address=null;
 //        if(user.getClass().getName().startsWith("com.qpp.model"))
         address = addressDao.getsBySQL("select * from t_address where userId='" + user + "'");
-        return new BaseReturn(1,address);
+        return new BaseReturn(0,address);
     }
 
     @Override
     public BaseReturn updateAddr(TAddress address) {
         addressDao.update(address);
-        return new BaseReturn(1,"Operation successfully executed.");
+        return new BaseReturn(0,"Operation successfully executed.");
     }
 
     @Override
@@ -595,7 +592,7 @@ public class UserServiceImpl implements UserService {
         if(addr.getClass().getName().startsWith("com.qpp.model"))
             addressDao.delete((TAddress)addr);
         else addressDao.delete(null,addr);
-        return new BaseReturn(1,"Operation successfully executed.");
+        return new BaseReturn(0,"Operation successfully executed.");
     }
 
     public BaseReturn cancelSubscript(long userId,long emailId) {
@@ -603,10 +600,10 @@ public class UserServiceImpl implements UserService {
         try {
             userDao.execBySQL("delete t_userEmail where userId=" + userId + " and emailId=" + emailId);
 //            userEMailDao.delete("id", userEmail.getId());
-            result.setResult(1);
+            result.setResult(0);
 //            result.setData(userId);
         } catch (Exception e) {
-            result.setResult(0);
+            result.setResult(1);
             return result;
         }
         return result;
@@ -619,7 +616,7 @@ public class UserServiceImpl implements UserService {
         else if (appId == 10000) //TODO:用户类型待定
             return queryPage(page, "t_mailPublish mail join t_userEmail userE on mail.id=userE.emailId join t_user user on user.id=userE.userId", mailPublishDao,user.getOid());
         else
-            return new BaseReturn("err.user.query.emailPublish.verify", 0);
+            return new BaseReturn("err.user.query.emailPublish.verify", 1);
     }
 
     public TUser getById(Serializable id) {
@@ -629,8 +626,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseReturn delete(List<Object> userList) {
             for(Object user:userList) userDao.execBySQL("delete from t_user where oid='" + user + "'");
-        return new BaseReturn(0,null);
+        return new BaseReturn(1,"Operation successfully executed.");
     }
-
 
 }

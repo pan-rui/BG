@@ -33,18 +33,16 @@ public class TUser extends Priciple implements java.io.Serializable {
 	private String status;
 	private String voucher;
 	private long present;
-    @NotNull
 	private Date ctime;
     @NotNull
 	private Date utime;
-	private String countryCode;
 
 	public TUser() {
 //        super.authType= AuthType.USER;
     }
 
 	public TUser(String name, String email, long type,
-			long currentPassword, Date ctime, Date utime, String countryCode) {
+			long currentPassword, Date ctime, Date utime) {
 //        super.authType= AuthType.USER;
 		this.name = name;
 		this.email = email;
@@ -52,14 +50,12 @@ public class TUser extends Priciple implements java.io.Serializable {
 		this.currentPassword = currentPassword;
 		this.ctime = ctime;
 		this.utime = utime;
-		this.countryCode = countryCode;
 	}
 
 	public TUser(String name, Date birthDay, String phone, String email,
 			long type, long currentPassword, String nickname, Double money,
 			long score, String sex, String comment, String status,
-			String voucher, long present, Date ctime, Date utime,
-			String countryCode) {
+			String voucher, long present, Date ctime, Date utime) {
 //        super.authType= AuthType.USER;
 		this.name = name;
 		this.birthDay = birthDay;
@@ -77,7 +73,6 @@ public class TUser extends Priciple implements java.io.Serializable {
 		this.present = present;
 		this.ctime = ctime;
 		this.utime = utime;
-		this.countryCode = countryCode;
 	}
 
 	public long getOid() {
@@ -215,14 +210,6 @@ public class TUser extends Priciple implements java.io.Serializable {
 
 	public void setUtime(Date utime) {
 		this.utime = utime;
-	}
-
-	public String getCountryCode() {
-		return this.countryCode;
-	}
-
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
 	}
 
     public long getDefaultAddr() {

@@ -59,8 +59,5 @@
         <property name="utime" type="timestamp">
             <column name="utime" length="19" not-null="true" />
         </property>
-        <property name="countryCode" type="string">
-            <column name="countryCode" length="2" not-null="false" />
-        </property>
     </class>
 </hibernate-mapping>

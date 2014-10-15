@@ -1,6 +1,5 @@
 package com.qpp.dao;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -9,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -16,7 +16,6 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.List;
@@ -29,8 +28,6 @@ public class BaseDao<T> extends HibernateDaoSupport{
     protected HibernateTemplate hibernateTemplate;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Resource
-    private ComboPooledDataSource dataSource;
     public BaseDao() {
 
     }
@@ -47,8 +44,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
     }
 
     public String getTableByClass(Class cls){
-        SessionFactory factory = getHibernateTemplate().getSessionFactory();
-        AbstractEntityPersister classMetadata = (SingleTableEntityPersister) factory.getClassMetadata(cls);
+        AbstractEntityPersister classMetadata = (SingleTableEntityPersister) hibernateTemplate.getSessionFactory().getClassMetadata(cls);
         return classMetadata.getTableName();
     }
 
@@ -58,6 +54,10 @@ public class BaseDao<T> extends HibernateDaoSupport{
 
     public void update(T po) {
         hibernateTemplate.update(po);
+    }
+    public void update(T newObject,T oldObject,String[] properties) {
+        BeanUtils.copyProperties(newObject,oldObject,properties);
+        hibernateTemplate.update(oldObject);
     }
     public void update(String name,T po) {
         hibernateTemplate.update(name, po);
@@ -229,10 +229,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
     public Connection getConnetion() {
         Connection conn = null;
         try {
-            Class.forName(dataSource.getDriverClass());
-            conn = DriverManager.getConnection(dataSource.getJdbcUrl(), dataSource.getUser(), dataSource.getPassword());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            conn = SessionFactoryUtils.getDataSource(hibernateTemplate.getSessionFactory()).getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -308,7 +305,7 @@ public class BaseDao<T> extends HibernateDaoSupport{
         if(property==null) {
             jdbcTemplate.execute("delete from " + getTableName(priClass.getName()) + " where oid='" + value + "'");
         }else{
-            jdbcTemplate.execute("delete from "+getTableName(priClass.getName())+ "where "+property+"='"+value+"'");
+            jdbcTemplate.execute("delete from "+getTableName(priClass.getName())+ " where "+property+"='"+value+"'");
         }
 //        List<T> list=hibernateTemplate.findByNamedQuery(property,value);
 //        hibernateTemplate.deleteAll(list);

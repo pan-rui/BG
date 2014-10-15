@@ -830,7 +830,6 @@
       <column name="present" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="ctime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <column name="utime" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="countryCode" sqlType="VARCHAR" precision="2" scale="0" nullable="true" jdbcType="12"/>
       <column name="registerType" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="defaultAddr" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="oid"/>

@@ -139,5 +139,40 @@ public class MDTest {
         System.out.println("---------------------");
         System.out.println("Long is Max:"+Long.MAX_VALUE);
         System.out.println(Integer.MAX_VALUE);
+        System.out.println("--------------------------");
+        System.out.println((short)1!=1);
+        System.out.println("---------------");
+//        try {
+//            Object a= new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(null)); // NullPointerException
+//        System.out.println(a);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        System.out.println("潘正-->小车+老婆孩子");
+        System.out.println("奋力追赶中...........");
+        System.out.println("args = [" + args + "]");
+        System.out.println("MDTest.main");
+        System.out.println("arrayList = " + arrayList);
+        System.out.println("15+0.5x");
+        System.out.println("JobExcutaionContext");
+        System.out.println(Math.atan(0.5d)*180/Math.PI);
+        System.out.println("年轻无极限...........");
+        System.out.println((8>>>2|1)==3);
+        System.out.println((8>>>2&1)==0);
+        new TreeMap<String,Object>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return 0;
+            }
+        });
+        Properties properties = System.getProperties();
+        Set sset=properties.keySet();
+        for(Object obj:sset)
+            System.out.println("key-> "+obj+"\tvalue-> "+properties.get(obj));
+        System.out.println("----------env");
+        Map map = System.getenv();
+        for(Object obj:map.keySet())
+            System.out.println("key-> "+obj+"\tvalue-> "+map.get(obj));
     }
+
 }
