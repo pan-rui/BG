@@ -1,7 +1,6 @@
 package com.qpp.action;
 
 import com.danga.MemCached.MemCachedClient;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.qpp.listener.SpringContextUtil;
 import com.qpp.model.BaseReturn;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +85,6 @@ public class BaseAction{
         loger.error(ex.getMessage());
         return baseReturn;
     }
+
     //protected final org.slf4j.Logger loger = org.slf4j.LoggerFactory.getLogger(this.getClass().getName());
 }
