@@ -85,5 +85,6 @@ public class BaseAction{
         loger.error(ex.getMessage());
         return baseReturn;
     }
+
     //protected final org.slf4j.Logger loger = org.slf4j.LoggerFactory.getLogger(this.getClass().getName());
 }
