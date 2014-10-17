@@ -74,7 +74,6 @@ public class TUser extends Priciple implements java.io.Serializable {
 		this.ctime = ctime;
 		this.utime = utime;
 	}
-
 	public long getOid() {
 		return this.oid;
 	}
