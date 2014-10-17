@@ -121,8 +121,6 @@ public class TUser extends Priciple implements java.io.Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
 	public long getCurrentPassword() {
 		return this.currentPassword;
 	}
